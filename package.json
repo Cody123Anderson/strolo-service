@@ -24,6 +24,7 @@
     "axios": "^0.15.3",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "mongoose": "^4.7.4",
     "sendgrid": "^4.7.1",
     "sendgrid-rest": "^2.3.0"
   }

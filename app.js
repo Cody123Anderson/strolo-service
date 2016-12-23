@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var settings = require('./config/settings');
 var routes = require('./routes/index');
@@ -10,8 +11,12 @@ settings.loadEnv(process.env);
 
 var port = process.env.PORT || 3000;
 
-app.use(bodyParser.json({ limit: '20mb' })); // increases max file size
-app.use(bodyParser.urlencoded({limit: '20mb', extended: true})); // increases max file size
+// increases max file size
+app.use(bodyParser.json({ limit: '20mb' }));
+app.use(bodyParser.urlencoded({limit: '20mb', extended: true}));
+
+//Configure mongodb
+mongoose.connect(process.env.MONGO_HOST || process.env.MONGO_TEST_URL);
 
 // CORS configuration
 app.use((req, res, next) => {
