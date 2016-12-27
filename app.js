@@ -1,15 +1,19 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
 
-var settings = require('./config/settings');
-var routes = require('./routes/index');
+const settings = require('./config/settings');
+const routes = require('./routes/index');
 
 //Load settings into node environment
 settings.loadEnv(process.env);
 
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
+
+// Set up logging
+app.use(morgan('combined'));
 
 // increases max file size
 app.use(bodyParser.json({ limit: '20mb' }));

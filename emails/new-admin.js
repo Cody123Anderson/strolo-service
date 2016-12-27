@@ -1,8 +1,9 @@
 let helper = require('sendgrid').mail;
 var sendEmail = require('./send');
 
-module.exports.send = function(args, cb) {
-  var to_email = args[0];
+module.exports.send = (cb) => {
+  var toEmail = args[0];
+  var username = args[1];
 
   var mail = new helper.Mail();
   var personalization = new helper.Personalization();
@@ -15,12 +16,12 @@ module.exports.send = function(args, cb) {
   email = new helper.Email('cody@serenadedates.com', 'Cody Anderson');
   mail.setReplyTo(email);
 
-  // Set to_email
-  email = new helper.Email(to_email);
+  // Set toEmail
+  email = new helper.Email(toEmail);
   personalization.addTo(email);
 
   // Set Subject
-  mail.setSubject('Thanks for Signing Up!'); // This replaces the <%subject%> tag inside your SendGrid template
+  mail.setSubject('New Admin Alert!'); // This replaces the <%subject%> tag inside your SendGrid template
 
   // Set content
   var content = new helper.Content('text/html', ' '); // This replaces the <%body%> tag inside your SendGrid template
@@ -28,6 +29,10 @@ module.exports.send = function(args, cb) {
 
   // Set template_id
   mail.setTemplateId('21d52629-039c-4cae-a7eb-4e5552521ba9');
+
+  // Set substitutions
+  var substitution = new helper.Substitution('-username-', username);
+  personalization.addSubstitution(substitution);
 
   // Add all personalizations to mail object
   mail.addPersonalization(personalization);

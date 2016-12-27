@@ -1,5 +1,9 @@
-var landingPageRoutes = require('./landing-page-routes');
+const adminRoutes = require('./admin-routes');
+const ideaRoutes = require('./idea-routes');
+const subscriberRoutes = require('./subscriber-routes');
 
 module.exports = (app) => {
-  landingPageRoutes(app);
+  adminRoutes(app);
+  ideaRoutes(app);
+  subscriberRoutes(app);
 };
