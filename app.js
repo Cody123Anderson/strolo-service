@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const settings = require('./config/settings');
 const routes = require('./routes/index');
@@ -23,12 +24,7 @@ app.use(bodyParser.urlencoded({limit: '20mb', extended: true}));
 mongoose.connect(process.env.MONGO_HOST || process.env.MONGO_TEST_URL);
 
 // CORS configuration
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+app.use(cors());
 
 routes(app);
 
