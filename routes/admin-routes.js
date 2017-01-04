@@ -19,6 +19,6 @@ module.exports = (app, passport) => {
   app.post('/admin/login', requireLogin, AdminController.login);
 
   /* Creates a new admin */
-  /* Add requireAuth middleware after creating first admin so that only admins can create admins */
-  app.post('/admin/signup', AdminController.signup);
+  /* Only admins can create admins */
+  app.post('/admin/signup', requireAuth, AdminController.signup);
 }
