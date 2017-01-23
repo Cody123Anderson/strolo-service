@@ -9,8 +9,13 @@ function tokenForUser(user) {
   return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
 }
 
+exports.isLoggedIn = (req, res, next) => {
+  // User has already been logged in if they get here
+  return res.status(200).send({ loggedin: true });
+};
+
 exports.login = (req, res, next) => {
-  // User has alread had their username and password authenticated, give them a token
+  // Valid username and password, give them a token
   res.send({ token: tokenForUser(req.user) });
 };
 

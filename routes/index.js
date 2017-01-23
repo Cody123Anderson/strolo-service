@@ -1,9 +1,9 @@
 const adminRoutes = require('./admin-routes');
-const ideaRoutes = require('./idea-routes');
-const subscriberRoutes = require('./subscriber-routes');
+const freeIdeaRoutes = require('./free-idea-routes');
+const emailSubscriberRoutes = require('./email-subscriber-routes');
 
 module.exports = (app) => {
   adminRoutes(app);
-  ideaRoutes(app);
-  subscriberRoutes(app);
+  freeIdeaRoutes(app);
+  emailSubscriberRoutes(app);
 };

@@ -4,17 +4,15 @@ var ObjectId = Schema.ObjectId;
 
 var ideaSchema = Schema({
   business: { type: ObjectId, required: true },
-  categories: [{ type: ObjectId }],
-  clothes: [{ type: ObjectId }],
+  categories: [],
+  clothes: [],
   description: { type: String },
   discount_percent: { type: Number },
-  image_id: { type: String },
-  image_url: { type: String },
+  discount_price: { type: Number },
   images: [],
   items: [],
   locations: [{ type: ObjectId }],
   name: { type: String },
-  questions: [],
   retail_price: { type: Number },
   status: { type: String },
   type: { type: String }

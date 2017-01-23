@@ -4,7 +4,7 @@ var ObjectId = Schema.ObjectId;
 
 var ideaSchema = Schema({
   business_name: { type: String },
-  categories: [{ type: ObjectId }],
+  categories: [],
   description: { type: String },
   images: [],
   locations: [],
