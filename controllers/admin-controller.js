@@ -1,12 +1,12 @@
 const jwt = require('jwt-simple');
 
 const Admin = require('../models/admin');
-const config = require('../config');
+const config = require('../config')
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
 
-  return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
+  return jwt.encode({ sub: user.id, iat: timestamp }, config.JWT_SECRET);
 }
 
 exports.isLoggedIn = (req, res, next) => {

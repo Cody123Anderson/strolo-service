@@ -5,13 +5,10 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 
-const settings = require('./config/settings');
+const config = require('./config');
 const routes = require('./routes/index');
 
-//Load settings into node environment
-settings.loadEnv(process.env);
-
-const port = process.env.PORT || 3000;
+const port = config.PORT || 3000;
 
 // Set up logging
 app.use(morgan('combined'));
@@ -21,7 +18,7 @@ app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({limit: '20mb', extended: true}));
 
 //Configure mongodb
-mongoose.connect(process.env.MONGO_HOST || process.env.MONGO_TEST_URL);
+mongoose.connect(config.MONGO_URL);
 
 // CORS configuration
 app.use(cors());
