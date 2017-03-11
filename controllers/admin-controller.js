@@ -1,18 +1,20 @@
-const jwt = require('jwt-simple');
+const aws = require('aws-sdk');
 
 const Admin = require('../models/admin');
+const { newAdmin } = require('../models/admin-dynamo');
+const { encodeToken, decodeToken } = require('../utils/jwt-token');
+const { comparePasswords } = require('../utils/password');
 const config = require('../config')
 
-function tokenForUser(user) {
-  const timestamp = Math.round(new Date().getTime() / 1000);
-  const expiration = timestamp + (60 * 60 * 24 * 7); // 7 days
+// Configure AWS
+aws.config.update({
+  accessKeyId: config.AWS_ACCESS_KEY_ID,
+  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
+});
+aws.config.update({ region: 'us-west-1' });
 
-  return jwt.encode({
-    sub: user.id,
-    iat: timestamp,
-    exp: expiration
-  }, config.JWT_SECRET);
-}
+// Get instance of the database
+const db = new aws.DynamoDB.DocumentClient();
 
 exports.isLoggedIn = (req, res, next) => {
   // User has already been logged in if they get here
@@ -22,11 +24,54 @@ exports.isLoggedIn = (req, res, next) => {
   });
 };
 
-exports.login = (req, res, next) => {
-  // Valid username and password, give them a token
-  res.status(200).send({
-    status: 200,
-    token: tokenForUser(req.user)
+exports.login = (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const params = {
+    TableName: config.TABLE_ADMIN,
+    Key: { username: username }
+  };
+
+  db.get(params, function(err, data) {
+    if (err) {
+      return res.status(500).send({
+        status: 500,
+        error: 'unable to process server request in admin checkCredentials'
+      });
+    }
+
+    if (data.Item) {
+      // User exists, check password
+      const hashedPassword = data.Item.password;
+      comparePasswords(password, hashedPassword, (err, isMatch) => {
+        if (err) {
+          return res.status(500).send({
+            status: 500,
+            error: 'unable to process server request in admin password comparison'
+          });
+        }
+
+        if (isMatch) {
+          // Valid username and password, give them a token
+          res.status(200).send({
+            status: 200,
+            token: encodeToken(data.Item)
+          });
+        } else {
+          // incorrect password
+          return res.status(422).send({
+            status: 422,
+            error: 'incorrect password'
+          });
+        }
+      });
+
+    } else {
+      return res.status(422).send({
+        status: 422,
+        error: 'incorrect username'
+      });
+    }
   });
 };
 
@@ -42,32 +87,66 @@ exports.signup = (req, res, next) => {
   }
 
   // See if a user with given username already exists
-  Admin.findOne({ username: username }, (err, existingAdmin) => {
-    if (err) { return next(err); }
+  const params = {
+    TableName: config.TABLE_ADMIN,
+    ProjectionExpression: '#username',
+    FilterExpression: '#username = :username',
+    ExpressionAttributeNames: {
+      '#username': 'username'
+    },
+    ExpressionAttributeValues: {
+      ':username': username
+    }
+  };
+
+  db.scan(params, (err, data) => {
+    if (err) {
+      console.error('Error Scanning DB: ', err);
+      return res.status(500).send({
+        status: 500,
+        error: 'Server Error scanning admins: Please refresh the page and try again'
+      });
+    }
 
     // If a user with this username exists, return an error
-    if (existingAdmin) {
+    if (data.Count > 0) {
       return res.status(422).send({
         status: 422,
         error: 'username is already in use'
       });
     }
 
-    // If no user with this username exists, create a new user
-    const admin = new Admin({
-      username: username,
-      password: password
-    });
+    // Since no user with this username exists, create a new user
+    newAdmin({ username, password }, (err, admin) => {
+      if (err) {
+        console.error("Unable to create new admin: ", JSON.stringify(err, null, 2));
+        return res.status(500).send({
+          status: 500,
+          error: 'Server Error creating admin: Please refresh the page and try again'
+        });
+      }
 
-    admin.save((err) => {
-      if (err) { return next(err); }
+      const createParams = {
+        TableName: config.TABLE_ADMIN,
+        Item: admin
+      };
 
-      // Respond to the request indicating the user was created successfully
-      return res.status(200).send({
-        status: 200,
-        info: 'new admin created!',
-        token: tokenForUser(admin)
+      db.put(createParams, (err, data) => {
+        if (err) {
+          console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+          return res.status(500).send({
+            status: 500,
+            error: 'Server Error creating admin in db: Please refresh the page and try again'
+          });
+        } else {
+          return res.status(200).send({
+            status: 200,
+            info: 'new admin created!',
+            token: encodeToken(admin)
+          });
+        }
       });
+
     });
   });
 }

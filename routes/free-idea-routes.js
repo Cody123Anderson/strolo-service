@@ -1,7 +1,7 @@
 const passport = require('passport');
 
 const freeIdeaController = require('../controllers/free-idea-controller');
-const adminPassportService = require('../services/passport-admin-service'); // Sets admin jwt, and local strategies
+// const adminPassportService = require('../services/passport-admin-service'); // Sets admin jwt, and local strategies
 
 const requireAdminAuth = passport.authenticate('jwt', { session: false} );
 

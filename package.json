@@ -4,11 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "dockerbuild": "docker build -t cody123anderson/serenade-api .",
-    "dockerrun": "docker run --name serenade-api -p 3000:3000 -d cody123anderson/serenade-api",
-    "dockerpush": "docker push cody123anderson/serenade-api",
-    "start": "PORT=3000 node app.js",
+    "dev": "NODE_ENV=development nodemon app.js",
+    "start": "NODE_ENV=production PORT=3000 node app.js",
     "test": "mocha --compilers js:babel-core/register --require ignore-styles --recursive ./test"
   },
   "repository": {
@@ -23,6 +20,7 @@
   "homepage": "https://github.com/Cody123Anderson/serenade-api#readme",
   "dependencies": {
     "asynquence": "^0.10.0",
+    "aws-sdk": "^2.26.0",
     "axios": "^0.15.3",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
@@ -32,9 +30,6 @@
     "mongoose": "^4.7.4",
     "morgan": "^1.7.0",
     "nodemon": "^1.11.0",
-    "passport": "^0.3.2",
-    "passport-jwt": "^2.2.1",
-    "passport-local": "^1.0.0",
     "sendgrid": "^4.7.1",
     "sendgrid-rest": "^2.3.0"
   }
