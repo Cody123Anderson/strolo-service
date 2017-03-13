@@ -1,17 +1,22 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
+const cleanObj = require('../utils/clean-obj');
 
-var ideaSchema = Schema({
-  business_name: { type: String },
-  categories: [],
-  description: { type: String },
-  images: [],
-  locations: [],
-  name: { type: String },
-  retail_price: { type: Number },
-  status: { type: String },
-  type: { type: String }
-});
-// create the model for Businesses and expose it to our app
-module.exports = mongoose.model('FreeIdea', ideaSchema);
+function formatFreeIdea(freeIdea) {
+  const newFreeIdea = {
+    businessName: freeIdea.businessName,
+    categories: freeIdea.categories,
+    description: freeIdea.description,
+    images: freeIdea.images,
+    locations: freeIdea.locations,
+    name: freeIdea.name,
+    retailPrice: freeIdea.retailPrice,
+    status: freeIdea.status,
+    type: freeIdea.type
+  }
+
+  // Remove null or undefined attributes
+  cleanObj(newFreeIdea);
+
+  return newFreeIdea;
+}
+
+module.exports = { formatFreeIdea };

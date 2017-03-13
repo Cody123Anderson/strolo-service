@@ -1,26 +1,25 @@
-const passport = require('passport');
-
 const freeIdeaController = require('../controllers/free-idea-controller');
-// const adminPassportService = require('../services/passport-admin-service'); // Sets admin jwt, and local strategies
-
-const requireAdminAuth = passport.authenticate('jwt', { session: false} );
+const adminAuthService = require('../services/admin-auth');
 
 module.exports = (app, passport) => {
   /* READ all freeideas */
   app.get('/freeideas', freeIdeaController.getAllFreeIdeas);
 
-  /* READ all freeideas with a given status ('active' | 'innactive') */
-  app.get('/freeideas/:status', freeIdeaController.getFreeIdeasForStatus);
+  /* READ all freeideas with a given status ('active' | 'inactive') */
+  app.get('/freeideas/status/:status', freeIdeaController.getFreeIdeasForStatus);
 
   /* READ all freeideas within a certain range of a zipcode  */
-  app.get('/freeideas/:zip/:range', freeIdeaController.getFreeIdeasWithinRange);
+  app.get('/freeideas/zip/:zip/range/:range', freeIdeaController.getFreeIdeasWithinRange);
+
+  /* READ one freeidea by id  */
+  app.get('/freeideas/:id', freeIdeaController.getFreeIdea);
 
   /* CREATE a freeIdea */
-  app.post('/freeideas', requireAdminAuth, freeIdeaController.postFreeIdea);
+  app.post('/freeideas', adminAuthService.isAuthenticated, freeIdeaController.createFreeIdea);
 
   /* UPDATE a freeIdea */
-  app.put('/freeideas/:id', requireAdminAuth, freeIdeaController.putFreeIdea);
+  app.put('/freeideas/:id', adminAuthService.isAuthenticated, freeIdeaController.updateFreeIdea);
 
   /* Delete a freeIdea */
-  app.delete('/freeideas/:id', requireAdminAuth, freeIdeaController.deleteFreeIdea);
+  app.delete('/freeideas/:id', adminAuthService.isAuthenticated, freeIdeaController.deleteFreeIdea);
 }

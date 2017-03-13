@@ -1,20 +1,8 @@
-const aws = require('aws-sdk');
-
-const Admin = require('../models/admin');
-const { newAdmin } = require('../models/admin-dynamo');
+const { newAdmin } = require('../models/admin');
 const { encodeToken, decodeToken } = require('../utils/jwt-token');
 const { comparePasswords } = require('../utils/password');
-const config = require('../config')
-
-// Configure AWS
-aws.config.update({
-  accessKeyId: config.AWS_ACCESS_KEY_ID,
-  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
-});
-aws.config.update({ region: 'us-west-1' });
-
-// Get instance of the database
-const db = new aws.DynamoDB.DocumentClient();
+const db = require('../services/database');
+const config = require('../config');
 
 exports.isLoggedIn = (req, res, next) => {
   // User has already been logged in if they get here
