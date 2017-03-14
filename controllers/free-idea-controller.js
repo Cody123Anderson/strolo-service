@@ -13,10 +13,10 @@ exports.getAllFreeIdeas = (req, res, next) => {
   db.scan(args, (err, data) => {
     if (err) {
       console.error('Error in getAllFreeIdeas controller function: ', err);
-      return res.status(500).send({ status: 500, data: null, error: err });
+      return res.status(500).send({ freeIdeas: null, error: err });
     }
 
-    return res.status(200).send({ status: 200, data: { freeIdeas: data.Items } });
+    return res.status(200).send({ freeIdeas: data.Items });
   });
 };
 
@@ -36,17 +36,16 @@ exports.getFreeIdeasForStatus = (req, res, next) => {
   db.scan(args, (err, data) => {
     if (err) {
       console.error('Error in getFreeIdeasForStatus controller function: ', err);
-      return res.status(500).send({ status: 500, data: null, error: err });
+      return res.status(500).send({ freeIdeas: null, error: err });
     }
 
-    return res.status(200).send({ status: 200, data: { freeIdeas: data.Items } });
+    return res.status(200).send({ freeIdeas: data.Items });
   });
 }
 
 exports.getFreeIdeasWithinRange = (req, res, next) => {
   return res.status(200).send({
-    status: 200,
-    data: {
+    freeIdeas: {
       info: 'This endpoint hasn\'t been implemented yet!'
     }
   });
@@ -62,10 +61,10 @@ exports.getFreeIdea = (req, res, next) => {
   db.get(args, (err, data) => {
     if (err) {
       console.error('Error in getFreeIdea controller function: ', err);
-      return res.status(500).send({ status: 500, data: null, error: err });
+      return res.status(500).send({ freeIdea: null, error: err });
     }
 
-    return res.status(200).send({ status: 200, data: { freeIdea: data.Item } });
+    return res.status(200).send({ freeIdea: data.Item });
   });
 }
 
@@ -85,13 +84,12 @@ exports.createFreeIdea = (req, res, next) => {
   db.put(args, (err, data) => {
     if (err) {
       console.error('Error in createFreeIdea controller function: ', err);
-      return res.status(500).send({ status: 500, data: null, error: err });
+      return res.status(500).send({ freeIdea: null, error: err });
     }
 
     return res.status(200).send({
-      status: 200,
       info: 'new freeIdea created successfully!',
-      data: { id: freeIdea.id }
+      id: freeIdea.id
     });
   });
 }
@@ -106,7 +104,7 @@ exports.updateFreeIdea = (req, res, next) => {
   db.get(args, (err, data) => {
     if (err) {
       console.error('Error in get part of updateFreeIdea controller function: ', err);
-      return res.status(500).send({ status: 500, data: null, error: err });
+      return res.status(500).send({ freeIdea: null, error: err });
     }
 
     if (data.Item) {
@@ -127,14 +125,14 @@ exports.updateFreeIdea = (req, res, next) => {
       db.update(args, (err, data) => {
         if (err) {
           console.error('Error in update part of updateFreeIdea controller function: ', err);
-          return res.status(500).send({ status: 500, data: null, error: err });
+          return res.status(500).send({ freeIdea: null, error: err });
         }
 
-        return res.status(200).send({ status: 200, data: { freeIdea: data.Attributes } });
+        return res.status(200).send({ freeIdea: data.Attributes });
       });
     } else {
       // Item doesn't exist
-      return res.status(404).send({ status: 404, error: 'no item with this id exists'});
+      return res.status(404).send({ error: 'no item with this id exists'});
     }
   });
 }
@@ -149,7 +147,7 @@ exports.deleteFreeIdea = (req, res, next) => {
   db.get(args, (err, data) => {
     if (err) {
       console.error('Error in get part of deleteFreeIdea controller function: ', err);
-      return res.status(500).send({ status: 500, data: null, error: err });
+      return res.status(500).send({ freeIdea: null, error: err });
     }
 
     if (data.Item) {
@@ -157,17 +155,14 @@ exports.deleteFreeIdea = (req, res, next) => {
       db.delete(args, (err, data) => {
         if (err) {
           console.error('Error in delete part of deleteFreeIdea controller function: ', err);
-          return res.status(500).send({ status: 500, data: null, error: err });
+          return res.status(500).send({ freeIdea: null, error: err });
         }
 
-        return res.status(200).send({
-          status: 200,
-          info: 'Successfully deleted freeIdea with ID ' + id
-        });
+        return res.status(200).send({ info: 'Successfully deleted freeIdea with ID ' + id });
       });
     } else {
       // Item doesn't exist
-      return res.status(404).send({ status: 404, error: 'no item with this id exists'});
+      return res.status(404).send({ error: 'no item with this id exists'});
     }
   });
 }
