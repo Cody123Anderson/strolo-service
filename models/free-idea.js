@@ -3,13 +3,13 @@ const cleanObj = require('../utils/clean-obj');
 function formatFreeIdea(freeIdea) {
   const newFreeIdea = {
     businessName: freeIdea.businessName,
-    categories: freeIdea.categories,
     description: freeIdea.description,
     images: freeIdea.images,
     locations: freeIdea.locations,
     name: freeIdea.name,
     retailPrice: freeIdea.retailPrice,
     status: freeIdea.status,
+    tags: freeIdea.tags,
     type: freeIdea.type
   }
 

@@ -1,9 +1,10 @@
 const jwt = require('jwt-simple');
 
 const config = require('../config');
+const { getTimestamp } = require('./timestamp');
 
 exports.encodeToken = (user) => {
-  const expiration = user.creationDate + (60 * 60 * 24 * 7); // 7 days
+  const expiration = getTimestamp() + (60 * 60 * 24 * 7); // 7 days
 
   return jwt.encode({
     sub: user.username,

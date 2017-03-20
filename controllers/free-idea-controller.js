@@ -76,6 +76,8 @@ exports.createFreeIdea = (req, res, next) => {
   freeIdea.creationDate = timestamp;
   freeIdea.lastUpdated = timestamp;
 
+  console.log('freeIdea: ', JSON.stringify(freeIdea, null, 2));
+
   const args = {
     TableName: config.TABLE_FREE_IDEA,
     Item: freeIdea,
