@@ -49,7 +49,7 @@ exports.login = (req, res) => {
           // incorrect password
           return res.status(422).send({
             status: 422,
-            error: 'incorrect password'
+            error: 'incorrect username/password combination'
           });
         }
       });
@@ -57,7 +57,7 @@ exports.login = (req, res) => {
     } else {
       return res.status(422).send({
         status: 422,
-        error: 'incorrect username'
+        error: 'incorrect username/password combination'
       });
     }
   });
