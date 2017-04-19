@@ -10,4 +10,7 @@ module.exports = (app, passport) => {
 
   /* Creates a new user */
   app.post('/user/signup', userController.signup);
+
+  /* Updates a user */
+  app.put('/user/:id', userController.update);
 }

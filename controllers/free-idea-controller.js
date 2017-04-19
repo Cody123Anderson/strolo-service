@@ -4,6 +4,7 @@ const { formatFreeIdea } = require('../models/free-idea');
 const { getUpdateExpression } = require('../utils/dynamo-expressions');
 const { getTimestamp } = require('../utils/timestamp');
 const uuid = require('../utils/uuid');
+const { shuffleArray } = require('../utils/shuffle');
 
 const identifier = 'fi';
 
@@ -16,7 +17,10 @@ exports.getAllFreeIdeas = (req, res, next) => {
       return res.status(500).send({ freeIdeas: null, error: err });
     }
 
-    return res.status(200).send({ freeIdeas: data.Items });
+    // Randomly shuffle arrray so free ideas display in a different order for each request
+    const shuffledFreeIdeas = shuffleArray(data.Items);
+
+    return res.status(200).send({ freeIdeas: shuffledFreeIdeas });
   });
 };
 

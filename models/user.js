@@ -8,6 +8,7 @@ function newUser(user, cb) {
     const newUser = {
       creationDate: getTimestamp(),
       email: user.email,
+      favorites: [],
       password: hashedPassword
     };
 
