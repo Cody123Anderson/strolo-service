@@ -12,5 +12,5 @@ module.exports = (app, passport) => {
   app.post('/user/signup', userController.signup);
 
   /* Updates a user */
-  app.put('/user/:id', userController.update);
+  // app.put('/user/:id', userController.update);
 }
