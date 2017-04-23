@@ -7,7 +7,7 @@ exports.isAuthenticated = (req, res, next) => {
   const decoded = decodeToken(token);
   const params = {
     TableName: config.TABLE_USER,
-    Key: { 'email': decoded.sub }
+    Key: { email: decoded.sub }
   };
 
   db.get(params, (err, data) => {
