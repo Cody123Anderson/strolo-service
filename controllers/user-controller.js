@@ -5,6 +5,41 @@ const { comparePasswords } = require('../utils/password');
 const db = require('../services/database');
 const config = require('../config');
 
+exports.getUserFromToken = (req, res) => {
+  const token = req.headers.authorization;
+  const decoded = decodeToken(token);
+  const email = decoded.sub;
+  const params = {
+    TableName: config.TABLE_USER,
+    Key: { email }
+  };
+
+  db.get(params, (err, data) => {
+    if (err) {
+      return res.status(500).send({
+        error: 'unable to process server request in getUserFromToken'
+      });
+    }
+
+    if (data.Item) {
+      // User exists, return the user without the password
+      const user = data.Item;
+
+      delete user.creationDate;
+      delete user.lastUpdated;
+      delete user.password;
+
+      return res.status(200).send({
+        user: user
+      });
+    } else {
+      return res.status(404).send({
+        error: 'No user found with this email address'
+      });
+    }
+  });
+};
+
 exports.isLoggedIn = (req, res) => {
   // User has already been logged in if they get here
   return res.status(200).send({
