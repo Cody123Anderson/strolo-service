@@ -19,3 +19,9 @@ exports.getUpdateExpression = (obj) => {
 
   return { expressionString, attributeNames, attributeValues };
 }
+
+exports.batchKeysFormat = (values, key) => {
+  return values.map((val) => {
+    return { [key]: val };
+  });
+}

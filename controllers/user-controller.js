@@ -1,9 +1,89 @@
 const { newUser, formatUser } = require('../models/user');
 const { encodeUserToken, decodeToken } = require('../utils/jwt-token');
-const { getUpdateExpression } = require('../utils/dynamo-expressions');
+const { getUpdateExpression, batchKeysFormat } = require('../utils/dynamo-expressions');
 const { comparePasswords } = require('../utils/password');
 const db = require('../services/database');
 const config = require('../config');
+
+exports.isLoggedIn = (req, res) => {
+  // User has already been logged in if they get here
+  return res.status(200).send({
+    loggedin: true
+  });
+};
+
+exports.getUserFavorites = (req, res) => {
+  const token = req.headers.authorization;
+  const email = decodeToken(token).sub;
+  const params = {
+    TableName: config.TABLE_USER,
+    Key: { email }
+  };
+
+  db.get(params, (err, data) => {
+    if (err) {
+      console.error('error in user getUserFavorites controller function: ', err);
+      return res.status(500).send({
+        error: 'unable to process server request in getUserFavorites'
+      });
+    }
+
+    if (data.Item) {
+      const favorites = data.Item.favorites;
+      const freeIdeaFavorites = [];
+      const ideaFavorites = [];
+
+      // Sort idea ids into freeideas and ideas
+      if (favorites) {
+        favorites.forEach((id) => {
+          if (id.substring(0, 2) === 'fi') {
+            // it's a freeIdea
+            freeIdeaFavorites.push(id);
+          } else {
+            // it's a normal idea
+            ideaFavorites.push(id);
+          }
+        });
+      }
+
+      const freeIdeaKeys = batchKeysFormat(freeIdeaFavorites, 'id');
+      const ideaKeys = batchKeysFormat(ideaFavorites, 'id');
+
+      // Get all freeIdea favorites
+      const batchParams = {
+        RequestItems: {
+          [config.TABLE_FREE_IDEA]: {
+            Keys: freeIdeaKeys
+          },
+          // [config.TABLE_IDEA]: {
+          //   Keys: ideaKeys
+          // }
+        }
+      };
+
+      db.batchGet(batchParams, (err, data) => {
+        if (err) {
+          console.error('error batch getting freeIdea favorites: ', err);
+          return res.status(500).send({
+            error: 'unable to process server request in getUserFavorites'
+          });
+        }
+
+        const freeIdeas = data.Responses[config.TABLE_FREE_IDEA];
+        // const ideas = data.Responses[config.TABLE_IDEA];
+
+        return res.status(200).send({
+          freeIdeaFavorites: freeIdeas,
+          // ideaFavorites: ideaFavorites
+        });
+      });
+    } else {
+      return res.status(404).send({
+        error: 'No user found with this email address'
+      });
+    }
+  });
+}
 
 exports.getUserFromToken = (req, res) => {
   const token = req.headers.authorization;
@@ -25,8 +105,7 @@ exports.getUserFromToken = (req, res) => {
       // User exists, return the user without the password
       const user = data.Item;
 
-      delete user.creationDate;
-      delete user.lastUpdated;
+      // Don't return the user's hashed password
       delete user.password;
 
       return res.status(200).send({
@@ -37,13 +116,6 @@ exports.getUserFromToken = (req, res) => {
         error: 'No user found with this email address'
       });
     }
-  });
-};
-
-exports.isLoggedIn = (req, res) => {
-  // User has already been logged in if they get here
-  return res.status(200).send({
-    loggedin: true
   });
 };
 
@@ -205,7 +277,12 @@ exports.update = (req, res) => {
           return res.status(500).send({ error: err });
         }
 
-        return res.status(200).send({ user: data.Attributes });
+        let displayUser = data.Attributes;
+
+        // Don't return the user's hashed password
+        delete displayUser.password;
+
+        return res.status(200).send({ user: displayUser });
       });
     } else {
       // Item doesn't exist
