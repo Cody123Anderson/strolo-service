@@ -1,6 +1,6 @@
 const { newUser, formatUser } = require('../models/user');
 const { encodeUserToken, decodeToken } = require('../utils/jwt-token');
-const { getUpdateExpression, batchKeysFormat } = require('../utils/dynamo-expressions');
+const { getUpdateExpression, batchKeysFormat } = require('../utils/dynamo');
 const { comparePasswords } = require('../utils/password');
 const db = require('../services/database');
 const config = require('../config');
@@ -176,28 +176,21 @@ exports.signup = (req, res) => {
   }
 
   // See if a user with given username already exists
-  const params = {
+  const args = {
     TableName: config.TABLE_USER,
-    ProjectionExpression: '#email',
-    FilterExpression: '#email = :email',
-    ExpressionAttributeNames: {
-      '#email': 'email'
-    },
-    ExpressionAttributeValues: {
-      ':email': email
-    }
-  };
+    Key: { email }
+  }
 
-  db.scan(params, (err, data) => {
+  db.get(args, (err, data) => {
     if (err) {
-      console.error('Error Scanning DB: ', err);
+      console.error('Error checking for user: ', err);
       return res.status(500).send({
-        error: 'Server Error scanning users: Please refresh the page and try again'
+        error: 'Server error checking for existing user: Please refresh the page and try again'
       });
     }
 
     // If a user with this email exists, return an error
-    if (data.Count > 0) {
+    if (data.Item) {
       return res.status(422).send({
         error: 'email is already in use'
       });

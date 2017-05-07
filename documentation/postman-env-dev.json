@@ -1,0 +1,58 @@
+{
+  "id": "6a58c0a1-b206-3fb1-77e2-6216b0facb63",
+  "name": "serenade-dev",
+  "values": [
+    {
+      "enabled": true,
+      "key": "url",
+      "value": "http://localhost:3000",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-password",
+      "value": "password",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-username",
+      "value": "admin",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE0OTM5MTI2NjgsImV4cCI6MTQ5NDUxNzQ2OH0.VQPQ-auNDdp3P78a3B-gF24BOiq4n4hDUt_IkFfMPLQ",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "zipcode",
+      "value": "84043",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "range",
+      "value": "50",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-email",
+      "value": "cody@serenadedates.com",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-password",
+      "value": "password",
+      "type": "text"
+    }
+  ],
+  "timestamp": 1494120892607,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2017-05-07T03:18:51.112Z",
+  "_postman_exported_using": "Postman/4.10.5"
+}

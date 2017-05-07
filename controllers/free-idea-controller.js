@@ -1,14 +1,14 @@
 const db = require('../services/database');
 const config = require('../config');
 const { formatFreeIdea } = require('../models/free-idea');
-const { getUpdateExpression } = require('../utils/dynamo-expressions');
+const { getUpdateExpression } = require('../utils/dynamo');
 const { getTimestamp } = require('../utils/timestamp');
 const uuid = require('../utils/uuid');
 const { shuffleArray } = require('../utils/shuffle');
 
 const identifier = 'fi';
 
-exports.getAllFreeIdeas = (req, res, next) => {
+exports.getAllFreeIdeas = (req, res) => {
   const args = { TableName: config.TABLE_FREE_IDEA };
 
   db.scan(args, (err, data) => {
@@ -24,7 +24,7 @@ exports.getAllFreeIdeas = (req, res, next) => {
   });
 };
 
-exports.getFreeIdeasForStatus = (req, res, next) => {
+exports.getFreeIdeasForStatus = (req, res) => {
   const status = req.params.status;
   const args = {
     TableName: config.TABLE_FREE_IDEA,
@@ -47,7 +47,7 @@ exports.getFreeIdeasForStatus = (req, res, next) => {
   });
 }
 
-exports.getFreeIdeasWithinRange = (req, res, next) => {
+exports.getFreeIdeasWithinRange = (req, res) => {
   return res.status(200).send({
     freeIdeas: {
       info: 'This endpoint hasn\'t been implemented yet!'
@@ -55,7 +55,7 @@ exports.getFreeIdeasWithinRange = (req, res, next) => {
   });
 }
 
-exports.getFreeIdea = (req, res, next) => {
+exports.getFreeIdea = (req, res) => {
   const id = req.params.id;
   const args = {
     TableName: config.TABLE_FREE_IDEA,
@@ -72,15 +72,13 @@ exports.getFreeIdea = (req, res, next) => {
   });
 }
 
-exports.createFreeIdea = (req, res, next) => {
+exports.createFreeIdea = (req, res) => {
   let freeIdea = formatFreeIdea(req.body);
   const timestamp = getTimestamp();
 
   freeIdea.id = uuid(identifier);
   freeIdea.creationDate = timestamp;
   freeIdea.lastUpdated = timestamp;
-
-  console.log('freeIdea: ', JSON.stringify(freeIdea, null, 2));
 
   const args = {
     TableName: config.TABLE_FREE_IDEA,
@@ -100,11 +98,11 @@ exports.createFreeIdea = (req, res, next) => {
   });
 }
 
-exports.updateFreeIdea = (req, res, next) => {
+exports.updateFreeIdea = (req, res) => {
   const id = req.params.id;
   let args = {
     TableName: config.TABLE_FREE_IDEA,
-    Key: { id: id }
+    Key: { id }
   }
 
   db.get(args, (err, data) => {
@@ -121,7 +119,7 @@ exports.updateFreeIdea = (req, res, next) => {
 
       args = {
         TableName: config.TABLE_FREE_IDEA,
-        Key: { id: id },
+        Key: { id },
         UpdateExpression: expression.expressionString,
         ExpressionAttributeNames: expression.attributeNames,
         ExpressionAttributeValues: expression.attributeValues,
@@ -134,7 +132,10 @@ exports.updateFreeIdea = (req, res, next) => {
           return res.status(500).send({ freeIdea: null, error: err });
         }
 
-        return res.status(200).send({ freeIdea: data.Attributes });
+        return res.status(200).send({
+          info: 'FreeIdea updated successfully!',
+          freeIdea: data.Attributes
+        });
       });
     } else {
       // Item doesn't exist
@@ -143,7 +144,7 @@ exports.updateFreeIdea = (req, res, next) => {
   });
 }
 
-exports.deleteFreeIdea = (req, res, next) => {
+exports.deleteFreeIdea = (req, res) => {
   const id = req.params.id;
   const args = {
     TableName: config.TABLE_FREE_IDEA,

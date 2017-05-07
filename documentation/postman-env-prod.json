@@ -1,0 +1,64 @@
+{
+  "id": "3e237d89-95e2-21ac-f2c8-74aa96cb0275",
+  "name": "serenade-prod",
+  "values": [
+    {
+      "enabled": true,
+      "key": "admin-username",
+      "value": "serenade-admin",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-password",
+      "value": "SerenadeDates2016",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "url",
+      "value": "https://api.serenadedates.com",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "zipcode",
+      "value": "84043",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "range",
+      "value": "50",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-email",
+      "value": "cody@serenadedates.com",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-password",
+      "value": "SerenadeDates2016",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-token",
+      "value": "",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZXJlbmFkZS1hZG1pbiIsInVzZXJuYW1lIjoic2VyZW5hZGUtYWRtaW4iLCJpYXQiOjE0OTQwODYzOTMsImV4cCI6MTQ5NDY5MTE5M30.COYVz4klUmkxP-ST6NYJvZ3xsjy2V-mn47q8n2vljHw",
+      "type": "text"
+    }
+  ],
+  "timestamp": 1494086392889,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2017-05-07T03:19:23.525Z",
+  "_postman_exported_using": "Postman/4.10.5"
+}
