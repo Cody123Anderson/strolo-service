@@ -467,6 +467,31 @@
 			"response": []
 		},
 		{
+			"name": "/locations/:id",
+			"request": {
+				"url": "{{url}}/locations/loc-1494750795-07cNO",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "/subscriber",
 			"request": {
 				"url": "{{url}}/subscriber",

@@ -24,7 +24,7 @@ module.exports.getLocation = (req, res) => {
   const id = req.params.id;
   const args = {
     TableName: config.TABLE_LOCATION,
-    Key: { id: id }
+    Key: { id }
   };
 
   db.get(args, (err, data) => {
@@ -46,22 +46,41 @@ module.exports.createLocation = (req, res) => {
     });
   }
 
-  const args = {
-    TableName: config.TABLE_LOCATION,
-    Item: location
+  // Check to make sure business exists
+  const getArgs = {
+    TableName: config.TABLE_BUSINESS,
+    Key: { id: location.businessId }
   };
 
-  db.put(args, (err, data) => {
+  db.get(getArgs, (err, data) => {
     if (err) {
-      console.error("Error adding location: ", err);
-      return res.status(500).send({
-        error: 'Server Error saving location: Please refresh the page and try again'
+      console.error('Error checking if business exists: ', err);
+      return res.status(500).send({ error: 'server error creating location' });
+    }
+
+    if (data.Item) {
+      // Good to create the location
+      const putArgs = {
+        TableName: config.TABLE_LOCATION,
+        Item: location
+      };
+
+      db.put(putArgs, (err, data) => {
+        if (err) {
+          console.error("Error adding location: ", err);
+          return res.status(500).send({
+            error: 'Server Error saving location: Please refresh the page and try again'
+          });
+        } else {
+          return res.status(200).send({
+            info: 'new location created!',
+            location: location
+          });
+        }
       });
     } else {
-      return res.status(200).send({
-        info: 'new location created!',
-        location: location
-      });
+      // Business doesn't exist
+      return res.status(404).send({ error: 'no business with the given id exists' });
     }
   });
 }
