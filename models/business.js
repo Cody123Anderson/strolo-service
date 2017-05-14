@@ -15,7 +15,6 @@ function formatNewBusiness(bus) {
       creationDate: currentTimestamp,
       id: uuid('bus'),
       lastUpdated: currentTimestamp,
-      locations: bus.locations,
       name: bus.name,
       status: bus.status
     };
@@ -29,7 +28,6 @@ function formatNewBusiness(bus) {
 function formatBusiness(bus) {
   const newBusiness = {
     lastUpdated: getTimestamp(),
-    locations: bus.locations,
     name: bus.name,
     status: bus.status,
   }

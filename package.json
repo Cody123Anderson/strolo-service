@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/Cody123Anderson/serenade-api#readme",
   "dependencies": {
-    "asynquence": "^0.10.0",
     "aws-sdk": "^2.26.0",
     "axios": "^0.15.3",
     "bcrypt-nodejs": "0.0.3",

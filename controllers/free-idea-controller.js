@@ -103,7 +103,7 @@ exports.updateFreeIdea = (req, res) => {
   let args = {
     TableName: config.TABLE_FREE_IDEA,
     Key: { id }
-  }
+  };
 
   db.get(args, (err, data) => {
     if (err) {
@@ -148,8 +148,8 @@ exports.deleteFreeIdea = (req, res) => {
   const id = req.params.id;
   const args = {
     TableName: config.TABLE_FREE_IDEA,
-    Key: { id: id }
-  }
+    Key: { id }
+  };
 
   db.get(args, (err, data) => {
     if (err) {

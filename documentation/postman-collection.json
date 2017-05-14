@@ -373,6 +373,100 @@
 			"response": []
 		},
 		{
+			"name": "/locations",
+			"request": {
+				"url": "{{url}}/locations",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/:id",
+			"request": {
+				"url": "{{url}}/locations/loc-1494749161-U5Elb",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/:id",
+			"request": {
+				"url": "{{url}}/locations/loc-1494749161-U5Elb",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"address2\": \"#403\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations",
+			"request": {
+				"url": "{{url}}/locations",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"address\": \"1476 Trinnaman Ln.\",\n  \"address2\": \"#402\",\n  \"city\": \"Lehi\",\n  \"state\": \"UT\",\n  \"zip\": \"84043\",\n  \"businessId\": \"bus-1494121432-LFp3I\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "/subscriber",
 			"request": {
 				"url": "{{url}}/subscriber",
@@ -488,7 +582,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"favorites\": [\n  \t\"fi-1490115218-GRwwT\",\n  \t\"fi-149011512111-209Gs\",\n  \t\"fi-1490805646-X5syM\",\n  \t\"fi-1491930976-wsdXW\",\n  \t\"idea-1\",\n  \t\"idea-2\"\n  ]\n}"
+					"raw": "{\n  \"favorites\": [\n    \"fi-1490115218-GRwwT\",\n    \"fi-149011512111-209Gs\",\n    \"fi-1490805646-X5syM\",\n    \"fi-1491930976-wsdXW\",\n    \"idea-1\",\n    \"idea-2\"\n  ]\n}"
 				},
 				"description": ""
 			},

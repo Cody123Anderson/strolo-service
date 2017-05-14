@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 const db = require('../services/database');
 const config = require('../config');
-const { getUpdateExpression } = require('../utils/dynamo');
+const { getUpdateExpression, batchKeysFormat } = require('../utils/dynamo');
 const { formatBusiness, formatNewBusiness } = require('../models/business');
 
 module.exports.getAllBusinesses = (req, res) => {
@@ -14,7 +14,7 @@ module.exports.getAllBusinesses = (req, res) => {
     if (err) {
       console.error('Error in getAllBusinesses controller: ', err);
       return res.status(500).send({
-        businesses: null
+        error: 'server error getting businesses'
       });
     }
 
@@ -42,9 +42,29 @@ module.exports.getBusiness = (req, res) => {
     }
 
     if (data.Item) {
-      return res.status(200).send({
-        business: data.Item
-      });
+      let business = data.Item;
+        // Add all locations to business response object
+        var scanParams = {
+          'TableName': config.TABLE_LOCATION,
+          // 'AttributesToGet': ['ID','COMMENTS','DATE'],
+          'FilterExpression': 'businessId = :busId',
+          'ExpressionAttributeValues': {
+            ':busId': business.id
+          }
+        }
+
+        db.scan(scanParams, (err, data) => {
+          if (err) {
+            console.error('error scanning locations in getBusiness function: ', err);
+            return res.status(500).send({
+              error: 'unable to process server request'
+            });
+          }
+
+          business.locations = data.Items;
+
+          return res.status(200).send({ business });
+        });
     } else {
       return res.status(404).send({
         error: 'No business found with this id'

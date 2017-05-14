@@ -2,10 +2,11 @@ const cleanObj = require('../utils/clean-obj');
 const uuid = require('../utils/uuid');
 const { getTimestamp } = require('../utils/timestamp');
 
-function newLocation(bus) {
+function newLocation(loc) {
     const currentTimestamp = getTimestamp();
     const newLocation = {
       address: loc.address,
+      address2: loc.address2,
       businessId: loc.businessId,
       city: loc.city,
       creationDate: currentTimestamp,
@@ -21,9 +22,10 @@ function newLocation(bus) {
     return newLocation;
 }
 
-function formatLocation(bus) {
+function formatLocation(loc) {
   const newLocation = {
     address: loc.address,
+    address2: loc.address2,
     businessId: loc.businessId,
     city: loc.city,
     lastUpdated: getTimestamp(),
