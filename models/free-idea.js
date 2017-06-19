@@ -1,4 +1,4 @@
-const cleanObj = require('../utils/clean-obj');
+const { cleanObj } = require('../utils/format-data');
 
 function formatFreeIdea(freeIdea) {
   const newFreeIdea = {

@@ -3,7 +3,7 @@ const _ = require('lodash');
 const db = require('../services/database');
 const config = require('../config');
 const { getUpdateExpression, batchKeysFormat } = require('../utils/dynamo');
-const { formatBusiness, formatNewBusiness } = require('../models/business');
+const { formatBusiness, newBusiness } = require('../models/business');
 
 module.exports.getAllBusinesses = (req, res) => {
   const args = {
@@ -74,7 +74,7 @@ module.exports.getBusiness = (req, res) => {
 };
 
 module.exports.createBusiness = (req, res) => {
-  let business = formatNewBusiness(req.body);
+  let business = newBusiness(req.body);
 
   if (!business.name) {
     return res.status(422).send({

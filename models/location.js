@@ -1,25 +1,16 @@
-const cleanObj = require('../utils/clean-obj');
+const { cleanObj } = require('../utils/format-data');
 const uuid = require('../utils/uuid');
 const { getTimestamp } = require('../utils/timestamp');
 
 function newLocation(loc) {
-    const currentTimestamp = getTimestamp();
+    const formattedLocation = formatLocation(loc);
     const newLocation = {
-      address: loc.address,
-      address2: loc.address2,
-      businessId: loc.businessId,
-      city: loc.city,
-      creationDate: currentTimestamp,
+      creationDate: getTimestamp(),
       id: uuid('loc'),
-      lastUpdated: currentTimestamp,
-      state: loc.state,
-      zip: loc.zip,
     };
+    const completeNewLocation = Object.assign(formattedLocation, newLocation);
 
-    // Remove null or undefined attributes
-    cleanObj(newLocation);
-
-    return newLocation;
+    return completeNewLocation;
 }
 
 function formatLocation(loc) {
@@ -29,6 +20,8 @@ function formatLocation(loc) {
     businessId: loc.businessId,
     city: loc.city,
     lastUpdated: getTimestamp(),
+    latitude: loc.latitude,
+    longitude: loc.longitude,
     state: loc.state,
     zip: loc.zip,
   };

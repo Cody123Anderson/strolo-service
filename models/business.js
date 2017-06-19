@@ -1,32 +1,29 @@
-const cleanObj = require('../utils/clean-obj');
+const { cleanObj } = require('../utils/format-data');
 const uuid = require('../utils/uuid');
 const { getTimestamp } = require('../utils/timestamp');
 
-function formatNewBusiness(bus) {
-    const currentTimestamp = getTimestamp();
-    const newBusiness = {
-      billingAddress: bus.billingAddress,
-      billingCity: bus.billingCity,
-      billingState: bus.billingState,
-      billingZip: bus.billingZip,
-      contactName: bus.contactName,
-      contactEmail: bus.contactEmail,
-      contactPhone: bus.contactPhone,
-      creationDate: currentTimestamp,
-      id: uuid('bus'),
-      lastUpdated: currentTimestamp,
-      name: bus.name,
-      status: bus.status
-    };
+function newBusiness(bus) {
+  const formattedBusiness = formatBusiness(bus);
+  const newBusiness = {
+    creationDate: getTimestamp(),
+    id: uuid('bus')
+  };
+  const completeNewBusiness = Object.assign(formattedBusiness, newBusiness);
 
-    // Remove null or undefined attributes
-    cleanObj(newBusiness);
-
-    return newBusiness;
+  return completeNewBusiness;
 }
 
 function formatBusiness(bus) {
   const newBusiness = {
+    billingAddress: bus.billingAddress,
+    billingCity: bus.billingCity,
+    billingState: bus.billingState,
+    billingZip: bus.billingZip,
+    contactName: bus.contactName,
+    contactEmail: bus.contactEmail,
+    contactPhone: bus.contactPhone,
+    contactPosition: bus.contactPosition,
+    description: bus.description,
     lastUpdated: getTimestamp(),
     name: bus.name,
     status: bus.status,
@@ -38,4 +35,4 @@ function formatBusiness(bus) {
   return newBusiness;
 }
 
-module.exports = { formatNewBusiness, formatBusiness };
+module.exports = { newBusiness, formatBusiness };

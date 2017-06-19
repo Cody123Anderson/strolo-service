@@ -1,6 +1,6 @@
 const { getTimestamp } = require('../utils/timestamp');
 const { encryptPassword } = require('../utils/password');
-const cleanObj = require('../utils/clean-obj');
+const { cleanObj } = require('../utils/format-data');
 
 function newUser(user, cb) {
   encryptPassword(user.password, (err, hashedPassword) => {
