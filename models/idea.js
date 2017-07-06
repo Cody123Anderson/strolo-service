@@ -1,48 +1,36 @@
-const cleanObj = require('../utils/clean-obj');
+const { cleanObj } = require('../utils/format-data');
 const uuid = require('../utils/uuid');
 const { getTimestamp } = require('../utils/timestamp');
 
-function newIdea(Idea) {
-  const currentTimestamp = getTimestamp();
+function newIdea(idea) {
+  const formattedIdea = formatIdea(idea);
   const newIdea = {
-    businessName: Idea.businessName,
-    creationDate: currentTimestamp,
-    description: Idea.description,
-    id: uuid('idea'),
-    images: Idea.images,
-    lastUpdated: currentTimestamp,
-    locations: Idea.locations, // Array of location ids
-    name: Idea.name,
-    retailPrice: Idea.retailPrice,
-    status: Idea.status,
-    tags: Idea.tags,
-    type: Idea.type
-  }
+    creationDate: getTimestamp(),
+    id: uuid()
+  };
 
-  // Remove null or undefined attributes
-  cleanObj(newIdea);
+  const completeIdea = Object.assign(formattedIdea, newIdea);
 
-  return newIdea;
+  return completeIdea;
 }
 
-function formatIdea(Idea) {
-  const newIdea = {
-    businessName: Idea.businessName,
-    description: Idea.description,
-    images: Idea.images,
+function formatIdea(idea) {
+  const formattedIdea = {
+    businessId: idea.businessId,
+    locations: idea.locations,  // Array of location ids
+    tags: idea.tags, // Tag Ids
+    categories: idea.categories, // category ids: Destination, Date Idea, Food, Activity, Concert
     lastUpdated: getTimestamp(),
-    locations: Idea.locations,  // Array of location ids
-    name: Idea.name,
-    retailPrice: Idea.retailPrice,
-    status: Idea.status,
-    tags: Idea.tags,
-    type: Idea.type
+    title: idea.title,
+    description: idea.description,
+    images: idea.images,
+    status: idea.status // 'active', 'under construction', 'deactivated'
   }
 
   // Remove null or undefined attributes
-  cleanObj(newIdea);
+  cleanObj(formattedIdea);
 
-  return newIdea;
+  return formattedIdea;
 }
 
 module.exports = { formatIdea, newIdea };

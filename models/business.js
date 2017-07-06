@@ -6,7 +6,7 @@ function newBusiness(bus) {
   const formattedBusiness = formatBusiness(bus);
   const newBusiness = {
     creationDate: getTimestamp(),
-    id: uuid('bus')
+    id: uuid()
   };
   const completeNewBusiness = Object.assign(formattedBusiness, newBusiness);
 
@@ -15,18 +15,17 @@ function newBusiness(bus) {
 
 function formatBusiness(bus) {
   const newBusiness = {
+    lastUpdated: getTimestamp(),
+    name: bus.name,
+    description: bus.description,
+    status: bus.status,
+    website: bus.website,
+    contacts: bus.contacts,
     billingAddress: bus.billingAddress,
     billingCity: bus.billingCity,
     billingState: bus.billingState,
     billingZip: bus.billingZip,
-    contactName: bus.contactName,
-    contactEmail: bus.contactEmail,
-    contactPhone: bus.contactPhone,
-    contactPosition: bus.contactPosition,
-    description: bus.description,
-    lastUpdated: getTimestamp(),
-    name: bus.name,
-    status: bus.status,
+    logoUrl: bus.logoUrl
   }
 
   // Remove null or undefined attributes

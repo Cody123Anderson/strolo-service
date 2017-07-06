@@ -38,50 +38,55 @@ module.exports.getLocation = (req, res) => {
 }
 
 module.exports.createLocation = (req, res) => {
-  let location = newLocation(req.body);
-
-  if (!location.businessId) {
-    return res.status(422).send({
-      error: 'You must provide a businessId with a location'
-    });
-  }
-
-  // Check to make sure business exists
-  const getArgs = {
-    TableName: config.TABLE_BUSINESS,
-    Key: { id: location.businessId }
-  };
-
-  db.get(getArgs, (err, data) => {
+  newLocation(req.body, (err, location) => {
     if (err) {
-      console.error('Error checking if business exists: ', err);
-      return res.status(500).send({ error: 'server error creating location' });
+      console.error('error creating location: ', err);
+      res.status(500).send({ err });
     }
 
-    if (data.Item) {
-      // Good to create the location
-      const putArgs = {
-        TableName: config.TABLE_LOCATION,
-        Item: location
-      };
-
-      db.put(putArgs, (err, data) => {
-        if (err) {
-          console.error("Error adding location: ", err);
-          return res.status(500).send({
-            error: 'Server Error saving location: Please refresh the page and try again'
-          });
-        } else {
-          return res.status(200).send({
-            info: 'new location created!',
-            location: location
-          });
-        }
+    if (!location.businessId) {
+      return res.status(422).send({
+        error: 'You must provide a businessId with a location'
       });
-    } else {
-      // Business doesn't exist
-      return res.status(404).send({ error: 'no business with the given id exists' });
     }
+
+    // Check to make sure business exists
+    const getArgs = {
+      TableName: config.TABLE_BUSINESS,
+      Key: { id: location.businessId }
+    };
+
+    db.get(getArgs, (err, data) => {
+      if (err) {
+        console.error('Error checking if business exists: ', err);
+        return res.status(500).send({ error: 'server error creating location' });
+      }
+
+      if (data.Item) {
+        // Good to create the location
+        const putArgs = {
+          TableName: config.TABLE_LOCATION,
+          Item: location
+        };
+
+        db.put(putArgs, (err, data) => {
+          if (err) {
+            console.error("Error adding location: ", err);
+            return res.status(500).send({
+              error: 'Server Error saving location: Please refresh the page and try again'
+            });
+          } else {
+            return res.status(200).send({
+              info: 'new location created!',
+              location: location
+            });
+          }
+        });
+      } else {
+        // Business doesn't exist
+        return res.status(404).send({ error: 'no business with the given id exists' });
+      }
+    });
   });
 }
 
@@ -100,27 +105,34 @@ module.exports.updateLocation = (req, res) => {
 
     if (data.Item) {
       // Item exists, now update it
-      const location = formatLocation(req.body);
-      const expression = getUpdateExpression(location);
+      const completeNewLocation = Object.assign(data.Item, req.body);
 
-      const updateArgs = {
-        TableName: config.TABLE_LOCATION,
-        Key: { id },
-        UpdateExpression: expression.expressionString,
-        ExpressionAttributeNames: expression.attributeNames,
-        ExpressionAttributeValues: expression.attributeValues,
-        ReturnValues: 'ALL_NEW'
-      }
-
-      db.update(updateArgs, (err, data) => {
+      formatLocation(completeNewLocation, (err, location) => {
         if (err) {
-          console.error('Error in update part of updateLocation controller function: ', err);
-          return res.status(500).send({ error: 'server error updating location' });
+          console.error('error updating location: ', err);
+          res.status(500).send({ err });
         }
 
-        return res.status(200).send({
-          info: 'Location updated successfully!',
-          location: data.Attributes
+        const expression = getUpdateExpression(location);
+        const updateArgs = {
+          TableName: config.TABLE_LOCATION,
+          Key: { id },
+          UpdateExpression: expression.expressionString,
+          ExpressionAttributeNames: expression.attributeNames,
+          ExpressionAttributeValues: expression.attributeValues,
+          ReturnValues: 'ALL_NEW'
+        }
+
+        db.update(updateArgs, (err, data) => {
+          if (err) {
+            console.error('Error in update part of updateLocation controller function: ', err);
+            return res.status(500).send({ error: 'server error updating location' });
+          }
+
+          return res.status(200).send({
+            info: 'Location updated successfully!',
+            location: data.Attributes
+          });
         });
       });
     } else {

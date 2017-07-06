@@ -1,6 +1,6 @@
 const db = require('../services/database');
 const config = require('../config');
-const { formatIdea } = require('../models/free-idea');
+const { newIdea, formatIdea } = require('../models/idea');
 const { getUpdateExpression } = require('../utils/dynamo');
 const { getTimestamp } = require('../utils/timestamp');
 const uuid = require('../utils/uuid');
@@ -71,8 +71,7 @@ exports.getIdea = (req, res) => {
 }
 
 exports.createIdea = (req, res) => {
-  let idea = newIdea(req.body);
-
+  const idea = newIdea(req.body);
   const args = {
     TableName: config.TABLE_IDEA,
     Item: idea,
@@ -86,7 +85,7 @@ exports.createIdea = (req, res) => {
 
     return res.status(200).send({
       info: 'new idea created successfully!',
-      id: idea.id
+      idea: idea
     });
   });
 }

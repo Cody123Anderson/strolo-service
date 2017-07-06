@@ -3,7 +3,7 @@ const config = require('../config');
 const { newDeal, formatDeal } = require('../models/deal');
 const { getUpdateExpression } = require('../utils/dynamo');
 
-module.exports.getAllDeals = (req, res) => {
+module.exports.getAllDealInstances = (req, res) => {
   const args = {
     TableName: config.TABLE_DEAL
   };
@@ -20,7 +20,7 @@ module.exports.getAllDeals = (req, res) => {
   });
 }
 
-module.exports.getDeal = (req, res) => {
+module.exports.getDealInstance = (req, res) => {
   const id = req.params.id;
   const args = {
     TableName: config.TABLE_DEAL,
@@ -37,7 +37,7 @@ module.exports.getDeal = (req, res) => {
   });
 }
 
-module.exports.createDeal = (req, res) => {
+module.exports.createDealInstance = (req, res) => {
   let deal = newDeal(req.body);
 
   if (!deal.businessId) {
@@ -85,7 +85,7 @@ module.exports.createDeal = (req, res) => {
   });
 }
 
-module.exports.updateDeal = (req, res) => {
+module.exports.updateDealInstance = (req, res) => {
   const id = req.params.id;
   const getArgs = {
     TableName: config.TABLE_DEAL,
@@ -130,7 +130,7 @@ module.exports.updateDeal = (req, res) => {
   });
 }
 
-module.exports.deleteDeal = (req, res) => {
+module.exports.deleteDealInstance = (req, res) => {
   const id = req.params.id;
   const getArgs = {
     TableName: config.TABLE_DEAL,

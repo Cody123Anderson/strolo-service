@@ -29,8 +29,10 @@
     "jwt-simple": "^0.5.1",
     "lodash": "^4.17.4",
     "morgan": "^1.7.0",
+    "node-geocoder": "^3.18.0",
     "nodemon": "^1.11.0",
     "sendgrid": "^4.7.1",
-    "sendgrid-rest": "^2.3.0"
+    "sendgrid-rest": "^2.3.0",
+    "uuid": "^3.1.0"
   }
 }

@@ -1,22 +1,23 @@
 const { getTimestamp } = require('../utils/timestamp');
 const { encryptPassword } = require('../utils/password');
 const { cleanObj } = require('../utils/format-data');
+const uuid = require('../utils/uuid');
 
 function newUser(user, cb) {
   encryptPassword(user.password, (err, hashedPassword) => {
     if (err) cb(err, null);
 
-    const currentTimestamp = getTimestamp();
-
+    const formattedUser = formatUser(user);
     const newUser = {
-      creationDate: currentTimestamp,
+      creationDate: getTimestamp(),
       email: user.email,
       favorites: [],
-      lastUpdated: currentTimestamp,
       password: hashedPassword
     };
 
-    cb(null, newUser);
+    const completeNewUser = Object.assign(formattedUser, newUser);
+
+    cb(null, completeNewUser);
   });
 }
 
