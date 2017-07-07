@@ -26,6 +26,7 @@ function formatDeal(deal) {
     maxPeople: deal.maxPeople,
     startDate: deal.startDate,
     endDate: deal.endDate,
+    status: deal.status // Always active unless the idea has been deleted, then it will be 'deleted'
   };
 
   // Remove null or undefined attributes

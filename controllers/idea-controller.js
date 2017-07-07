@@ -15,7 +15,7 @@ exports.getAllIdeas = (req, res) => {
       return res.status(500).send({ error: err });
     }
 
-    // Randomly shuffle arrray so free ideas display in a different order for each request
+    // Randomly shuffle arrray so ideas display in a different order for each request
     const shuffledIdeas = shuffleArray(data.Items);
 
     return res.status(200).send({ ideas: shuffledIdeas });
@@ -39,6 +39,30 @@ exports.getIdeasForStatus = (req, res) => {
     if (err) {
       console.error('Error in getIdeasForStatus controller function: ', err);
       return res.status(500).send({ ideas: null, error: err });
+    }
+
+    return res.status(200).send({ ideas: data.Items });
+  });
+}
+
+exports.getIdeasForBusiness = (req, res) => {
+  const busId = req.params.id;
+
+  const args = {
+    TableName: config.TABLE_IDEA,
+    FilterExpression: '#busId = :businessId',
+    ExpressionAttributeNames: {
+      '#busId': 'businessId'
+    },
+    ExpressionAttributeValues: {
+      ':businessId': busId
+    }
+  };
+
+  db.scan(args, (err, data) => {
+    if (err) {
+      console.error('Error in getIdeasForBusiness controller function: ', err);
+      return res.status(500).send({ error: err });
     }
 
     return res.status(200).send({ ideas: data.Items });
@@ -150,14 +174,41 @@ exports.deleteIdea = (req, res) => {
     }
 
     if (data.Item) {
-      // Item exists, now delete it
-      db.delete(args, (err, data) => {
+      if (data.Item.status === 'deleted') {
+        // Already has deleted status
+        return res.status(200).send({
+          info: 'Idea status is already \'deleted\'!',
+        });
+      }
+
+      // Update idea status to 'deleted'
+      const idea = formatIdea({ status: 'deleted' });
+      const expression = getUpdateExpression(idea);
+      const updateArgs = {
+        TableName: config.TABLE_IDEA,
+        Key: { id },
+        UpdateExpression: expression.expressionString,
+        ExpressionAttributeNames: expression.attributeNames,
+        ExpressionAttributeValues: expression.attributeValues,
+        ReturnValues: 'ALL_NEW'
+      }
+
+      db.update(updateArgs, (err, data) => {
         if (err) {
-          console.error('Error in delete part of deleteIdea controller function: ', err);
-          return res.status(500).send({ idea: null, error: err });
+          console.error('Error in update part of deleteIdea controller: ', err);
+          return res.status(500).send({ error: err });
         }
 
-        return res.status(200).send({ info: 'Successfully deleted idea with ID ' + id });
+        // Update all deal status' associated with this idea to be 'deleted'
+        /**
+          *
+          * Need to implement this!!!
+          *
+        */
+
+        return res.status(200).send({
+          info: 'Idea status set to \'deleted\'!',
+        });
       });
     } else {
       // Item doesn't exist

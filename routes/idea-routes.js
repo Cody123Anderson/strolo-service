@@ -8,6 +8,9 @@ module.exports = (app, passport) => {
   /* READ all ideas with a given status ('active' | 'inactive' | 'deleted') */
   app.get('/ideas/status/:status', ideaController.getIdeasForStatus);
 
+  /* READ all ideas for a business by id  */
+  app.get('/ideas/business/:id', ideaController.getIdeasForBusiness);
+
   /* READ all ideas within a certain range of a zipcode  */
   app.get('/ideas/zip/:zip/range/:range', ideaController.getIdeasWithinRange);
 
