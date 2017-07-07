@@ -8,6 +8,9 @@ module.exports = (app, passport) => {
   /* READ one location by id  */
   app.get('/locations/:id', locationController.getLocation);
 
+  /* READ all locations for a business by id  */
+  app.get('/locations/business/:id', locationController.getLocationsForBusiness);
+
   /* CREATE a location */
   app.post('/locations', adminAuthService.isAuthenticated, locationController.createLocation);
 

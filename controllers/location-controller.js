@@ -37,6 +37,30 @@ module.exports.getLocation = (req, res) => {
   });
 }
 
+module.exports.getLocationsForBusiness = (req, res) => {
+  const busId = req.params.id;
+
+  const args = {
+    TableName: config.TABLE_LOCATION,
+    FilterExpression: '#busId = :businessId',
+    ExpressionAttributeNames: {
+      '#busId': 'businessId'
+    },
+    ExpressionAttributeValues: {
+      ':businessId': busId
+    }
+  };
+
+  db.scan(args, (err, data) => {
+    if (err) {
+      console.error('Error in getLocationsForBusiness controller function: ', err);
+      return res.status(500).send({ error: err });
+    }
+
+    return res.status(200).send({ locations: data.Items });
+  });
+}
+
 module.exports.createLocation = (req, res) => {
   newLocation(req.body, (err, location) => {
     if (err) {
