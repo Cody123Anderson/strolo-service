@@ -1,4 +1,4 @@
-const db = require('./database')
+const { dynamo } = require('./database')
 const { decodeToken } = require('../utils/jwt-token');
 const config = require('../config');
 
@@ -10,7 +10,7 @@ exports.isAuthenticated = (req, res, next) => {
     Key: { 'username': decoded.sub }
   };
 
-  db.get(params, function(err, data) {
+  dynamo.get(params, function(err, data) {
     if (err) {
       console.error('Error in isAuthenticated controller function: ', err);
       return res.status(500).send({ status: 500, error: err });

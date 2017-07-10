@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 
-const config = require('./config');
-const routes = require('./routes/index');
+const config = require('./app/config');
+const routes = require('./app/routes/index');
 
 // Configure port
 const port = config.PORT || 3000;

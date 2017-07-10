@@ -1,80 +1,39 @@
 const _ = require('lodash');
 
-const db = require('../services/database');
 const config = require('../config');
 const { getUpdateExpression, batchKeysFormat } = require('../utils/dynamo');
-const { formatBusiness, newBusiness } = require('../models/business');
+// const { formatBusiness, newBusiness } = require('../models/business');
+const Business = require('../models/business');
 
 module.exports.getAllBusinesses = (req, res) => {
-  const args = {
-    TableName: config.TABLE_BUSINESS
-  };
-
-  db.scan(args, (err, data) => {
-    if (err) {
-      console.error('Error in getAllBusinesses controller: ', err);
-      return res.status(500).send({
-        error: 'server error getting businesses'
-      });
-    }
-
+  Business.findAll().then((businesses) => {
     // Sort the businesses alphabetically by name
-    const sortedBusinesses = _.sortBy(data.Items, ['name']);
+    const sortedBusinesses = _.sortBy(businesses, ['name']);
 
     return res.status(200).send({ businesses: sortedBusinesses });
+  }).catch(err => {
+    console.error('error in getAllBusinesses controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve businesses'
+    });
   });
 };
 
 module.exports.getBusiness = (req, res) => {
   const id = req.params.id;
 
-  const args = {
-    TableName: config.TABLE_BUSINESS,
-    Key: { id }
-  };
-
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error getting business: ', err);
-      return res.status(500).send({
-        error: 'unable to retrieve business'
-      });
-    }
-
-    if (data.Item) {
-      let business = data.Item;
-        // Add all locations to business response object
-        var scanParams = {
-          'TableName': config.TABLE_LOCATION,
-          // 'AttributesToGet': ['ID','COMMENTS','DATE'],
-          'FilterExpression': 'businessId = :busId',
-          'ExpressionAttributeValues': {
-            ':busId': business.id
-          }
-        }
-
-        db.scan(scanParams, (err, data) => {
-          if (err) {
-            console.error('error scanning locations in getBusiness function: ', err);
-            return res.status(500).send({
-              error: 'unable to process server request'
-            });
-          }
-
-          business.locations = data.Items;
-
-          return res.status(200).send({ business });
-        });
-    } else {
-      return res.status(404).send({
-        error: 'No business found with this id'
-      });
-    }
-  });
+  Business.findById(id).then(business => {
+    return res.status(200).send({ business });
+  }).catch(err => {
+    console.error('Error in getBusiness controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve business'
+    });
+  })
 };
 
 module.exports.createBusiness = (req, res) => {
-  let business = newBusiness(req.body);
+  const business = req.body;
 
   if (!business.name) {
     return res.status(422).send({
@@ -82,23 +41,16 @@ module.exports.createBusiness = (req, res) => {
     });
   }
 
-  const args = {
-    TableName: config.TABLE_BUSINESS,
-    Item: business
-  };
-
-  db.put(args, (err, data) => {
-    if (err) {
-      console.error("Error adding business: ", err);
-      return res.status(500).send({
-        error: 'Server Error saving business: Please refresh the page and try again'
-      });
-    } else {
-      return res.status(200).send({
-        info: 'new business created!',
-        business: business
-      });
-    }
+  Business.create(business).then(business => {
+    return res.status(200).send({
+      info: 'new business created!',
+      business: business
+    });
+  }).catch(err => {
+    console.error('error creating business: ', err);
+    return res.status(500).send({
+      error: 'server error creating business'
+    });
   });
 };
 
