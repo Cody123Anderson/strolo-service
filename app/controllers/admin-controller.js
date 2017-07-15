@@ -1,7 +1,7 @@
 const { newAdmin } = require('../models/admin');
 const { encodeAdminToken, decodeToken } = require('../utils/jwt-token');
 const { comparePasswords } = require('../utils/password');
-const db = require('../services/database');
+const { dynamo } = require('../services/database');
 const config = require('../config');
 
 exports.isLoggedIn = (req, res, next) => {
@@ -20,7 +20,7 @@ exports.login = (req, res) => {
     Key: { username: username }
   };
 
-  db.get(params, function(err, data) {
+  dynamo.get(params, function(err, data) {
     if (err) {
       return res.status(500).send({
         status: 500,
@@ -87,9 +87,9 @@ exports.signup = (req, res, next) => {
     }
   };
 
-  db.scan(params, (err, data) => {
+  dynamo.scan(params, (err, data) => {
     if (err) {
-      console.error('Error Scanning DB: ', err);
+      console.error('Error Scanning dynamo: ', err);
       return res.status(500).send({
         status: 500,
         error: 'Server Error scanning admins: Please refresh the page and try again'
@@ -119,12 +119,12 @@ exports.signup = (req, res, next) => {
         Item: admin
       };
 
-      db.put(createParams, (err, data) => {
+      dynamo.put(createParams, (err, data) => {
         if (err) {
           console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
           return res.status(500).send({
             status: 500,
-            error: 'Server Error creating admin in db: Please refresh the page and try again'
+            error: 'Server Error creating admin in dynamo: Please refresh the page and try again'
           });
         } else {
           return res.status(200).send({

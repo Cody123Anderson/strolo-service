@@ -1,16 +1,14 @@
-const _ = require('lodash');
-
-const config = require('../config');
-const { getUpdateExpression, batchKeysFormat } = require('../utils/dynamo');
-// const { formatBusiness, newBusiness } = require('../models/business');
-const Business = require('../models/business');
+const { Business, BusinessContact } = require('../models');
+const { sequelize } = require('../services/database');
 
 module.exports.getAllBusinesses = (req, res) => {
-  Business.findAll().then((businesses) => {
-    // Sort the businesses alphabetically by name
-    const sortedBusinesses = _.sortBy(businesses, ['name']);
-
-    return res.status(200).send({ businesses: sortedBusinesses });
+  Business.findAll({
+    order: sequelize.col('name'),
+    include: [
+      { model: BusinessContact, as: 'businessContacts'}
+    ]
+  }).then((businesses) => {
+    return res.status(200).send({ businesses });
   }).catch(err => {
     console.error('error in getAllBusinesses controller: ', err);
     return res.status(500).send({
@@ -22,7 +20,12 @@ module.exports.getAllBusinesses = (req, res) => {
 module.exports.getBusiness = (req, res) => {
   const id = req.params.id;
 
-  Business.findById(id).then(business => {
+  Business.findOne({
+    where: { id },
+    include: [
+      { model: BusinessContact, as: 'businessContacts'}
+    ]
+  }).then(business => {
     return res.status(200).send({ business });
   }).catch(err => {
     console.error('Error in getBusiness controller: ', err);
@@ -56,94 +59,23 @@ module.exports.createBusiness = (req, res) => {
 
 module.exports.updateBusiness = (req, res) => {
   const id = req.params.id;
-  const getArgs = {
-    TableName: config.TABLE_BUSINESS,
-    Key: { id }
-  }
 
-  db.get(getArgs, (err, data) => {
-    if (err) {
-      console.error('Error in get part of updateBusiness controller: ', err);
-      return res.status(500).send({ error: err });
-    }
-
-    if (data.Item) {
-      // Item exists, now update it
-      const business = formatBusiness(req.body);
-      const expression = getUpdateExpression(business);
-      const updateArgs = {
-        TableName: config.TABLE_BUSINESS,
-        Key: { id },
-        UpdateExpression: expression.expressionString,
-        ExpressionAttributeNames: expression.attributeNames,
-        ExpressionAttributeValues: expression.attributeValues,
-        ReturnValues: 'ALL_NEW'
-      }
-
-      db.update(updateArgs, (err, data) => {
-        if (err) {
-          console.error('Error in update part of updateBusiness controller: ', err);
-          return res.status(500).send({ error: err });
-        }
-
-        return res.status(200).send({
-          info: 'Business updated successfully!',
-          business: data.Attributes
-        });
-      });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no business with this id exists'});
-    }
+  Business.update(req.body, { where: { id } }).then(() => {
+    return res.status(200).send({ info: 'business updated successfully!' });
+  }).catch(err => {
+    console.error('error updating business: ', err);
+    return res.status(500).send({ error: 'server error updating business' });
   });
 };
 
 module.exports.deleteBusiness = (req, res) => {
   const id = req.params.id;
-  const getArgs = {
-    TableName: config.TABLE_BUSINESS,
-    Key: { id }
-  }
+  const data = { status: 'deleted' };
 
-  db.get(getArgs, (err, data) => {
-    if (err) {
-      console.error('Error in get part of deleteBusiness controller: ', err);
-      return res.status(500).send({ error: err });
-    }
-
-    if (data.Item) {
-      if (data.Item.status === 'deleted') {
-        // Already has deleted status
-        return res.status(200).send({
-          info: 'Business status is already \'deleted\'!',
-        });
-      }
-
-      // Update business status to 'deleted'
-      const business = formatBusiness({ status: 'deleted' });
-      const expression = getUpdateExpression(business);
-      const updateArgs = {
-        TableName: config.TABLE_BUSINESS,
-        Key: { id },
-        UpdateExpression: expression.expressionString,
-        ExpressionAttributeNames: expression.attributeNames,
-        ExpressionAttributeValues: expression.attributeValues,
-        ReturnValues: 'ALL_NEW'
-      }
-
-      db.update(updateArgs, (err, data) => {
-        if (err) {
-          console.error('Error in update part of deleteBusiness controller: ', err);
-          return res.status(500).send({ error: err });
-        }
-
-        return res.status(200).send({
-          info: 'Business status set to \'deleted\'!',
-        });
-      });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no business with this id exists'});
-    }
+  Business.update(data, { where: { id } }).then(() => {
+    return res.status(200).send({ info: 'Business status set to \'deleted\'!' });
+  }).catch(err => {
+    console.error('error deleting business: ', err);
+    return res.status(500).send({ error: 'server error deleting business' });
   });
 };

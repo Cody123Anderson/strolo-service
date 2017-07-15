@@ -3,15 +3,27 @@ const Sequelize = require('sequelize');
 const { sequelize } = require('../services/database');
 
 const Business = sequelize.define('Business', {
+  id: {
+    allowNull: false,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+    type: Sequelize.UUID
+  },
   name: {
     type: Sequelize.STRING,
-    validate: {
-      notEmpty: true
-    }
+    allowNull: false
   },
   description: {
+    type: Sequelize.STRING
+  },
+  status: {
     type: Sequelize.STRING,
-    defaultValue: '',
+    allowNull: false,
+    defaultValue: 'active'
+  },
+  websiteUrl: {
+    type: Sequelize.STRING,
+    isUrl: true
   },
   billingAddress: {
     type: Sequelize.STRING
@@ -25,25 +37,13 @@ const Business = sequelize.define('Business', {
   billingZip: {
     type: Sequelize.STRING
   },
-  website: {
-    type: Sequelize.STRING,
-    validate: {
-      isUrl: true
-    }
+  stripeToken: {
+    type: Sequelize.STRING
   },
-  status: {
+  logoUrl: {
     type: Sequelize.STRING,
-    defaultValue: 'active',
-    validate: {
-      notEmpty: true
-    }
-  },
-  logo: {
-    type: Sequelize.STRING,
-    validate: {
-      isUrl: true
-    }
-  },
+    isUrl: true
+  }
 });
 
 module.exports = Business;

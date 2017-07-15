@@ -11,13 +11,12 @@ let TABLE_LOCATION = 'Location';
 let TABLE_USER = 'User';
 
 if (process.env.NODE_ENV === 'development') {
-  DB_NAME = 'dealtrix-dev';
-  DB_USERNAME = 'cody123anderson';
-  DB_PASSWORD = 'codester8.';
+  DB_NAME = 'dealtrix_dev';
+  DB_USERNAME = 'dealtrix';
+  DB_PASSWORD = 'dealtrix';
   DB_HOST = '127.0.0.1';
   STRIPE_SECRET_KEY = 'sk_test_nGZ5IJisXAiljDuRg79tSug6';
   TABLE_ADMIN = 'TestAdmin';
-  TABLE_BUSINESS = 'TestBusiness';
   TABLE_FREE_IDEA = 'TestFreeIdea';
   TABLE_IDEA = 'TestIdea';
   TABLE_LOCATION = 'TestLocation';
@@ -42,7 +41,6 @@ module.exports = {
   SENDGRID_LIST_ID: 793453,
   STRIPE_SECRET_KEY: STRIPE_SECRET_KEY,
   TABLE_ADMIN: TABLE_ADMIN,
-  TABLE_BUSINESS: TABLE_BUSINESS,
   TABLE_FREE_IDEA: TABLE_FREE_IDEA,
   TABLE_IDEA: TABLE_IDEA,
   TABLE_LOCATION: TABLE_LOCATION,

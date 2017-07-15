@@ -1,0 +1,1108 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Dealtrix API",
+		"_postman_id": "cc03030d-71ec-80c5-f602-4ca17c91a956",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/health",
+			"request": {
+				"url": "{{url}}/health",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/admin/authenticated",
+			"request": {
+				"url": "{{url}}/admin/authenticated",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/admin/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"admin-token\", jsonData.token);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/admin/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"{{admin-username}}\",\n  \"password\": \"{{admin-password}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/admin/signup",
+			"request": {
+				"url": "{{url}}/admin/signup",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"{{admin-username}}\",\n  \"password\": \"{{admin-password}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businesses",
+			"request": {
+				"url": "{{url}}/businesses",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businesses/:id",
+			"request": {
+				"url": "{{url}}/businesses/{{current-bus-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businesses/:id",
+			"request": {
+				"url": "{{url}}/businesses/{{current-bus-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"billingAddress\": \"3247 South Tytus Ln.\",\n  \"billingCity\": \"Saratoga Springs\",\n  \"billingZip\": \"84045\",\n  \"logoUrl\": \"https://res.cloudinary.com/serenade-dates/logos/dealtrix-logo-dark.png\",\n  \"website\": \"www.dealtrix.com\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businesses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-bus-id\", jsonData.business.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/businesses",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Dealtrix\",\n  \"description\": \"Dealtrix offers the best deals on Earth!\",\n  \"websiteUrl\": \"www.dealtrixx.com\",\n  \"billingAddress\": \"1476 Trinnaman Ln.\",\n  \"billingCity\": \"Lehi\",\n  \"billingState\": \"UT\",\n  \"billingZip\": \"84043\",\n  \"stripeToken\": \"1ak13lkj5502kfslkdjf23klj\",\n  \"logoUrl\": \"broken\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businesses/:id",
+			"request": {
+				"url": "{{url}}/businesses/{{current-bus-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businessContacts/:id",
+			"request": {
+				"url": "{{url}}/businessContacts/{{current-bus-contact-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businessContacts/:id",
+			"request": {
+				"url": "{{url}}/businessContacts/{{current-bus-contact-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Cody Henderson\",\n  \"position\": \"Co-Founder\",\n  \"email\": \"cody@blah.com\",\n  \"phone\": \"(602) 541-7677\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businessContacts/:businessId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-bus-contact-id\", jsonData.businessContact.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/businessContacts/{{current-bus-id}}",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Cody Anderson\",\n  \"position\": \"Co-Founder\",\n  \"email\": \"cody@dealtrix.com\",\n  \"phone\": \"(602) 541-7677\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businessContacts/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"current-bus-contact-id\", null);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/businessContacts/{{current-bus-contact-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Cody Henderson\",\n  \"position\": \"Co-Founder\",\n  \"email\": \"cody@blah.com\",\n  \"phone\": \"(602) 541-7677\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals",
+			"request": {
+				"url": "{{url}}/deals",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals/:id",
+			"request": {
+				"url": "{{url}}/deals/asdfasdfasd",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals/:id",
+			"request": {
+				"url": "{{url}}/deals/loc-1497911865-zr0oU",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Ninja Warrior and Trampoline Course\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals",
+			"request": {
+				"url": "{{url}}/deals",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"ideaId\": \"{{current-idea-id}}\",\n    \"title\": \"Buy 1 Get 1 Free\",\n    \"details\": \"Good for two admission tickets for the price of one\",\n    \"retailPrice\": 50,\n    \"discountPercent\": 50,\n    \"discountPricePer\": 12.5,\n    \"maxRedemptions\": 1,\n    \"minPeople\": 2,\n    \"maxPeople\": 2,\n    \"startDate\": 1499465013000,\n    \"endDate\": 1499565013000,\n    \"status\": \"active\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals/:id",
+			"request": {
+				"url": "{{url}}/deals/loc-1497911865-zr0oU",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/freeideas",
+			"request": {
+				"url": "{{url}}/freeideas",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/freeideas/status/:status",
+			"request": {
+				"url": "{{url}}/freeideas/status/active",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/freeideas/zip/:zip/range/:range",
+			"request": {
+				"url": "{{url}}/freeideas/zip/{{zipcode}}/range/{range}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/freeideas/:id",
+			"request": {
+				"url": "{{url}}/freeideas/{{freeIdeaID}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/freeideas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"freeIdeaID\", jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/freeideas",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"businessName\": \"Test Business\",\n  \"categories\": [\"Romantic\", \"Spontaneous\"],\n  \"description\": \"This is a test date. This really is a test date.\",\n  \"images\": [{\n    \"id\": \"v1480801812\",\n    \"url\": \"https://res.cloudinary.com/serenade-dates/image/upload/v1480801812/emails/firstdate.jpg\"\n  }],\n  \"locations\": [{\n    \"address\": \"1489 Test Ln.\",\n    \"city\": \"Provo\",\n    \"state\": \"UT\",\n    \"zip\": \"84606\"\n  }],\n  \"name\": \"Test date\",\n  \"retailPrice\": 44.99,\n  \"status\": \"active\",\n  \"type\": \"activity\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/freeideas/:id",
+			"request": {
+				"url": "{{url}}/freeideas/{{freeIdeaID}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"businessName\": \"Trampoline Nation\",\n  \"name\": \"Become Ninja Warriors\",\n  \"retailPrice\": 54.99,\n  \"status\": \"inactive\",\n  \"type\": \"fun\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/freeideas/:id",
+			"request": {
+				"url": "{{url}}/freeideas/{{freeIdeaID}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"business_name\": \"Test Business\",\n  \"categories\": [{ \n    \"name\": \"Test\"\n  }],\n  \"description\": \"This is a test date. This really is a test date.\",\n  \"images\": [{\n    \"id\": \"v1480801812\",\n    \"url\": \"https://res.cloudinary.com/serenade-dates/image/upload/v1480801812/emails/firstdate.jpg\"\n  }],\n  \"locations\": [{\n    \"address\": \"1489 Test Ln.\",\n    \"city\": \"Provo\",\n    \"state\": \"UT\",\n    \"zip\": \"84606\"\n  }],\n  \"name\": \"Test date\",\n  \"retail_price\": 44.99,\n  \"status\": \"active\",\n  \"type\": \"food/fun\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas",
+			"request": {
+				"url": "{{url}}/ideas",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/:id",
+			"request": {
+				"url": "{{url}}/ideas/{{current-idea-id}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/status/:status",
+			"request": {
+				"url": "{{url}}/ideas/status/active",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/business/:id",
+			"request": {
+				"url": "{{url}}/ideas/business/{{current-bus-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/:id",
+			"request": {
+				"url": "{{url}}/ideas/{{current-idea-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tags\": [\"1\", \"2\", \"3\", \"4\"],\n  \"categories\": [\"1\", \"2\", \"3\", \"4\"],\n  \"title\": \"Very Fun Test date\",\n  \"description\": \"This is a test date. This really is a test date. Duh.\",\n  \"status\": \"active\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-idea-id\", jsonData.idea.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/ideas",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"businessId\": \"{{current-bus-id}}\",\n  \"locations\": [\"{{current-loc-id}}\"],\n  \"tags\": [\"1\", \"2\", \"3\"],\n  \"categories\": [\"1\", \"2\", \"3\"],\n  \"title\": \"Test date\",\n  \"description\": \"This is a test date. This really is a test date.\",\n  \"images\": [{\n    \"id\": \"v1480801812\",\n    \"url\": \"https://res.cloudinary.com/serenade-dates/emails/firstdate.jpg\"\n  }],\n  \"status\": \"under construction\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/:id",
+			"request": {
+				"url": "{{url}}/ideas/{{current-idea-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"business_name\": \"Test Business\",\n  \"categories\": [{ \n    \"name\": \"Test\"\n  }],\n  \"description\": \"This is a test date. This really is a test date.\",\n  \"images\": [{\n    \"id\": \"v1480801812\",\n    \"url\": \"https://res.cloudinary.com/serenade-dates/image/upload/v1480801812/emails/firstdate.jpg\"\n  }],\n  \"locations\": [{\n    \"address\": \"1489 Test Ln.\",\n    \"city\": \"Provo\",\n    \"state\": \"UT\",\n    \"zip\": \"84606\"\n  }],\n  \"name\": \"Test date\",\n  \"retail_price\": 44.99,\n  \"status\": \"active\",\n  \"type\": \"food/fun\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/images",
+			"request": {
+				"url": "{{url}}/images",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"dataURL\": \"\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations",
+			"request": {
+				"url": "{{url}}/locations",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/:id",
+			"request": {
+				"url": "{{url}}/locations/{{current-loc-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/business/:id",
+			"request": {
+				"url": "{{url}}/locations/business/{{current-bus-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/:id",
+			"request": {
+				"url": "{{url}}/locations/{{current-loc-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"address\": \"3247 South Tytus Lane\",\n  \"address2\": \"\",\n  \"city\": \"Saratoga Springs\",\n  \"zip\": \"84045\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-loc-id\", jsonData.location.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/locations",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"address\": \"1476 Trinnaman Ln.\",\n  \"address2\": \"#402\",\n  \"city\": \"Lehi\",\n  \"state\": \"UT\",\n  \"zip\": \"84043\",\n  \"businessId\": \"{{current-bus-id}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/:id",
+			"request": {
+				"url": "{{url}}/locations/loc-1497911865-zr0oU",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/subscriber",
+			"request": {
+				"url": "{{url}}/subscriber",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"cody123anderson@gmail.com\",\n  \"region\": \"Utah Valley\",\n  \"state\": \"Utah\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/user",
+			"request": {
+				"url": "{{url}}/user",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{user-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"favorites\": [\"1235\"]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/user/authenticated",
+			"request": {
+				"url": "{{url}}/user/authenticated",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{user-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/user/favorites",
+			"request": {
+				"url": "{{url}}/user/favorites",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{user-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"favorites\": [\"1235\"]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/user",
+			"request": {
+				"url": "{{url}}/user",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{user-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"favorites\": [\n    \"fi-1490115218-GRwwT\",\n    \"fi-149011512111-209Gs\",\n    \"fi-1490805646-X5syM\",\n    \"fi-1491930976-wsdXW\",\n    \"idea-1\",\n    \"idea-2\"\n  ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/user/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"user-token\", jsonData.token);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/user/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{user-email}}\",\n  \"password\": \"{{user-password}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/user/signup",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"user-token\", jsonData.token);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/user/signup",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{user-email}}\",\n  \"password\": \"{{user-password}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

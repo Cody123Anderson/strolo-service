@@ -23,6 +23,23 @@ app.use(cors());
 // Load routes into application
 routes(app);
 
+// 404 routes
+app.get('*', function(req, res){
+  res.send({ statusCode: 404, error: 'Route not found' });
+});
+
+app.put('*', function(req, res){
+  res.send({ statusCode: 404, error: 'Route not found' });
+});
+
+app.post('*', function(req, res){
+  res.send({ statusCode: 404, error: 'Route not found' });
+});
+
+app.delete('*', function(req, res){
+  res.send({ statusCode: 404, error: 'Route not found' });
+});
+
 app.listen(port, (err) => {
   if (err) console.error('Error starting server: ' + err);
   console.info('Running server on port: ' + port);

@@ -1,5 +1,6 @@
 const adminRoutes = require('./admin-routes');
 const businessRoutes = require('./business-routes');
+const businessContactRoutes = require('./business-contact-routes');
 const dealRoutes = require('./deal-routes');
 const dealInstanceRoutes = require('./deal-instance-routes');
 const emailSubscriberRoutes = require('./email-subscriber-routes');
@@ -13,6 +14,7 @@ const userRoutes = require('./user-routes');
 module.exports = (app) => {
   adminRoutes(app);
   businessRoutes(app);
+  businessContactRoutes(app);
   dealRoutes(app);
   dealInstanceRoutes(app);
   emailSubscriberRoutes(app);
