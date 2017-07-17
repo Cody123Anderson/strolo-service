@@ -4,10 +4,7 @@ let DB_PASSWORD = 'Dealtrix2017.';
 let DB_HOST = '';
 let STRIPE_SECRET_KEY = 'sk_live_FtyFa5fFIvl5U1eYfVffdtUa';
 let TABLE_ADMIN = 'Admin';
-let TABLE_BUSINESS = 'Business';
 let TABLE_FREE_IDEA = 'FreeIdea';
-let TABLE_IDEA = 'Idea';
-let TABLE_LOCATION = 'Location';
 let TABLE_USER = 'User';
 
 if (process.env.NODE_ENV === 'development') {
@@ -18,8 +15,6 @@ if (process.env.NODE_ENV === 'development') {
   STRIPE_SECRET_KEY = 'sk_test_nGZ5IJisXAiljDuRg79tSug6';
   TABLE_ADMIN = 'TestAdmin';
   TABLE_FREE_IDEA = 'TestFreeIdea';
-  TABLE_IDEA = 'TestIdea';
-  TABLE_LOCATION = 'TestLocation';
   TABLE_USER = 'TestUser';
 }
 
@@ -42,7 +37,5 @@ module.exports = {
   STRIPE_SECRET_KEY: STRIPE_SECRET_KEY,
   TABLE_ADMIN: TABLE_ADMIN,
   TABLE_FREE_IDEA: TABLE_FREE_IDEA,
-  TABLE_IDEA: TABLE_IDEA,
-  TABLE_LOCATION: TABLE_LOCATION,
   TABLE_USER: TABLE_USER
 };

@@ -1,4 +1,4 @@
-const { Business, BusinessContact } = require('../models');
+const { Business, BusinessContact, Location } = require('../models');
 const { sequelize } = require('../services/database');
 
 module.exports.getAllBusinesses = (req, res) => {
@@ -23,7 +23,8 @@ module.exports.getBusiness = (req, res) => {
   Business.findOne({
     where: { id },
     include: [
-      { model: BusinessContact, as: 'businessContacts'}
+      { model: BusinessContact, as: 'businessContacts'},
+      { model: Location, as: 'locations'}
     ]
   }).then(business => {
     return res.status(200).send({ business });

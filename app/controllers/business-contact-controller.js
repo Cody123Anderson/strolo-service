@@ -8,9 +8,10 @@ module.exports.getBusinessContact = (req, res) => {
   }).catch(err => {
     console.error('Error in getBusinessContact controller: ', err);
     return res.status(500).send({
-      error: 'unable to retrieve businessContact'
+      error: 'unable to retrieve businessContact',
+      details: err
     });
-  })
+  });
 };
 
 module.exports.createBusinessContact = (req, res) => {

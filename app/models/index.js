@@ -10,6 +10,11 @@ Business.hasMany(BusinessContact, {
   as: 'businessContacts'
 });
 
+Business.hasMany(Location, {
+  foreignKey: 'businessId',
+  as: 'locations'
+});
+
 /**
   * BusinessContact Model Associations
 **/
@@ -21,6 +26,10 @@ BusinessContact.belongsTo(Business, {
 /**
   * Location Model Associations
 **/
+Location.belongsTo(Business, {
+  foreignKey: 'businessId',
+  onDelete: 'CASCADE',
+});
 
 module.exports = {
   Business,

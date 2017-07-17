@@ -1,198 +1,113 @@
 const db = require('../services/database');
 const config = require('../config');
-// const { Location } = require('../models');
-// const { formatLocation } = require('../models/location');
+const { Location } = require('../models');
+const { formatLocation } = require('../models/location');
 const { getUpdateExpression } = require('../utils/dynamo');
-
-module.exports.getAllLocations = (req, res) => {
-  const args = {
-    TableName: config.TABLE_LOCATION
-  };
-
-  db.scan(args, (err, data) => {
-    if (err) {
-      console.error('Error in getAllLocations controller: ', err);
-      return res.status(500).send({
-        error: 'server error getting locations'
-      });
-    }
-
-    return res.status(200).send({ locations: data.Items });
-  });
-}
 
 module.exports.getLocation = (req, res) => {
   const id = req.params.id;
-  const args = {
-    TableName: config.TABLE_LOCATION,
-    Key: { id }
-  };
 
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error in getLocation controller function: ', err);
-      return res.status(500).send({ error: 'server error getting location' });
-    }
-
-    return res.status(200).send({ location: data.Item });
+  Location.findById(id).then(location => {
+    return res.status(200).send({ location });
+  }).catch(err => {
+    console.error('Error in getLocation controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve location',
+      details: err
+    });
   });
 }
 
 module.exports.getLocationsForBusiness = (req, res) => {
-  const busId = req.params.id;
+  const { businessId } = req.params;
 
-  const args = {
-    TableName: config.TABLE_LOCATION,
-    FilterExpression: '#busId = :businessId',
-    ExpressionAttributeNames: {
-      '#busId': 'businessId'
-    },
-    ExpressionAttributeValues: {
-      ':businessId': busId
-    }
-  };
-
-  db.scan(args, (err, data) => {
-    if (err) {
-      console.error('Error in getLocationsForBusiness controller function: ', err);
-      return res.status(500).send({ error: err });
-    }
-
-    return res.status(200).send({ locations: data.Items });
+  Location.findAll({
+    where: { businessId }
+  }).then(locations => {
+    return res.status(200).send({ locations });
+  }).catch(err => {
+    console.error('Error in getLocationsForBusiness controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve locations',
+      details: err
+    });
   });
 }
 
 module.exports.createLocation = (req, res) => {
-  newLocation(req.body, (err, location) => {
+  formatLocation(req.body, (err, formattedLocation) => {
     if (err) {
       console.error('error creating location: ', err);
-      res.status(500).send({ err });
+      return res.status(500).send({
+        error: 'error creating location',
+        details: err
+      });
     }
 
-    if (!location.businessId) {
+    if (!formattedLocation.businessId) {
       return res.status(422).send({
         error: 'You must provide a businessId with a location'
       });
     }
 
-    // Check to make sure business exists
-    const getArgs = {
-      TableName: config.TABLE_BUSINESS,
-      Key: { id: location.businessId }
-    };
-
-    db.get(getArgs, (err, data) => {
-      if (err) {
-        console.error('Error checking if business exists: ', err);
-        return res.status(500).send({ error: 'server error creating location' });
-      }
-
-      if (data.Item) {
-        // Good to create the location
-        const putArgs = {
-          TableName: config.TABLE_LOCATION,
-          Item: location
-        };
-
-        db.put(putArgs, (err, data) => {
-          if (err) {
-            console.error("Error adding location: ", err);
-            return res.status(500).send({
-              error: 'Server Error saving location: Please refresh the page and try again'
-            });
-          } else {
-            return res.status(200).send({
-              info: 'new location created!',
-              location: location
-            });
-          }
-        });
-      } else {
-        // Business doesn't exist
-        return res.status(404).send({ error: 'no business with the given id exists' });
-      }
+    Location.create(formattedLocation).then(location => {
+      return res.status(200).send({
+        info: 'new location created!',
+        location: location
+      });
+    }).catch(err => {
+      console.error('error creating location: ', err);
+      return res.status(500).send({
+        error: 'server error creating location',
+        details: err
+      });
     });
   });
 }
 
 module.exports.updateLocation = (req, res) => {
   const id = req.params.id;
-  const getArgs = {
-    TableName: config.TABLE_LOCATION,
-    Key: { id }
-  };
 
-  db.get(getArgs, (err, data) => {
-    if (err) {
-      console.error('Error in get part of updateLocation controller function: ', err);
-      return res.status(500).send({ error: 'server error updating location' });
-    }
+  Location.findById(id).then(location => {
+    const completeNewLocation = Object.assign(location, req.body);
 
-    if (data.Item) {
-      // Item exists, now update it
-      const completeNewLocation = Object.assign(data.Item, req.body);
-
-      formatLocation(completeNewLocation, (err, location) => {
-        if (err) {
-          console.error('error updating location: ', err);
-          res.status(500).send({ err });
-        }
-
-        const expression = getUpdateExpression(location);
-        const updateArgs = {
-          TableName: config.TABLE_LOCATION,
-          Key: { id },
-          UpdateExpression: expression.expressionString,
-          ExpressionAttributeNames: expression.attributeNames,
-          ExpressionAttributeValues: expression.attributeValues,
-          ReturnValues: 'ALL_NEW'
-        }
-
-        db.update(updateArgs, (err, data) => {
-          if (err) {
-            console.error('Error in update part of updateLocation controller function: ', err);
-            return res.status(500).send({ error: 'server error updating location' });
-          }
-
-          return res.status(200).send({
-            info: 'Location updated successfully!',
-            location: data.Attributes
-          });
+    formatLocation(completeNewLocation, (err, formattedLocation) => {
+      if (err) {
+        console.error('error updating location: ', err);
+        res.status(500).send({
+          error: 'unable to update location',
+          details: err
         });
+      }
+
+      Location.update(formattedLocation, {
+        where: { id }
+      }).then(() => {
+        return res.status(200).send({ info: 'location updated successfully!' });
+      }).catch(err => {
+        console.error('error updating businessContact: ', err);
+        return res.status(500).send({ error: 'server error updating businessContact' });
       });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no location with this id exists' });
-    }
+    });
+  }).catch(err => {
+    console.error('Error in updateLocation controller: ', err);
+    return res.status(500).send({
+      error: 'unable to update location',
+      details: err
+    });
   });
 }
 
 module.exports.deleteLocation = (req, res) => {
   const id = req.params.id;
-  const args = {
-    TableName: config.TABLE_LOCATION,
-    Key: { id }
-  };
 
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error in get part of deleteLocation controller function: ', err);
-      return res.status(500).send({ error: 'server error deleting location' });
-    }
-
-    if (data.Item) {
-      // Item exists, now delete it
-      db.delete(args, (err, data) => {
-        if (err) {
-          console.error('Error in delete part of deleteLocation controller function: ', err);
-          return res.status(500).send({ error: 'server error deleting location' });
-        }
-
-        return res.status(200).send({ info: 'Successfully deleted location with ID ' + id });
-      });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no location with this id exists'});
-    }
+  Location.destroy({ where: { id } }).then(() => {
+    return res.status(200).send({ info: 'location was destroyed!' });
+  }).catch(err => {
+    console.error('error deleting location: ', err);
+    return res.status(500).send({
+      error: 'server error deleting location',
+      details: err
+    });
   });
 }
