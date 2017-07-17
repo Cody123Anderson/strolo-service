@@ -1,75 +1,58 @@
-const db = require('../services/database');
-const config = require('../config');
-const { newIdea, formatIdea } = require('../models/idea');
-const { getUpdateExpression } = require('../utils/dynamo');
-const { getTimestamp } = require('../utils/timestamp');
-const uuid = require('../utils/uuid');
+const { Idea } = require('../models');
+const { sequelize } = require('../services/database');
 const { shuffleArray } = require('../utils/shuffle');
 
 exports.getAllIdeas = (req, res) => {
-  const args = { TableName: config.TABLE_IDEA };
-
-  db.scan(args, (err, data) => {
-    if (err) {
-      console.error('Error in getAllIdeas controller function: ', err);
-      return res.status(500).send({ error: err });
-    }
-
-    // Randomly shuffle arrray so ideas display in a different order for each request
-    const shuffledIdeas = shuffleArray(data.Items);
-
-    return res.status(200).send({ ideas: shuffledIdeas });
+  Idea.findAll({
+    order: sequelize.col('title')
+  }).then((ideas) => {
+    return res.status(200).send({ ideas });
+  }).catch(err => {
+    console.error('error in getAllIdeas controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve ideas',
+      details: err
+    });
   });
 };
 
 exports.getIdeasForStatus = (req, res) => {
-  const status = req.params.status;
-  const args = {
-    TableName: config.TABLE_IDEA,
-    FilterExpression: '#stat = :status',
-    ExpressionAttributeNames: {
-      '#stat': 'status'
-    },
-    ExpressionAttributeValues: {
-      ':status': status
-    }
-  };
+  const { status } = req.params;
 
-  db.scan(args, (err, data) => {
-    if (err) {
-      console.error('Error in getIdeasForStatus controller function: ', err);
-      return res.status(500).send({ ideas: null, error: err });
-    }
+  Idea.findAll({
+    where: { status },
+    order: sequelize.col('title')
+  }).then((ideas) => {
+    const shuffledIdeas = shuffleArray(ideas);
 
-    return res.status(200).send({ ideas: data.Items });
+    return res.status(200).send({ ideas: shuffledIdeas });
+  }).catch(err => {
+    console.error('error in getIdeasForStatus controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve ideas',
+      details: err
+    });
   });
 }
 
 exports.getIdeasForBusiness = (req, res) => {
-  const busId = req.params.id;
+  const { businessId } = req.params;
 
-  const args = {
-    TableName: config.TABLE_IDEA,
-    FilterExpression: '#busId = :businessId',
-    ExpressionAttributeNames: {
-      '#busId': 'businessId'
-    },
-    ExpressionAttributeValues: {
-      ':businessId': busId
-    }
-  };
-
-  db.scan(args, (err, data) => {
-    if (err) {
-      console.error('Error in getIdeasForBusiness controller function: ', err);
-      return res.status(500).send({ error: err });
-    }
-
-    return res.status(200).send({ ideas: data.Items });
+  Idea.findAll({
+    where: { businessId },
+    order: sequelize.col('title')
+  }).then((ideas) => {
+    return res.status(200).send({ ideas });
+  }).catch(err => {
+    console.error('error in getIdeasForBusiness controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve ideas',
+      details: err
+    });
   });
 }
 
-exports.getIdeasWithinRange = (req, res) => {
+exports.getIdeasWithinRadius = (req, res) => {
   return res.status(200).send({
     ideas: {
       info: 'This endpoint hasn\'t been implemented yet!'
@@ -78,141 +61,77 @@ exports.getIdeasWithinRange = (req, res) => {
 }
 
 exports.getIdea = (req, res) => {
-  const id = req.params.id;
-  const args = {
-    TableName: config.TABLE_IDEA,
-    Key: { id: id }
-  }
+  const { id } = req.params;
 
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error in getIdea controller function: ', err);
-      return res.status(500).send({ idea: null, error: err });
-    }
-
-    return res.status(200).send({ idea: data.Item });
+  Idea.findOne({
+    where: { id }
+  }).then(idea => {
+    return res.status(200).send({ idea });
+  }).catch(err => {
+    console.error('Error in getIdea controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve idea',
+      details: err
+    });
   });
 }
 
 exports.createIdea = (req, res) => {
-  const idea = newIdea(req.body);
-  const args = {
-    TableName: config.TABLE_IDEA,
-    Item: idea,
-  };
+  const idea = req.body;
 
-  db.put(args, (err, data) => {
-    if (err) {
-      console.error('Error in createIdea controller function: ', err);
-      return res.status(500).send({ error: err });
-    }
+  if (!idea.title) {
+    return res.status(422).send({
+      error: 'You must provide a title'
+    });
+  } else if (!idea.businessId) {
+    return res.status(422).send({
+      error: 'You must provide a businessId'
+    });
+  }
 
+  Idea.create(idea).then(newIdea => {
     return res.status(200).send({
-      info: 'new idea created successfully!',
-      idea: idea
+      info: 'new idea created!',
+      idea: newIdea
+    });
+  }).catch(err => {
+    console.error('error creating idea: ', err);
+    return res.status(500).send({
+      error: 'server error creating idea',
+      details: err
     });
   });
 }
 
 exports.updateIdea = (req, res) => {
-  const id = req.params.id;
-  let args = {
-    TableName: config.TABLE_IDEA,
-    Key: { id }
-  };
+  const { id } = req.params;
 
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error in get part of updateIdea controller function: ', err);
-      return res.status(500).send({ idea: null, error: err });
-    }
-
-    if (data.Item) {
-      // Item exists, now update it
-      const idea = formatIdea(req.body);
-      idea.lastUpdated = getTimestamp();
-      const expression = getUpdateExpression(idea);
-
-      args = {
-        TableName: config.TABLE_IDEA,
-        Key: { id },
-        UpdateExpression: expression.expressionString,
-        ExpressionAttributeNames: expression.attributeNames,
-        ExpressionAttributeValues: expression.attributeValues,
-        ReturnValues: 'ALL_NEW'
-      }
-
-      db.update(args, (err, data) => {
-        if (err) {
-          console.error('Error in update part of updateIdea controller function: ', err);
-          return res.status(500).send({ idea: null, error: err });
-        }
-
-        return res.status(200).send({
-          info: 'idea updated successfully!',
-          idea: data.Attributes
-        });
-      });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no item with this id exists'});
-    }
+  Idea.update(req.body, { where: { id } }).then(() => {
+    return res.status(200).send({
+      info: 'idea updated successfully!'
+    });
+  }).catch(err => {
+    console.error('error updating idea: ', err);
+    return res.status(500).send({
+      error: 'server error updating idea',
+      details: err
+    });
   });
 }
 
 exports.deleteIdea = (req, res) => {
-  const id = req.params.id;
-  const args = {
-    TableName: config.TABLE_IDEA,
-    Key: { id }
-  };
+  const { id } = req.params;
+  const data = { status: 'deleted' };
 
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error in get part of deleteIdea controller function: ', err);
-      return res.status(500).send({ idea: null, error: err });
-    }
-
-    if (data.Item) {
-      if (data.Item.status === 'deleted') {
-        // Already has deleted status
-        return res.status(200).send({
-          info: 'Idea status is already \'deleted\'!',
-        });
-      }
-
-      // Update idea status to 'deleted'
-      const idea = formatIdea({ status: 'deleted' });
-      const expression = getUpdateExpression(idea);
-      const updateArgs = {
-        TableName: config.TABLE_IDEA,
-        Key: { id },
-        UpdateExpression: expression.expressionString,
-        ExpressionAttributeNames: expression.attributeNames,
-        ExpressionAttributeValues: expression.attributeValues,
-        ReturnValues: 'ALL_NEW'
-      }
-
-      db.update(updateArgs, (err, data) => {
-        if (err) {
-          console.error('Error in update part of deleteIdea controller: ', err);
-          return res.status(500).send({ error: err });
-        }
-
-        // Update all deal status' associated with this idea to be 'deleted'
-        /**
-          *
-          * Need to implement this!!!
-          *
-        */
-
-        return res.status(200).send({
-          info: 'Idea status set to \'deleted\'!',
-        });
-      });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no item with this id exists'});
-    }
+  Idea.update(data, { where: { id } }).then(() => {
+    return res.status(200).send({
+      info: 'Idea status set to \'deleted\'!'
+    });
+  }).catch(err => {
+    console.error('error deleting idea: ', err);
+    return res.status(500).send({
+      error: 'server error deleting idea',
+      details: err
+    });
   });
 }

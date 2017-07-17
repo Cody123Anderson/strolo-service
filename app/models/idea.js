@@ -1,36 +1,44 @@
-const { cleanObj } = require('../utils/format-data');
-const uuid = require('../utils/uuid');
-const { getTimestamp } = require('../utils/timestamp');
+const Sequelize = require('sequelize');
 
-function newIdea(idea) {
-  const formattedIdea = formatIdea(idea);
-  const newIdea = {
-    creationDate: getTimestamp(),
-    id: uuid()
-  };
+const { sequelize } = require('../services/database');
 
-  const completeIdea = Object.assign(formattedIdea, newIdea);
-
-  return completeIdea;
-}
-
-function formatIdea(idea) {
-  const formattedIdea = {
-    businessId: idea.businessId,
-    locations: idea.locations,  // Array of location ids
-    tags: idea.tags, // Tag Ids
-    categories: idea.categories, // category ids: Destination, Date Idea, Food, Activity, Concert
-    lastUpdated: getTimestamp(),
-    title: idea.title,
-    description: idea.description,
-    images: idea.images,
-    status: idea.status // 'active', 'under construction', 'deactivated'
+const Idea = sequelize.define('Idea', {
+  id: {
+    allowNull: false,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+    type: Sequelize.UUID
+  },
+  businessId: {
+    type: Sequelize.UUID,
+    onDelete: 'CASCADE',
+    references: {
+      model: 'Businesses',
+      key: 'id',
+      as: 'businessId',
+    },
+    allowNull: false
+  },
+  createdAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
+  updatedAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
+  title: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  description: {
+    type: Sequelize.STRING
+  },
+  status: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    defaultValue: 'Under Construction' // 'Active', 'Under Construction', 'Deactivated'
   }
+});
 
-  // Remove null or undefined attributes
-  cleanObj(formattedIdea);
-
-  return formattedIdea;
-}
-
-module.exports = { formatIdea, newIdea };
+module.exports = Idea;

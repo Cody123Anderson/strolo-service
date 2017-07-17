@@ -1,11 +1,21 @@
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Businesses', {
+    return queryInterface.createTable('Ideas', {
       id: {
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         type: Sequelize.UUID
+      },
+      businessId: {
+        type: Sequelize.UUID,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Businesses',
+          key: 'id',
+          as: 'businessId',
+        },
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -15,7 +25,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      name: {
+      title: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -25,34 +35,11 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'Active'
-      },
-      websiteUrl: {
-        type: Sequelize.STRING,
-        isUrl: true
-      },
-      billingAddress: {
-        type: Sequelize.STRING
-      },
-      billingCity: {
-        type: Sequelize.STRING
-      },
-      billingState: {
-        type: Sequelize.STRING
-      },
-      billingZip: {
-        type: Sequelize.STRING
-      },
-      stripeToken: {
-        type: Sequelize.STRING
-      },
-      logoUrl: {
-        type: Sequelize.STRING,
-        isUrl: true
+        defaultValue: 'Under Construction'
       }
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Businesses');
+    return queryInterface.dropTable('Ideas');
   }
 };

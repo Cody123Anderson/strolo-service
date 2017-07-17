@@ -9,10 +9,13 @@ module.exports = (app, passport) => {
   app.get('/ideas/status/:status', ideaController.getIdeasForStatus);
 
   /* READ all ideas for a business by id  */
-  app.get('/ideas/business/:id', ideaController.getIdeasForBusiness);
+  app.get(
+    '/ideas/business/:businessId',
+    ideaController.getIdeasForBusiness
+  );
 
-  /* READ all ideas within a certain range of a zipcode  */
-  app.get('/ideas/zip/:zip/range/:range', ideaController.getIdeasWithinRange);
+  /* READ all ideas within a certain mile radius of a zipcode  */
+  app.get('/ideas/zip/:zip/radius/:miles', ideaController.getIdeasWithinRadius);
 
   /* READ one idea by id  */
   app.get('/ideas/:id', ideaController.getIdea);
