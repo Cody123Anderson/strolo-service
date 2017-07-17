@@ -9,6 +9,14 @@ const Business = sequelize.define('Business', {
     primaryKey: true,
     type: Sequelize.UUID
   },
+  createdAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
+  updatedAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
   name: {
     type: Sequelize.STRING,
     allowNull: false

@@ -1,26 +1,75 @@
+const Sequelize = require('sequelize');
+
+const { sequelize } = require('../services/database');
 const { cleanObj } = require('../utils/format-data');
-const uuid = require('../utils/uuid');
-const { getTimestamp } = require('../utils/timestamp');
 const { getDetailedLocation } = require('../utils/location');
 
-function newLocation(loc, cb) {
-  formatLocation(loc, (err, formattedLocation) => {
-    if (err) cb(err, null);
-
-    const newLocation = {
-      creationDate: getTimestamp(),
-      id: uuid(),
-    };
-    const completeNewLocation = Object.assign(formattedLocation, newLocation);
-
-    cb(null, completeNewLocation);
-  });
-}
+const Location = sequelize.define('Location', {
+  id: {
+    allowNull: false,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+    type: Sequelize.UUID
+  },
+  businessId: {
+    type: Sequelize.UUID,
+    onDelete: 'CASCADE',
+    references: {
+      model: 'Businesses',
+      key: 'id',
+      as: 'businessId',
+    },
+    allowNull: false
+  },
+  createdAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
+  updatedAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
+  address: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  address2: {
+    type: Sequelize.STRING
+  },
+  city: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  state: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  zipcode: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  country: {
+    type: Sequelize.STRING
+  },
+  countryCode: {
+    type: Sequelize.STRING
+  },
+  latitude: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  longitude: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  phone: {
+    type: Sequelize.STRING
+  }
+});
 
 function formatLocation(loc, cb) {
   const formattedLocation = {
     businessId: loc.businessId,
-    lastUpdated: getTimestamp(),
     address: loc.address,
     address2: loc.address2,
     city: loc.city,
@@ -48,4 +97,4 @@ function formatLocation(loc, cb) {
   });
 }
 
-module.exports = { newLocation, formatLocation };
+module.exports = { Location, formatLocation };

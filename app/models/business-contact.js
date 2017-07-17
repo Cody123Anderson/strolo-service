@@ -9,6 +9,24 @@ const BusinessContact = sequelize.define('BusinessContact', {
     primaryKey: true,
     type: Sequelize.UUID
   },
+  businessId: {
+    type: Sequelize.UUID,
+    onDelete: 'CASCADE',
+    references: {
+      model: 'Businesses',
+      key: 'id',
+      as: 'businessId',
+    },
+    allowNull: false
+  },
+  createdAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
+  updatedAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
   name: {
     type: Sequelize.STRING,
     allowNull: false

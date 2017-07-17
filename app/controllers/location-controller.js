@@ -1,6 +1,7 @@
 const db = require('../services/database');
 const config = require('../config');
-const { newLocation, formatLocation } = require('../models/location');
+// const { Location } = require('../models');
+// const { formatLocation } = require('../models/location');
 const { getUpdateExpression } = require('../utils/dynamo');
 
 module.exports.getAllLocations = (req, res) => {

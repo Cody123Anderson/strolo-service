@@ -1,5 +1,6 @@
 const Business = require('./business');
 const BusinessContact = require('./business-contact');
+const { Location } = require('./location');
 
 /**
   * Business Model Associations
@@ -17,7 +18,12 @@ BusinessContact.belongsTo(Business, {
   onDelete: 'CASCADE',
 });
 
+/**
+  * Location Model Associations
+**/
+
 module.exports = {
   Business,
-  BusinessContact
+  BusinessContact,
+  Location
 }

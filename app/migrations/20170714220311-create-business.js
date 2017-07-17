@@ -7,6 +7,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
       name: {
         type: Sequelize.STRING,
         allowNull: false
@@ -41,14 +49,6 @@ module.exports = {
       logoUrl: {
         type: Sequelize.STRING,
         isUrl: true
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     });
   },
