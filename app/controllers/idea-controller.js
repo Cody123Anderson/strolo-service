@@ -1,9 +1,14 @@
-const { Idea } = require('../models');
+const { Idea, Location } = require('../models');
 const { sequelize } = require('../services/database');
 const { shuffleArray } = require('../utils/shuffle');
 
 exports.getAllIdeas = (req, res) => {
   Idea.findAll({
+    include: [{
+      model: Location,
+      as: 'locations',
+      through: { attributes: [] }
+    }],
     order: sequelize.col('title')
   }).then((ideas) => {
     return res.status(200).send({ ideas });
@@ -21,6 +26,11 @@ exports.getIdeasForStatus = (req, res) => {
 
   Idea.findAll({
     where: { status },
+    include: [{
+      model: Location,
+      as: 'locations',
+      through: { attributes: [] }
+    }],
     order: sequelize.col('title')
   }).then((ideas) => {
     const shuffledIdeas = shuffleArray(ideas);
@@ -40,6 +50,11 @@ exports.getIdeasForBusiness = (req, res) => {
 
   Idea.findAll({
     where: { businessId },
+    include: [{
+      model: Location,
+      as: 'locations',
+      through: { attributes: [] }
+    }],
     order: sequelize.col('title')
   }).then((ideas) => {
     return res.status(200).send({ ideas });
@@ -64,7 +79,12 @@ exports.getIdea = (req, res) => {
   const { id } = req.params;
 
   Idea.findOne({
-    where: { id }
+    where: { id },
+    include: [{
+      model: Location,
+      as: 'locations',
+      through: { attributes: [] }
+    }],
   }).then(idea => {
     return res.status(200).send({ idea });
   }).catch(err => {
@@ -77,23 +97,52 @@ exports.getIdea = (req, res) => {
 }
 
 exports.createIdea = (req, res) => {
-  const idea = req.body;
+  const newIdea = req.body;
+  const locationIds = newIdea.locationIds || [];
 
-  if (!idea.title) {
+  if (!newIdea.title) {
     return res.status(422).send({
       error: 'You must provide a title'
     });
-  } else if (!idea.businessId) {
+  } else if (!newIdea.businessId) {
     return res.status(422).send({
       error: 'You must provide a businessId'
     });
   }
 
-  Idea.create(idea).then(newIdea => {
-    return res.status(200).send({
-      info: 'new idea created!',
-      idea: newIdea
-    });
+  if (newIdea.locationIds) {
+    delete newIdea.locationIds;
+  }
+
+  Idea.create(newIdea).then(idea => {
+    if (locationIds.length > 0) {
+      // There's locations to add to this idea
+      Location.findAll({
+        where: { id: { $in: locationIds } }
+      }).then(locations => {
+        if (locations.length > 0) {
+          idea.addLocations(locations);
+        }
+
+        return res.status(200).send({
+          info: 'new idea created!',
+          idea: idea
+        });
+      })
+      .catch(err => {
+        console.error('error creating idea: ', err);
+        return res.status(500).send({
+          error: 'server error creating idea',
+          details: err
+        });
+      });
+    } else {
+      // No locations to add to idea
+      return res.status(200).send({
+        info: 'new idea created!',
+        idea: idea
+      });
+    }
   }).catch(err => {
     console.error('error creating idea: ', err);
     return res.status(500).send({
@@ -105,10 +154,43 @@ exports.createIdea = (req, res) => {
 
 exports.updateIdea = (req, res) => {
   const { id } = req.params;
+  const newIdeaFields = req.body;
+  const locationIds = newIdeaFields.locationIds || [];
 
-  Idea.update(req.body, { where: { id } }).then(() => {
-    return res.status(200).send({
-      info: 'idea updated successfully!'
+  Idea.findOne({ where: { id } }).then(idea => {
+    idea.update(newIdeaFields, { where: { id } }).then(() => {
+      if (locationIds.length > 0) {
+        // There's locations to add to this idea
+        Location.findAll({
+          where: { id: { $in: locationIds } }
+        }).then(locations => {
+          if (locations.length > 0) {
+            idea.setLocations(locations);
+          }
+
+          return res.status(200).send({
+            info: 'idea updated successfully!'
+          });
+        })
+        .catch(err => {
+          console.error('error updating idea: ', err);
+          return res.status(500).send({
+            error: 'server error updating idea',
+            details: err
+          });
+        });
+      } else {
+        // No locations to add to idea
+        return res.status(200).send({
+          info: 'idea updated successfully!'
+        });
+      }
+    }).catch(err => {
+      console.error('error updating idea: ', err);
+      return res.status(500).send({
+        error: 'server error updating idea',
+        details: err
+      });
     });
   }).catch(err => {
     console.error('error updating idea: ', err);

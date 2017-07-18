@@ -37,12 +37,23 @@ Location.belongsTo(Business, {
   onDelete: 'CASCADE',
 });
 
+Location.belongsToMany(Idea, {
+  through: 'IdeaLocations',
+  foreignKey: 'locationId'
+});
+
 /**
   * Idea Model Associations
 **/
 Idea.belongsTo(Business, {
   foreignKey: 'businessId',
   onDelete: 'CASCADE',
+});
+
+Idea.belongsToMany(Location, {
+  through: 'IdeaLocations',
+  as: 'locations',
+  foreignKey: 'ideaId'
 });
 
 module.exports = {
