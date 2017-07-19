@@ -349,6 +349,148 @@
 			"response": []
 		},
 		{
+			"name": "/categories",
+			"request": {
+				"url": "{{url}}/categories",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/:id",
+			"request": {
+				"url": "{{url}}/categories/{{current-category-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/:id",
+			"request": {
+				"url": "{{url}}/categories/{{current-category-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"date_ideas\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-category-id\", jsonData.category.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/categories",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"date_idea\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"current-category-contact-id\", null);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/categories/{{current-category-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "/deals",
 			"request": {
 				"url": "{{url}}/deals",
@@ -623,7 +765,7 @@
 		{
 			"name": "/ideas/status/:status",
 			"request": {
-				"url": "{{url}}/ideas/status/active",
+				"url": "{{url}}/ideas/status/Active",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -672,7 +814,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"tags\": [\"1\", \"2\", \"3\", \"4\"],\n  \"categories\": [\"1\", \"2\", \"3\", \"4\"],\n  \"title\": \"Very Fun Test date\",\n  \"description\": \"This is a test date. This really is a test date. Duh.\",\n  \"status\": \"active\"\n}"
+					"raw": "{\n  \"status\": \"Active\",\n  \"locationIds\": [\"78e253d7-764e-4eb5-9529-8f53d23bcc91\", \"{{current-loc-id}}\"],\n  \"categoryIds\": [\"3c33a371-7326-4448-80f3-31245a6c082d\", \"{{current-category-id}}\"],\n  \"tagIds\": [\"8b141979-cf80-4d80-a3f7-edb0e11a84c5\", \"{{current-tag-id}}\"]\n}"
 				},
 				"description": ""
 			},
@@ -709,7 +851,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"businessId\": \"{{current-bus-id}}\",\n  \"locations\": [\"{{current-loc-id}}\"],\n  \"tags\": [\"1\", \"2\", \"3\"],\n  \"categories\": [\"1\", \"2\", \"3\"],\n  \"title\": \"Test date\",\n  \"description\": \"This is a test date. This really is a test date.\",\n  \"images\": [{\n    \"id\": \"v1480801812\",\n    \"url\": \"https://res.cloudinary.com/serenade-dates/emails/firstdate.jpg\"\n  }],\n  \"status\": \"under construction\"\n}"
+					"raw": "{\n  \"businessId\": \"{{current-bus-id}}\",\n  \"title\": \"Test date\",\n  \"description\": \"This is a test date. This really is a test date.\",\n  \"locationIds\": [\"{{current-loc-id}}\"],\n  \"categoryIds\": [\"{{current-category-id}}\"],\n  \"tagIds\": [\"{{current-tag-id}}\"]\n}"
 				},
 				"description": ""
 			},
@@ -766,28 +908,6 @@
 			"response": []
 		},
 		{
-			"name": "/locations",
-			"request": {
-				"url": "{{url}}/locations",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					},
-					{
-						"key": "Authorization",
-						"value": "{{admin-token}}",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
 			"name": "/locations/:id",
 			"request": {
 				"url": "{{url}}/locations/{{current-loc-id}}",
@@ -810,7 +930,7 @@
 			"response": []
 		},
 		{
-			"name": "/locations/business/:id",
+			"name": "/locations/business/:businessId",
 			"request": {
 				"url": "{{url}}/locations/business/{{current-bus-id}}",
 				"method": "GET",
@@ -850,7 +970,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"address\": \"3247 South Tytus Lane\",\n  \"address2\": \"\",\n  \"city\": \"Saratoga Springs\",\n  \"zip\": \"84045\"\n}"
+					"raw": "{\n  \"address\": \"3247 South Tytus Lane\",\n  \"address2\": \"\",\n  \"city\": \"Saratoga Springs\",\n  \"zip\": \"84045\",\n  \"phone\": \"(602) 555-3922\"\n}"
 				},
 				"description": ""
 			},
@@ -865,7 +985,8 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"current-loc-id\", jsonData.location.id);"
+							"postman.setEnvironmentVariable(\"current-loc-id\", jsonData.location.id);",
+							""
 						]
 					}
 				}
@@ -887,7 +1008,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"address\": \"1476 Trinnaman Ln.\",\n  \"address2\": \"#402\",\n  \"city\": \"Lehi\",\n  \"state\": \"UT\",\n  \"zip\": \"84043\",\n  \"businessId\": \"{{current-bus-id}}\"\n}"
+					"raw": "{\n  \"address\": \"1476 Trinnaman Ln.\",\n  \"address2\": \"#402\",\n  \"city\": \"Lehi\",\n  \"state\": \"UT\",\n  \"zipcode\": \"84043\",\n  \"businessId\": \"{{current-bus-id}}\"\n}"
 				},
 				"description": ""
 			},
@@ -938,6 +1059,154 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n  \"email\": \"cody123anderson@gmail.com\",\n  \"region\": \"Utah Valley\",\n  \"state\": \"Utah\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags",
+			"request": {
+				"url": "{{url}}/tags",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Spontaneous\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags/:id",
+			"request": {
+				"url": "{{url}}/tags/{{current-tag-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Spontaneous\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags/:id",
+			"request": {
+				"url": "{{url}}/tags/{{current-tag-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Spontaneous\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-tag-id\", jsonData.tag.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/tags",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"spontaneous\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"current-tag-contact-id\", null);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/tags/{{current-tag-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
 				},
 				"description": ""
 			},

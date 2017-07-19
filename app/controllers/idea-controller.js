@@ -1,14 +1,26 @@
-const { Idea, Location } = require('../models');
+const { Idea, Location, Category, Tag } = require('../models');
 const { sequelize } = require('../services/database');
 const { shuffleArray } = require('../utils/shuffle');
 
 exports.getAllIdeas = (req, res) => {
   Idea.findAll({
-    include: [{
-      model: Location,
-      as: 'locations',
-      through: { attributes: [] }
-    }],
+    include: [
+      {
+        model: Location,
+        as: 'locations',
+        through: { attributes: [] }
+      },
+      {
+        model: Category,
+        as: 'categories',
+        through: { attributes: [] }
+      },
+      {
+        model: Tag,
+        as: 'tags',
+        through: { attributes: [] }
+      }
+    ],
     order: sequelize.col('title')
   }).then((ideas) => {
     return res.status(200).send({ ideas });
@@ -26,11 +38,23 @@ exports.getIdeasForStatus = (req, res) => {
 
   Idea.findAll({
     where: { status },
-    include: [{
-      model: Location,
-      as: 'locations',
-      through: { attributes: [] }
-    }],
+    include: [
+      {
+        model: Location,
+        as: 'locations',
+        through: { attributes: [] }
+      },
+      {
+        model: Category,
+        as: 'categories',
+        through: { attributes: [] }
+      },
+      {
+        model: Tag,
+        as: 'tags',
+        through: { attributes: [] }
+      }
+    ],
     order: sequelize.col('title')
   }).then((ideas) => {
     const shuffledIdeas = shuffleArray(ideas);
@@ -50,11 +74,23 @@ exports.getIdeasForBusiness = (req, res) => {
 
   Idea.findAll({
     where: { businessId },
-    include: [{
-      model: Location,
-      as: 'locations',
-      through: { attributes: [] }
-    }],
+    include: [
+      {
+        model: Location,
+        as: 'locations',
+        through: { attributes: [] }
+      },
+      {
+        model: Category,
+        as: 'categories',
+        through: { attributes: [] }
+      },
+      {
+        model: Tag,
+        as: 'tags',
+        through: { attributes: [] }
+      }
+    ],
     order: sequelize.col('title')
   }).then((ideas) => {
     return res.status(200).send({ ideas });
@@ -80,11 +116,23 @@ exports.getIdea = (req, res) => {
 
   Idea.findOne({
     where: { id },
-    include: [{
-      model: Location,
-      as: 'locations',
-      through: { attributes: [] }
-    }],
+    include: [
+      {
+        model: Location,
+        as: 'locations',
+        through: { attributes: [] }
+      },
+      {
+        model: Category,
+        as: 'categories',
+        through: { attributes: [] }
+      },
+      {
+        model: Tag,
+        as: 'tags',
+        through: { attributes: [] }
+      }
+    ]
   }).then(idea => {
     return res.status(200).send({ idea });
   }).catch(err => {
@@ -99,6 +147,12 @@ exports.getIdea = (req, res) => {
 exports.createIdea = (req, res) => {
   const newIdea = req.body;
   const locationIds = newIdea.locationIds || [];
+  const categoryIds = newIdea.categoryIds || [];
+  const tagIds = newIdea.tagIds || [];
+
+  if (newIdea.locationIds) { delete newIdea.locationIds; }
+  if (newIdea.categoryIds) { delete newIdea.categoryIds; }
+  if (newIdea.tagIds) { delete newIdea.tagIds; }
 
   if (!newIdea.title) {
     return res.status(422).send({
@@ -110,39 +164,76 @@ exports.createIdea = (req, res) => {
     });
   }
 
-  if (newIdea.locationIds) {
-    delete newIdea.locationIds;
-  }
-
   Idea.create(newIdea).then(idea => {
-    if (locationIds.length > 0) {
-      // There's locations to add to this idea
-      Location.findAll({
-        where: { id: { $in: locationIds } }
-      }).then(locations => {
-        if (locations.length > 0) {
-          idea.addLocations(locations);
-        }
+    const addLocations = new Promise((resolve, reject) => {
+      if (locationIds.length > 0) {
+        // There's locations to add to this idea
+        Location.findAll({
+          where: { id: { $in: locationIds } }
+        }).then(locations => {
+          if (locations.length > 0) {
+            idea.addLocations(locations).then(() => {
+              resolve();
+            }).catch(err => { reject(err); });
+          } else {
+            resolve();
+          }
+        }).catch(err => { reject(err); });
+      } else {
+        resolve();
+      }
+    });
 
-        return res.status(200).send({
-          info: 'new idea created!',
-          idea: idea
-        });
-      })
-      .catch(err => {
-        console.error('error creating idea: ', err);
-        return res.status(500).send({
-          error: 'server error creating idea',
-          details: err
-        });
-      });
-    } else {
-      // No locations to add to idea
+    const addCategories = new Promise((resolve, reject) => {
+      if (categoryIds.length > 0) {
+        // There's categories to add to this idea
+        Category.findAll({
+          where: { id: { $in: categoryIds } }
+        }).then(categories => {
+          if (categories.length > 0) {
+            idea.addCategories(categories).then(() => {
+              resolve();
+            }).catch(err => { reject(err); });
+          } else {
+            resolve();
+          }
+        }).catch(err => { reject(err); });
+      } else {
+        resolve();
+      }
+    });
+
+    const addTags = new Promise((resolve, reject) => {
+      if (tagIds.length > 0) {
+        // There's tags to add to this idea
+        Tag.findAll({
+          where: { id: { $in: tagIds } }
+        }).then(tags => {
+          if (tags.length > 0) {
+            idea.addTags(tags).then(() => {
+              resolve();
+            }).catch(err => { reject(err); });
+          } else {
+            resolve();
+          }
+        }).catch(err => { reject(err); });
+      } else {
+        resolve();
+      }
+    });
+
+    Promise.all([addLocations, addCategories, addTags]).then(values => {
       return res.status(200).send({
         info: 'new idea created!',
         idea: idea
       });
-    }
+    }).catch(err => {
+      console.error('error creating idea: ', err);
+      return res.status(500).send({
+        error: 'server error creating idea',
+        details: err
+      });
+    });
   }).catch(err => {
     console.error('error creating idea: ', err);
     return res.status(500).send({
@@ -156,35 +247,81 @@ exports.updateIdea = (req, res) => {
   const { id } = req.params;
   const newIdeaFields = req.body;
   const locationIds = newIdeaFields.locationIds || [];
+  const categoryIds = newIdeaFields.categoryIds || [];
+  const tagIds = newIdeaFields.tagIds || [];
+
+  if (newIdeaFields.locationIds) { delete newIdeaFields.locationIds; }
+  if (newIdeaFields.categoryIds) { delete newIdeaFields.categoryIds; }
+  if (newIdeaFields.tagIds) { delete newIdeaFields.tagIds; }
 
   Idea.findOne({ where: { id } }).then(idea => {
     idea.update(newIdeaFields, { where: { id } }).then(() => {
-      if (locationIds.length > 0) {
-        // There's locations to add to this idea
-        Location.findAll({
-          where: { id: { $in: locationIds } }
-        }).then(locations => {
-          if (locations.length > 0) {
-            idea.setLocations(locations);
-          }
+      const setLocations = new Promise((resolve, reject) => {
+        if (locationIds.length > 0) {
+          // There's locations to add to this idea
+          Location.findAll({
+            where: { id: { $in: locationIds } }
+          }).then(locations => {
+            if (locations.length > 0) {
+              idea.addLocations(locations).then(() => {
+                resolve();
+              }).catch(err => { reject(err); });
+            } else {
+              resolve();
+            }
+          }).catch(err => { reject(err); });
+        } else {
+          resolve();
+        }
+      });
 
-          return res.status(200).send({
-            info: 'idea updated successfully!'
-          });
-        })
-        .catch(err => {
-          console.error('error updating idea: ', err);
-          return res.status(500).send({
-            error: 'server error updating idea',
-            details: err
-          });
+      const setCategories = new Promise((resolve, reject) => {
+        if (categoryIds.length > 0) {
+          // There's categories to add to this idea
+          Category.findAll({
+            where: { id: { $in: categoryIds } }
+          }).then(categories => {
+            if (categories.length > 0) {
+              idea.addCategories(categories).then(() => {
+                resolve();
+              }).catch(err => { reject(err); });
+            } else {
+              resolve();
+            }
+          }).catch(err => { reject(err); });
+        } else {
+          resolve();
+        }
+      });
+
+      const setTags = new Promise((resolve, reject) => {
+        if (tagIds.length > 0) {
+          // There's tags to add to this idea
+          Tag.findAll({
+            where: { id: { $in: tagIds } }
+          }).then(tags => {
+            if (tags.length > 0) {
+              idea.addTags(tags).then(() => {
+                resolve();
+              }).catch(err => { reject(err); });
+            } else {
+              resolve();
+            }
+          }).catch(err => { reject(err); });
+        } else {
+          resolve();
+        }
+      });
+
+      Promise.all([setLocations, setCategories, setTags]).then(values => {
+        return res.status(200).send({ info: 'idea updated successfully!' });
+      }).catch(err => {
+        console.error('error creating idea: ', err);
+        return res.status(500).send({
+          error: 'server error creating idea',
+          details: err
         });
-      } else {
-        // No locations to add to idea
-        return res.status(200).send({
-          info: 'idea updated successfully!'
-        });
-      }
+      });
     }).catch(err => {
       console.error('error updating idea: ', err);
       return res.status(500).send({

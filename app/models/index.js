@@ -2,6 +2,8 @@ const Business = require('./business');
 const BusinessContact = require('./business-contact');
 const { Location } = require('./location');
 const Idea = require('./idea');
+const Category = require('./category');
+const Tag = require('./tag');
 
 /**
   * Business Model Associations
@@ -56,9 +58,39 @@ Idea.belongsToMany(Location, {
   foreignKey: 'ideaId'
 });
 
+Idea.belongsToMany(Category, {
+  through: 'IdeaCategories',
+  as: 'categories',
+  foreignKey: 'ideaId'
+});
+
+Idea.belongsToMany(Tag, {
+  through: 'IdeaTags',
+  as: 'tags',
+  foreignKey: 'ideaId'
+});
+
+/**
+  * Category Model Associations
+**/
+Category.belongsToMany(Idea, {
+  through: 'IdeaCategories',
+  foreignKey: 'categoryId'
+});
+
+/**
+  * Tag Model Associations
+**/
+Tag.belongsToMany(Idea, {
+  through: 'IdeaTags',
+  foreignKey: 'tagId'
+});
+
 module.exports = {
   Business,
   BusinessContact,
   Location,
-  Idea
+  Idea,
+  Category,
+  Tag
 }

@@ -14,7 +14,7 @@ module.exports.getAllBusinesses = (req, res) => {
       { model: Location, as: 'locations'},
       { model: Idea, as: 'ideas'}
     ]
-  }).then((businesses) => {
+  }).then(businesses => {
     return res.status(200).send({ businesses });
   }).catch(err => {
     console.error('error in getAllBusinesses controller: ', err);
