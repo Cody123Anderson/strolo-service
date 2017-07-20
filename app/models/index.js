@@ -4,6 +4,7 @@ const { Location } = require('./location');
 const Idea = require('./idea');
 const Category = require('./category');
 const Tag = require('./tag');
+const IdeaImage = require('./idea-image');
 
 /**
   * Business Model Associations
@@ -70,6 +71,11 @@ Idea.belongsToMany(Tag, {
   foreignKey: 'ideaId'
 });
 
+Idea.hasMany(IdeaImage, {
+  foreignKey: 'ideaId',
+  as: 'images'
+});
+
 /**
   * Category Model Associations
 **/
@@ -86,11 +92,20 @@ Tag.belongsToMany(Idea, {
   foreignKey: 'tagId'
 });
 
+/**
+  * IdeaImage Model Associations
+**/
+IdeaImage.belongsTo(Idea, {
+  foreignKey: 'ideaId',
+  onDelete: 'CASCADE',
+});
+
 module.exports = {
   Business,
   BusinessContact,
   Location,
   Idea,
   Category,
-  Tag
+  Tag,
+  IdeaImage
 }

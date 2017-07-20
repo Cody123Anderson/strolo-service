@@ -8,7 +8,7 @@ const emailSubscriberRoutes = require('./email-subscriber-routes');
 const freeIdeaRoutes = require('./free-idea-routes');
 const healthRoutes = require('./health-routes');
 const ideaRoutes = require('./idea-routes');
-const imageRoutes = require('./image-routes');
+const ideaImageRoutes = require('./idea-image-routes');
 const locationRoutes = require('./location-routes');
 const tagRoutes = require('./tag-routes');
 const userRoutes = require('./user-routes');
@@ -24,7 +24,7 @@ module.exports = (app) => {
   freeIdeaRoutes(app);
   healthRoutes(app);
   ideaRoutes(app);
-  imageRoutes(app);
+  ideaImageRoutes(app);
   locationRoutes(app);
   tagRoutes(app);
   userRoutes(app);
