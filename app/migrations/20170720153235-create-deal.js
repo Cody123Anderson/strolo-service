@@ -1,19 +1,19 @@
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Ideas', {
+    return queryInterface.createTable('Deals', {
       id: {
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      businessId: {
+      ideaId: {
         type: Sequelize.UUID,
         onDelete: 'CASCADE',
         references: {
-          model: 'Businesses',
+          model: 'Ideas',
           key: 'id',
-          as: 'businessId',
+          as: 'ideaId',
         },
         allowNull: false
       },
@@ -26,28 +26,34 @@ module.exports = {
         type: Sequelize.DATE
       },
       title: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      description: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      status: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: 'Under Construction'
+      details: {
+        type: Sequelize.STRING
       },
-      startDate: {
+      retailPrice: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
+        type: Sequelize.FLOAT
       },
-      endDate: {
-        type: Sequelize.DATE
+      discountPrice: {
+        allowNull: false,
+        type: Sequelize.FLOAT
+      },
+      discountPercent: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      maxRedemptions: {
+        type: Sequelize.INTEGER
+      },
+      type: {
+        allowNull: false,
+        type: Sequelize.STRING
       }
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Ideas');
+    return queryInterface.dropTable('Deals');
   }
 };

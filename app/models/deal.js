@@ -1,38 +1,59 @@
-const { cleanObj } = require('../utils/format-data');
-const uuid = require('../utils/uuid');
-const { getTimestamp } = require('../utils/timestamp');
+const Sequelize = require('sequelize');
 
-function newDeal(deal) {
-  const formattedDeal = formatDeal(deal);
-  const newDeal = {
-    creationDate: getTimestamp(),
-    id: uuid(),
-  };
-  const completeNewLocation = Object.assign(formattedDeal, newDeal);
+const { sequelize } = require('../services/database');
 
-  return completeNewLocation;
-}
+const Deal = sequelize.define('Deal', {
+  id: {
+    allowNull: false,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+    type: Sequelize.UUID
+  },
+  ideaId: {
+    type: Sequelize.UUID,
+    onDelete: 'CASCADE',
+    references: {
+      model: 'Ideas',
+      key: 'id',
+      as: 'ideaId',
+    },
+    allowNull: false
+  },
+  createdAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
+  updatedAt: {
+    allowNull: false,
+    type: Sequelize.DATE
+  },
+  title: {
+    allowNull: false,
+    type: Sequelize.STRING
+  },
+  details: {
+    allowNull: false,
+    type: Sequelize.STRING
+  },
+  retailPrice: {
+    allowNull: false,
+    type: Sequelize.FLOAT
+  },
+  discountPrice: {
+    allowNull: false,
+    type: Sequelize.FLOAT
+  },
+  discountPercent: {
+    allowNull: false,
+    type: Sequelize.INTEGER
+  },
+  maxRedemptions: {
+    type: Sequelize.INTEGER
+  },
+  type: {
+    allowNull: false,
+    type: Sequelize.STRING
+  }
+});
 
-function formatDeal(deal) {
-  const formattedDeal = {
-    ideaId: deal.ideaId,
-    title: deal.title,
-    details: deal.details,
-    retailPrice: deal.retailPrice,
-    discountPercent: deal.discountPercent,
-    discountPricePer: deal.discountPricePer,
-    maxRedemptions: deal.maxRedemptions,
-    minPeople: deal.minPeople,
-    maxPeople: deal.maxPeople,
-    startDate: deal.startDate,
-    endDate: deal.endDate,
-    status: deal.status // Always active unless the idea has been deleted, then it will be 'deleted'
-  };
-
-  // Remove null or undefined attributes
-  cleanObj(formattedDeal);
-
-  return formattedDeal;
-}
-
-module.exports = { newDeal, formatDeal };
+module.exports = Deal;

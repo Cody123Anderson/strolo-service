@@ -1,4 +1,4 @@
-const { Idea, Location, Category, Tag, IdeaImage } = require('../models');
+const { Idea, Location, Category, Tag, IdeaImage, Deal } = require('../models');
 const { sequelize } = require('../services/database');
 const { shuffleArray } = require('../utils/shuffle');
 
@@ -23,6 +23,10 @@ exports.getAllIdeas = (req, res) => {
       {
         model: IdeaImage,
         as: 'images'
+      },
+      {
+        model: Deal,
+        as: 'deals'
       }
     ],
     order: sequelize.col('title')
@@ -61,6 +65,10 @@ exports.getIdeasForStatus = (req, res) => {
       {
         model: IdeaImage,
         as: 'images'
+      },
+      {
+        model: Deal,
+        as: 'deals'
       }
     ],
     order: sequelize.col('title')
@@ -101,6 +109,10 @@ exports.getIdeasForBusiness = (req, res) => {
       {
         model: IdeaImage,
         as: 'images'
+      },
+      {
+        model: Deal,
+        as: 'deals'
       }
     ],
     order: sequelize.col('title')
@@ -147,6 +159,10 @@ exports.getIdea = (req, res) => {
       {
         model: IdeaImage,
         as: 'images'
+      },
+      {
+        model: Deal,
+        as: 'deals'
       }
     ]
   }).then(idea => {

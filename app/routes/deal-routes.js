@@ -2,11 +2,11 @@ const dealController = require('../controllers/deal-controller');
 const adminAuthService = require('../services/admin-auth');
 
 module.exports = (app, passport) => {
-  /* READ all deals */
-  app.get('/deals', dealController.getAllDeals);
-
   /* READ one deal by id  */
   app.get('/deals/:id', dealController.getDeal);
+
+  /* READ all deals for an idea  */
+  app.get('/deals/idea/:ideaId', dealController.getDealsForIdea);
 
   /* CREATE a deal */
   app.post(

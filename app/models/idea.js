@@ -38,6 +38,14 @@ const Idea = sequelize.define('Idea', {
     type: Sequelize.STRING,
     allowNull: false,
     defaultValue: 'Under Construction' // 'Active', 'Under Construction', 'Deactivated'
+  },
+  startDate: {
+    allowNull: false,
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
+  },
+  endDate: {
+    type: Sequelize.DATE
   }
 });
 

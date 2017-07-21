@@ -1,181 +1,124 @@
-const db = require('../services/database');
-const config = require('../config');
-const { newDeal, formatDeal } = require('../models/deal');
-const { getUpdateExpression } = require('../utils/dynamo');
-
-module.exports.getAllDeals = (req, res) => {
-  const args = {
-    TableName: config.TABLE_DEAL
-  };
-
-  db.scan(args, (err, data) => {
-    if (err) {
-      console.error('Error in getAllDeals controller: ', err);
-      return res.status(500).send({
-        error: 'server error getting deals'
-      });
-    }
-
-    return res.status(200).send({ deals: data.Items });
-  });
-}
+const { Deal } = require('../models');
+const { sequelize } = require('../services/database');
 
 module.exports.getDeal = (req, res) => {
-  const id = req.params.id;
-  const args = {
-    TableName: config.TABLE_DEAL,
-    Key: { id }
-  };
+  const { id } = req.params;
 
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error in getDeal controller function: ', err);
-      return res.status(500).send({ error: 'server error getting deal' });
-    }
-
-    return res.status(200).send({ deal: data.Item });
+  Deal.findOne({ where: { id } }).then(deal => {
+    return res.status(200).send({ deal });
+  }).catch(err => {
+    console.error('Error in getDeal controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve deal',
+      details: err
+    });
   });
-}
+};
+
+module.exports.getDealsForIdea = (req, res) => {
+  const { ideaId } = req.params;
+
+  Deal.findAll({
+    where: { ideaId },
+    order: [['type', 'DESC']]
+  }).then(deals => {
+    return res.status(200).send({ deals });
+  }).catch(err => {
+    console.error('error in getDealsForIdea controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve deals',
+      details: err
+    });
+  });
+};
 
 module.exports.createDeal = (req, res) => {
-  let deal = newDeal(req.body);
+  const deal = req.body;
 
-  if (!deal.businessId) {
+  if (!deal.ideaId) {
     return res.status(422).send({
-      error: 'You must provide a businessId with a deal'
+      error: 'You must provide an ideaId for the deal'
+    });
+  } else if (!deal.title) {
+    return res.status(422).send({
+      error: 'You must provide a deal title'
+    });
+  } else if (!deal.retailPrice) {
+    return res.status(422).send({
+      error: 'You must provide a deal retailPrice'
+    });
+  } else if (!deal.discountPrice) {
+    return res.status(422).send({
+      error: 'You must provide a deal discountPrice'
+    });
+  } else if (!deal.type) {
+    return res.status(422).send({
+      error: 'You must provide a deal type'
+    });
+  } else if (deal.type && (deal.type !== 'single' && deal.type !== 'pair')) {
+    return res.status(422).send({
+      error: `deal type must be either 'single' or 'pair'`
     });
   }
 
-  // Check to make sure business exists
-  const getArgs = {
-    TableName: config.TABLE_BUSINESS,
-    Key: { id: deal.businessId }
-  };
+  // Set discountPercent for deal
+  deal.discountPercent = deal.discountPrice / deal.retailPrice * 100;
 
-  db.get(getArgs, (err, data) => {
-    if (err) {
-      console.error('Error checking if business exists: ', err);
-      return res.status(500).send({ error: 'server error creating deal' });
-    }
-
-    if (data.Item) {
-      // Good to create the deal
-      const putArgs = {
-        TableName: config.TABLE_DEAL,
-        Item: deal
-      };
-
-      db.put(putArgs, (err, data) => {
-        if (err) {
-          console.error("Error adding deal: ", err);
-          return res.status(500).send({
-            error: 'Server Error saving deal: Please refresh the page and try again'
-          });
-        } else {
-          return res.status(200).send({
-            info: 'new deal created!',
-            deal: deal
-          });
-        }
-      });
-    } else {
-      // Business doesn't exist
-      return res.status(404).send({ error: 'no business with the given id exists' });
-    }
+  Deal.create(deal).then(deal => {
+    return res.status(200).send({
+      info: 'new deal created!',
+      deal: deal
+    });
+  }).catch(err => {
+    console.error('error creating deal: ', err);
+    return res.status(500).send({
+      error: 'server error creating deal',
+      details: err
+    });
   });
-}
+};
 
 module.exports.updateDeal = (req, res) => {
-  const id = req.params.id;
-  const getArgs = {
-    TableName: config.TABLE_DEAL,
-    Key: { id }
-  };
+  const { id } = req.params;
+  const newDeal = req.body;
 
-  db.get(getArgs, (err, data) => {
-    if (err) {
-      console.error('Error in get part of updateDeal controller function: ', err);
-      return res.status(500).send({ error: 'server error updating deal' });
-    }
-
-    if (data.Item) {
-      // Item exists, now update it
-      const deal = formatDeal(req.body);
-      const expression = getUpdateExpression(deal);
-
-      const updateArgs = {
-        TableName: config.TABLE_DEAL,
-        Key: { id },
-        UpdateExpression: expression.expressionString,
-        ExpressionAttributeNames: expression.attributeNames,
-        ExpressionAttributeValues: expression.attributeValues,
-        ReturnValues: 'ALL_NEW'
-      }
-
-      db.update(updateArgs, (err, data) => {
-        if (err) {
-          console.error('Error in update part of updateDeal controller function: ', err);
-          return res.status(500).send({ error: 'server error updating deal' });
-        }
-
-        return res.status(200).send({
-          info: 'Deal updated successfully!',
-          deal: data.Attributes
-        });
-      });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no deal with this id exists' });
-    }
-  });
-}
-
-module.exports.deleteDeal = (req, res) => {
-  const id = req.params.id;
-  const getArgs = {
-    TableName: config.TABLE_DEAL,
-    Key: { id }
+  if (newDeal.type && (newDeal.type !== 'single' && newDeal.type !== 'pair')) {
+    return res.status(422).send({
+      error: `deal type must be either 'single' or 'pair'`
+    });
   }
 
-  db.get(getArgs, (err, data) => {
-    if (err) {
-      console.error('Error in get part of deleteDeal controller: ', err);
-      return res.status(500).send({ error: err });
-    }
+  Deal.findOne({ where: { id } }).then(deal => {
+    // Find the new discountPercent
+    newDeal.retailPrice = newDeal.retailPrice || deal.retailPrice;
+    newDeal.discountPrice = newDeal.discountPrice || deal.discountPrice;
+    newDeal.discountPercent = deal.discountPrice / deal.retailPrice * 100;
 
-    if (data.Item) {
-      if (data.Item.status === 'deleted') {
-        // Already has deleted status
-        return res.status(200).send({
-          info: 'Deal status is already \'deleted\'!',
-        });
-      }
-
-      // Update deal status to 'deleted'
-      const deal = formatDeal({ status: 'deleted' });
-      const expression = getUpdateExpression(deal);
-      const updateArgs = {
-        TableName: config.TABLE_DEAL,
-        Key: { id },
-        UpdateExpression: expression.expressionString,
-        ExpressionAttributeNames: expression.attributeNames,
-        ExpressionAttributeValues: expression.attributeValues,
-        ReturnValues: 'ALL_NEW'
-      }
-
-      db.update(updateArgs, (err, data) => {
-        if (err) {
-          console.error('Error in update part of deleteDeal controller: ', err);
-          return res.status(500).send({ error: err });
-        }
-
-        return res.status(200).send({
-          info: 'Deal status set to \'deleted\'!',
-        });
+    Deal.update(newDeal, { where: { id } }).then(() => {
+      return res.status(200).send({ info: 'deal updated successfully!' });
+    }).catch(err => {
+      console.error('error updating deal: ', err);
+      return res.status(500).send({
+        error: 'server error updating deal',
+        details: err
       });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no deal with this id exists'});
-    }
+    });
+  }).catch(err => {
+    console.error('Error in updateDeal controller: ', err);
+    return res.status(500).send({
+      error: 'unable to update deal',
+      details: err
+    });
+  });
+};
+
+module.exports.deleteDeal = (req, res) => {
+  const { id } = req.params;
+
+  Deal.destroy({ where: { id } }).then(() => {
+    return res.status(200).send({ info: 'deal was destroyed!' });
+  }).catch(err => {
+    console.error('error deleting deal: ', err);
+    return res.status(500).send({ error: 'server error deleting deal' });
   });
 };
