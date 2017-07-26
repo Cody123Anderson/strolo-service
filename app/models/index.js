@@ -6,6 +6,7 @@ const Category = require('./category');
 const Tag = require('./tag');
 const IdeaImage = require('./idea-image');
 const Deal = require('./deal');
+const { User } = require('./user');
 
 /**
   * Business Model Associations
@@ -114,6 +115,11 @@ Deal.belongsTo(Idea, {
   onDelete: 'CASCADE',
 });
 
+/**
+  * User Model Associations
+**/
+
+
 module.exports = {
   Business,
   BusinessContact,
@@ -122,5 +128,6 @@ module.exports = {
   Category,
   Tag,
   IdeaImage,
-  Deal
+  Deal,
+  User
 }

@@ -37,6 +37,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 'Under Construction'
       },
+      reservationRequired: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       startDate: {
         allowNull: false,
         type: Sequelize.DATE,

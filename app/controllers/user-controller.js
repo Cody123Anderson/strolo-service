@@ -1,143 +1,31 @@
-const { newUser, formatUser } = require('../models/user');
-const { encodeUserToken, decodeToken } = require('../utils/jwt-token');
-const { getUpdateExpression, batchKeysFormat } = require('../utils/dynamo');
+const { User } = require('../models');
+const { formatUser } = require('../models/user');
+const { encodeUserToken } = require('../utils/jwt-token');
 const { comparePasswords } = require('../utils/password');
-const db = require('../services/database');
-const config = require('../config');
-
-exports.isLoggedIn = (req, res) => {
-  // User has already been logged in if they get here
-  return res.status(200).send({
-    loggedin: true
-  });
-};
-
-exports.getUserFavorites = (req, res) => {
-  const token = req.headers.authorization;
-  const email = decodeToken(token).sub;
-  const params = {
-    TableName: config.TABLE_USER,
-    Key: { email }
-  };
-
-  db.get(params, (err, data) => {
-    if (err) {
-      console.error('error in user getUserFavorites controller function: ', err);
-      return res.status(500).send({
-        error: 'unable to process server request in getUserFavorites'
-      });
-    }
-
-    if (data.Item) {
-      const favorites = data.Item.favorites;
-      const freeIdeaFavorites = [];
-      const ideaFavorites = [];
-
-      // Sort idea ids into freeideas and ideas
-      if (favorites) {
-        favorites.forEach((id) => {
-          if (id.substring(0, 2) === 'fi') {
-            // it's a freeIdea
-            freeIdeaFavorites.push(id);
-          } else {
-            // it's a normal idea
-            ideaFavorites.push(id);
-          }
-        });
-      }
-
-      const freeIdeaKeys = batchKeysFormat(freeIdeaFavorites, 'id');
-      const ideaKeys = batchKeysFormat(ideaFavorites, 'id');
-
-      // Get all freeIdea favorites
-      const batchParams = {
-        RequestItems: {
-          [config.TABLE_FREE_IDEA]: {
-            Keys: freeIdeaKeys
-          },
-          // [config.TABLE_IDEA]: {
-          //   Keys: ideaKeys
-          // }
-        }
-      };
-
-      db.batchGet(batchParams, (err, data) => {
-        if (err) {
-          console.error('error batch getting freeIdea favorites: ', err);
-          return res.status(500).send({
-            error: 'unable to process server request in getUserFavorites'
-          });
-        }
-
-        const freeIdeas = data.Responses[config.TABLE_FREE_IDEA];
-        // const ideas = data.Responses[config.TABLE_IDEA];
-
-        return res.status(200).send({
-          freeIdeaFavorites: freeIdeas,
-          // ideaFavorites: ideaFavorites
-        });
-      });
-    } else {
-      return res.status(404).send({
-        error: 'No user found with this email address'
-      });
-    }
-  });
-}
 
 exports.getUserFromToken = (req, res) => {
-  const token = req.headers.authorization;
-  const decoded = decodeToken(token);
-  const email = decoded.sub;
-  const params = {
-    TableName: config.TABLE_USER,
-    Key: { email }
-  };
+  const user = req.user;
 
-  db.get(params, (err, data) => {
-    if (err) {
-      return res.status(500).send({
-        error: 'unable to process server request in getUserFromToken'
-      });
-    }
+  // Delete fields that we don't want shown to user
+  delete user.password;
+  delete user.passwordResetToken;
+  delete user.passwordResetTokenExpiration;
 
-    if (data.Item) {
-      // User exists, return the user without the password
-      const user = data.Item;
-
-      // Don't return the user's hashed password
-      delete user.password;
-
-      return res.status(200).send({
-        user: user
-      });
-    } else {
-      return res.status(404).send({
-        error: 'No user found with this email address'
-      });
-    }
-  });
+  return res.status(200).send({ user });
 };
 
-exports.login = (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const params = {
-    TableName: config.TABLE_USER,
-    Key: { email }
-  };
+exports.loginUser = (req, res) => {
+  const { email, password } = req.body;
 
-  db.get(params, (err, data) => {
-    if (err) {
-      return res.status(500).send({
-        error: 'unable to process server request in user checkCredentials'
-      });
-    }
+  if (!email || !password) {
+    return res.status(422).send({
+      error: 'You must provide email and password'
+    });
+  }
 
-    if (data.Item) {
-      // User exists, check password
-      const hashedPassword = data.Item.password;
-      comparePasswords(password, hashedPassword, (err, isMatch) => {
+  User.findOne({ where: { email } }).then(user => {
+    if (user) {
+      comparePasswords(password, user.password, (err, isMatch) => {
         if (err) {
           return res.status(500).send({
             error: 'unable to process server request in user password comparison'
@@ -147,7 +35,7 @@ exports.login = (req, res) => {
         if (isMatch) {
           // Valid email and password, give them a token
           res.status(200).send({
-            token: encodeUserToken(data.Item)
+            token: encodeUserToken(user)
           });
         } else {
           // incorrect password
@@ -156,18 +44,22 @@ exports.login = (req, res) => {
           });
         }
       });
-
     } else {
       return res.status(422).send({
         error: 'incorrect email/password combination'
       });
     }
+  }).catch(err => {
+    console.error('Error in loginUser controller: ', err);
+    return res.status(500).send({
+      error: 'unable to authenticate user',
+      details: err
+    });
   });
 };
 
-exports.signup = (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+exports.signupUser = (req, res) => {
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(422).send({
@@ -176,110 +68,75 @@ exports.signup = (req, res) => {
   }
 
   // See if a user with given username already exists
-  const args = {
-    TableName: config.TABLE_USER,
-    Key: { email }
-  }
+  User.findOne({ where: { email } }).then(user => {
+    if (!user) {
+      formatUser(req.body).then(formattedUser => {
+        User.create(formattedUser).then(user => {
+          user = user.dataValues;
 
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error checking for user: ', err);
-      return res.status(500).send({
-        error: 'Server error checking for existing user: Please refresh the page and try again'
+          delete user.password;
+
+          return res.status(200).send({
+            info: 'new user created successfully!',
+            user: user,
+            token: encodeUserToken(user)
+          });
+        }).catch(err => {
+          console.error('error creating user: ', err);
+          return res.status(500).send({
+            error: 'server error creating user',
+            details: err
+          });
+        });
+      }).catch(err => {
+        console.error('Error formatting user in signupUser controller: ', err);
+        return res.status(500).send({
+          error: 'unable to sign up user',
+          details: err
+        });
       });
-    }
-
-    // If a user with this email exists, return an error
-    if (data.Item) {
+    } else {
+      // user already exists
       return res.status(422).send({
         error: 'email is already in use'
       });
     }
-
-    // Since no user with this email exists, create a new user
-    newUser({ email, password }, (err, user) => {
-      if (err) {
-        console.error("Unable to create new user: ", JSON.stringify(err, null, 2));
-        return res.status(500).send({
-          error: 'Server Error creating user: Please refresh the page and try again'
-        });
-      }
-
-      const createParams = {
-        TableName: config.TABLE_USER,
-        Item: user
-      };
-
-      db.put(createParams, (err, data) => {
-        if (err) {
-          console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-          return res.status(500).send({
-            error: 'Server Error creating user in db: Please refresh the page and try again'
-          });
-        } else {
-          return res.status(200).send({
-            info: 'new user created!',
-            token: encodeUserToken(user)
-          });
-        }
-      });
-
+  }).catch(err => {
+    console.error('Error in signupUser controller: ', err);
+    return res.status(500).send({
+      error: 'unable to sign up user',
+      details: err
     });
   });
 }
 
-exports.update = (req, res) => {
-  const token = req.headers.authorization;
-  const decoded = decodeToken(token);
-  const email = decoded.sub;
-  const userFields = req.body;
+exports.updateUser = (req, res) => {
+  const email = req.user.email;
 
-  if (userFields.password) {
-    return res.status(400).send({
-      error: 'You can\'t update user email or password with this route'
-    });
-  }
+  formatUser(req.body).then(formattedUser => {
+    User.update(formattedUser, { where: { email } }).then(() => {
+      const updatedUser = Object.assign(req.user, formattedUser);
 
-  let args = {
-    TableName: config.TABLE_USER,
-    Key: { email }
-  }
+      delete updatedUser.password;
+      delete updatedUser.passwordResetToken;
+      delete updatedUser.passwordResetTokenExpiration;
 
-  db.get(args, (err, data) => {
-    if (err) {
-      console.error('Error in get part of updateFreeIdea controller function: ', err);
-      return res.status(500).send({ freeIdea: null, error: err });
-    }
-
-    if (data.Item) {
-      // User exists, now update it
-      const updatedUser = formatUser(userFields);
-      const expression = getUpdateExpression(updatedUser);
-      const updateArgs = {
-        TableName: config.TABLE_USER,
-        Key: { email },
-        UpdateExpression: expression.expressionString,
-        ExpressionAttributeNames: expression.attributeNames,
-        ExpressionAttributeValues: expression.attributeValues,
-        ReturnValues: 'ALL_NEW'
-      }
-
-      db.update(updateArgs, (err, data) => {
-        if (err) {
-          console.error('Error in update part of update user controller function: ', err);
-          return res.status(500).send({ error: err });
-        }
-
-        let displayUser = data.Attributes;
-
-        // Don't return the user's hashed password
-        delete displayUser.password;
-
-        return res.status(200).send({ user: displayUser });
+      return res.status(200).send({
+        info: 'user updated successfully!',
+        user: updatedUser
       });
-    } else {
-      // Item doesn't exist
-      return res.status(404).send({ error: 'no user with this email exists'});
-    }
+    }).catch(err => {
+      console.error('error updating user: ', err);
+      return res.status(500).send({
+        error: 'server error updating user',
+        details: err
+      });
+    });
+  }).catch(err => {
+    console.error('error updating user: ', err);
+    return res.status(500).send({
+      error: 'server error updating user',
+      details: err
+    });
   });
 }

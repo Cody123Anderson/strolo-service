@@ -39,6 +39,11 @@ const Idea = sequelize.define('Idea', {
     allowNull: false,
     defaultValue: 'Under Construction' // 'Active', 'Under Construction', 'Deactivated'
   },
+  reservationRequired: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
   startDate: {
     allowNull: false,
     type: Sequelize.DATE,
