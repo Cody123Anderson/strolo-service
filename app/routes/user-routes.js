@@ -11,6 +11,13 @@ module.exports = (app, passport) => {
   /* Creates a new user */
   app.post('/user/signup', userController.signupUser);
 
+  /* Adds/Removes a favorite idea from a  user */
+  app.put(
+    '/user/idea/:ideaId',
+    userAuthMiddleware.isAuthenticated,
+    userController.updateUserFavorites
+  );
+
   /* Updates a user */
   app.put('/user', userAuthMiddleware.isAuthenticated, userController.updateUser);
 }

@@ -1,13 +1,16 @@
-const { User } = require('../models');
+const { User, Idea } = require('../models');
 const { decodeToken } = require('../utils/jwt-token');
 
 exports.isAuthenticated = (req, res, next) => {
   const token = req.headers.authorization;
   const email = decodeToken(token).sub;
 
-  User.findOne({ where: { email } }).then(user => {
+  User.findOne({
+    where: { email },
+    include: [{ model: Idea, as: 'favorites', through: { attributes: [] } }]
+  }).then(user => {
     if (user) {
-      req.user = user.dataValues;
+      req.user = user;
 
       next();
     } else {

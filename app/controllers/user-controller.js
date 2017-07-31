@@ -1,17 +1,26 @@
-const { User } = require('../models');
+const _ = require('lodash');
+
+const { User, Idea } = require('../models');
 const { formatUser } = require('../models/user');
 const { encodeUserToken } = require('../utils/jwt-token');
 const { comparePasswords } = require('../utils/password');
 
 exports.getUserFromToken = (req, res) => {
-  const user = req.user;
+  const { email } = req.user;
 
-  // Delete fields that we don't want shown to user
-  delete user.password;
-  delete user.passwordResetToken;
-  delete user.passwordResetTokenExpiration;
-
-  return res.status(200).send({ user });
+  User.findOne({
+    where: { email },
+    attributes: { exclude: ['password', 'passwordResetToken', 'passwordResetTokenExpiration']},
+    include: [{ model: Idea, as: 'favorites', through: { attributes: [] } }]
+  }).then(user => {
+    return res.status(200).send({ user });
+  }).catch(err => {
+    console.error('Error in getUserFromToken controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve user',
+      details: err
+    });
+  });
 };
 
 exports.loginUser = (req, res) => {
@@ -108,6 +117,46 @@ exports.signupUser = (req, res) => {
       details: err
     });
   });
+}
+
+exports.updateUserFavorites = (req, res) => {
+  const { user } = req;
+  const { ideaId } = req.params;
+  let favoriteIds = [];
+
+  user.favorites.forEach(idea => {
+    favoriteIds.push(idea.id);
+  });
+
+  const favoriteIndex = _.indexOf(favoriteIds, ideaId);
+
+  if (favoriteIndex > -1) {
+    favoriteIds.splice(favoriteIndex, 1);
+
+    user.setFavorites(favoriteIds).then(() => {
+      return res.status(200).send({
+        info: 'user favorites updated successfully!'
+      });
+    }).catch(err => {
+      console.error('error updating user favorites: ', err);
+      return res.status(500).send({
+        error: 'server error updating user favorites',
+        details: err
+      });
+    });
+  } else {
+    user.addFavorite(ideaId).then(() => {
+      return res.status(200).send({
+        info: 'user favorites updated successfully!'
+      });
+    }).catch(err => {
+      console.error('error updating user favorites: ', err);
+      return res.status(500).send({
+        error: 'server error updating user favorites',
+        details: err
+      });
+    });
+  }
 }
 
 exports.updateUser = (req, res) => {

@@ -83,6 +83,11 @@ Idea.hasMany(Deal, {
   as: 'deals'
 });
 
+Idea.belongsToMany(User, {
+  through: 'UserFavorites',
+  foreignKey: 'ideaId'
+});
+
 /**
   * Category Model Associations
 **/
@@ -118,7 +123,11 @@ Deal.belongsTo(Idea, {
 /**
   * User Model Associations
 **/
-
+User.belongsToMany(Idea, {
+  through: 'UserFavorites',
+  as: 'favorites',
+  foreignKey: 'userId'
+});
 
 module.exports = {
   Business,
