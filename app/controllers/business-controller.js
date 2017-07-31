@@ -1,8 +1,11 @@
+const _ = require('lodash');
+
 const {
   Business,
   BusinessContact,
   Location,
-  Idea
+  Idea,
+  User
 } = require('../models');
 const { sequelize } = require('../services/database');
 
@@ -12,7 +15,16 @@ module.exports.getAllBusinesses = (req, res) => {
     include: [
       { model: BusinessContact, as: 'businessContacts'},
       { model: Location, as: 'locations'},
-      { model: Idea, as: 'ideas'}
+      { model: Idea, as: 'ideas'},
+      {
+        model: User,
+        as: 'businessUsers',
+        attributes: {
+          exclude: [
+            'password', 'passwordResetToken', 'passwordResetTokenExpiration'
+          ]
+        },
+        through: { attributes: [] }}
     ]
   }).then(businesses => {
     return res.status(200).send({ businesses });
@@ -33,7 +45,16 @@ module.exports.getBusiness = (req, res) => {
     include: [
       { model: BusinessContact, as: 'businessContacts'},
       { model: Location, as: 'locations'},
-      { model: Idea, as: 'ideas'}
+      { model: Idea, as: 'ideas'},
+      {
+        model: User,
+        as: 'businessUsers',
+        attributes: {
+          exclude: [
+            'password', 'passwordResetToken', 'passwordResetTokenExpiration'
+          ]
+        },
+        through: { attributes: [] }}
     ]
   }).then(business => {
     return res.status(200).send({ business });
@@ -64,6 +85,65 @@ module.exports.createBusiness = (req, res) => {
     console.error('error creating business: ', err);
     return res.status(500).send({
       error: 'server error creating business',
+      details: err
+    });
+  });
+};
+
+module.exports.updateBusinessUsers = (req, res) => {
+  const { businessId, userId } = req.params;
+  let userIds = [];
+
+  Business.findOne({
+    where: { id: businessId },
+    include: [{
+      model: User,
+      as: 'businessUsers',
+      attributes: {
+        exclude: [
+          'password', 'passwordResetToken', 'passwordResetTokenExpiration'
+        ]
+      },
+      through: { attributes: [] }
+    }]
+  }).then(business => {
+    business.businessUsers.forEach(busUser => {
+      userIds.push(busUser.id);
+    });
+
+    const userIndex = _.indexOf(userIds, userId);
+
+    if (userIndex > -1) {
+      userIds.splice(userIndex, 1);
+
+      business.setBusinessUsers(userIds).then(() => {
+        return res.status(200).send({
+          info: 'business users updated successfully!'
+        });
+      }).catch(err => {
+        console.error('error updating business users: ', err);
+        return res.status(500).send({
+          error: 'server error updating business users',
+          details: err
+        });
+      });
+    } else {
+      business.addBusinessUser(userId).then(() => {
+        return res.status(200).send({
+          info: 'business users updated successfully!'
+        });
+      }).catch(err => {
+        console.error('error updating business users: ', err);
+        return res.status(500).send({
+          error: 'server error updating business users',
+          details: err
+        });
+      });
+    }
+  }).catch(err => {
+    console.error('error updating business users: ', err);
+    return res.status(500).send({
+      error: 'server error updating business users',
       details: err
     });
   });

@@ -44,6 +44,7 @@ exports.loginUser = (req, res) => {
         if (isMatch) {
           // Valid email and password, give them a token
           res.status(200).send({
+            id: user.id,
             token: encodeUserToken(user)
           });
         } else {
@@ -120,59 +121,62 @@ exports.signupUser = (req, res) => {
 }
 
 exports.updateUserFavorites = (req, res) => {
-  const { user } = req;
-  const { ideaId } = req.params;
+  const { userId, ideaId } = req.params;
   let favoriteIds = [];
 
-  user.favorites.forEach(idea => {
-    favoriteIds.push(idea.id);
+  User.findOne({
+    where: { id: userId },
+    include: [{ model: Idea, as: 'favorites', through: { attributes: [] } }]
+  }).then(user => {
+    user.favorites.forEach(idea => {
+      favoriteIds.push(idea.id);
+    });
+
+    const favoriteIndex = _.indexOf(favoriteIds, ideaId);
+
+    if (favoriteIndex > -1) {
+      favoriteIds.splice(favoriteIndex, 1);
+
+      user.setFavorites(favoriteIds).then(() => {
+        return res.status(200).send({
+          info: 'user favorites updated successfully!'
+        });
+      }).catch(err => {
+        console.error('error updating user favorites: ', err);
+        return res.status(500).send({
+          error: 'server error updating user favorites',
+          details: err
+        });
+      });
+    } else {
+      user.addFavorite(ideaId).then(() => {
+        return res.status(200).send({
+          info: 'user favorites updated successfully!'
+        });
+      }).catch(err => {
+        console.error('error updating user favorites: ', err);
+        return res.status(500).send({
+          error: 'server error updating user favorites',
+          details: err
+        });
+      });
+    }
+  }).catch(err => {
+    console.error('error updating user favorites: ', err);
+    return res.status(500).send({
+      error: 'server error updating user favorites',
+      details: err
+    });
   });
-
-  const favoriteIndex = _.indexOf(favoriteIds, ideaId);
-
-  if (favoriteIndex > -1) {
-    favoriteIds.splice(favoriteIndex, 1);
-
-    user.setFavorites(favoriteIds).then(() => {
-      return res.status(200).send({
-        info: 'user favorites updated successfully!'
-      });
-    }).catch(err => {
-      console.error('error updating user favorites: ', err);
-      return res.status(500).send({
-        error: 'server error updating user favorites',
-        details: err
-      });
-    });
-  } else {
-    user.addFavorite(ideaId).then(() => {
-      return res.status(200).send({
-        info: 'user favorites updated successfully!'
-      });
-    }).catch(err => {
-      console.error('error updating user favorites: ', err);
-      return res.status(500).send({
-        error: 'server error updating user favorites',
-        details: err
-      });
-    });
-  }
 }
 
 exports.updateUser = (req, res) => {
-  const email = req.user.email;
+  const { id } = req.params;
 
   formatUser(req.body).then(formattedUser => {
-    User.update(formattedUser, { where: { email } }).then(() => {
-      const updatedUser = Object.assign(req.user, formattedUser);
-
-      delete updatedUser.password;
-      delete updatedUser.passwordResetToken;
-      delete updatedUser.passwordResetTokenExpiration;
-
+    User.update(formattedUser, { where: { id } }).then(() => {
       return res.status(200).send({
         info: 'user updated successfully!',
-        user: updatedUser
       });
     }).catch(err => {
       console.error('error updating user: ', err);

@@ -26,6 +26,12 @@ Business.hasMany(Idea, {
   as: 'ideas'
 });
 
+Business.belongsToMany(User, {
+  through: 'BusinessUsers',
+  as: 'businessUsers',
+  foreignKey: 'businessId'
+});
+
 /**
   * BusinessContact Model Associations
 **/
@@ -126,6 +132,11 @@ Deal.belongsTo(Idea, {
 User.belongsToMany(Idea, {
   through: 'UserFavorites',
   as: 'favorites',
+  foreignKey: 'userId'
+});
+
+User.belongsToMany(Business, {
+  through: 'BusinessUsers',
   foreignKey: 'userId'
 });
 
