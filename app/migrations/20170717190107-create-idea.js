@@ -17,25 +17,14 @@ module.exports = {
         },
         allowNull: false
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      description: {
-        type: Sequelize.STRING
-      },
+      createdAt: { allowNull: false, type: Sequelize.DATE },
+      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      title: { type: Sequelize.STRING, allowNull: false },
+      description: { type: Sequelize.STRING },
       status: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'Under Construction'
+        defaultValue: 'Under Construction' // 'Active', 'Under Construction', 'Deactivated'
       },
       reservationRequired: {
         type: Sequelize.BOOLEAN,
@@ -47,9 +36,8 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
       },
-      endDate: {
-        type: Sequelize.DATE
-      }
+      endDate: { type: Sequelize.DATE },
+      eventDate: { type: Sequelize.DATE }
     });
   },
   down: function(queryInterface, Sequelize) {

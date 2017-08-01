@@ -1,39 +1,39 @@
 const categoryController = require('../controllers/category-controller');
-const adminAuthService = require('../services/admin-auth');
+const { isAdminAuthenticated } = require('../middleware/admin-auth');
 
 module.exports = (app, passport) => {
   /* READ all categories */
   app.get(
     '/categories',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     categoryController.getAllCategories
   );
 
   /* READ one category by id  */
   app.get(
     '/categories/:id',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     categoryController.getCategory
   );
 
   /* CREATE a category */
   app.post(
     '/categories',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     categoryController.createCategory
   );
 
   /* UPDATE a category */
   app.put(
     '/categories/:id',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     categoryController.updateCategory
   );
 
   /* DELETE a category */
   app.delete(
     '/categories/:id',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     categoryController.deleteCategory
   );
 }

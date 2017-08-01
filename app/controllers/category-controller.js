@@ -10,7 +10,7 @@ module.exports.getAllCategories = (req, res) => {
     console.error('error in getAllCategories controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve categories',
-      details: err
+      details: err.message
     });
   });
 };
@@ -24,7 +24,7 @@ module.exports.getCategory = (req, res) => {
     console.error('Error in getCategory controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve category',
-      details: err
+      details: err.message
     });
   });
 };
@@ -47,7 +47,7 @@ module.exports.createCategory = (req, res) => {
     console.error('error creating category: ', err);
     return res.status(500).send({
       error: 'server error creating category',
-      details: err
+      details: err.message
     });
   });
 };
@@ -61,7 +61,7 @@ module.exports.updateCategory = (req, res) => {
     console.error('error updating category: ', err);
     return res.status(500).send({
       error: 'server error updating category',
-      details: err
+      details: err.message
     });
   });
 };

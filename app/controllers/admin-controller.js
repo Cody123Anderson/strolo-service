@@ -4,14 +4,6 @@ const { comparePasswords } = require('../utils/password');
 const { dynamo } = require('../services/database');
 const config = require('../config');
 
-exports.isLoggedIn = (req, res, next) => {
-  // User has already been logged in if they get here
-  return res.status(200).send({
-    status: 200,
-    loggedin: true
-  });
-};
-
 exports.login = (req, res) => {
   const username = req.body.username;
   const password = req.body.password;

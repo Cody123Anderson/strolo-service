@@ -1,25 +1,25 @@
 const ideaImageController = require('../controllers/idea-image-controller');
-const adminAuthService = require('../services/admin-auth');
+const { isAdminAuthenticated } = require('../middleware/admin-auth');
 
 module.exports = (app) => {
   /* Upload image to Cloud storage */
   app.post(
     '/ideaImages',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     ideaImageController.createImage
   );
 
   /* Update Image */
   app.put(
     '/ideaImages/:id',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     ideaImageController.updateImage
   );
 
   /* Delete Image */
   app.delete(
     '/ideaImages/:id',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     ideaImageController.destroyImage
   );
 }

@@ -18,7 +18,7 @@ exports.getUserFromToken = (req, res) => {
     console.error('Error in getUserFromToken controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve user',
-      details: err
+      details: err.message
     });
   });
 };
@@ -63,7 +63,7 @@ exports.loginUser = (req, res) => {
     console.error('Error in loginUser controller: ', err);
     return res.status(500).send({
       error: 'unable to authenticate user',
-      details: err
+      details: err.message
     });
   });
 };
@@ -95,14 +95,14 @@ exports.signupUser = (req, res) => {
           console.error('error creating user: ', err);
           return res.status(500).send({
             error: 'server error creating user',
-            details: err
+            details: err.message
           });
         });
       }).catch(err => {
         console.error('Error formatting user in signupUser controller: ', err);
         return res.status(500).send({
           error: 'unable to sign up user',
-          details: err
+          details: err.message
         });
       });
     } else {
@@ -115,7 +115,7 @@ exports.signupUser = (req, res) => {
     console.error('Error in signupUser controller: ', err);
     return res.status(500).send({
       error: 'unable to sign up user',
-      details: err
+      details: err.message
     });
   });
 }
@@ -145,7 +145,7 @@ exports.updateUserFavorites = (req, res) => {
         console.error('error updating user favorites: ', err);
         return res.status(500).send({
           error: 'server error updating user favorites',
-          details: err
+          details: err.message
         });
       });
     } else {
@@ -157,7 +157,7 @@ exports.updateUserFavorites = (req, res) => {
         console.error('error updating user favorites: ', err);
         return res.status(500).send({
           error: 'server error updating user favorites',
-          details: err
+          details: err.message
         });
       });
     }
@@ -165,7 +165,7 @@ exports.updateUserFavorites = (req, res) => {
     console.error('error updating user favorites: ', err);
     return res.status(500).send({
       error: 'server error updating user favorites',
-      details: err
+      details: err.message
     });
   });
 }
@@ -182,14 +182,14 @@ exports.updateUser = (req, res) => {
       console.error('error updating user: ', err);
       return res.status(500).send({
         error: 'server error updating user',
-        details: err
+        details: err.message
       });
     });
   }).catch(err => {
     console.error('error updating user: ', err);
     return res.status(500).send({
       error: 'server error updating user',
-      details: err
+      details: err.message
     });
   });
 }

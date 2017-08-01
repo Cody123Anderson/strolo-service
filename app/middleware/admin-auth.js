@@ -1,8 +1,8 @@
-const { dynamo } = require('./database')
+const { dynamo } = require('../services/database')
 const { decodeToken } = require('../utils/jwt-token');
 const config = require('../config');
 
-exports.isAuthenticated = (req, res, next) => {
+exports.isAdminAuthenticated = (req, res, next) => {
   const token = req.headers.authorization;
   const decoded = decodeToken(token);
   const params = {

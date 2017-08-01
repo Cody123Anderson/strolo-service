@@ -1,5 +1,5 @@
 const dealController = require('../controllers/deal-controller');
-const adminAuthService = require('../services/admin-auth');
+const { isAdminAuthenticated } = require('../middleware/admin-auth');
 
 module.exports = (app, passport) => {
   /* READ one deal by id  */
@@ -11,21 +11,21 @@ module.exports = (app, passport) => {
   /* CREATE a deal */
   app.post(
     '/deals',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     dealController.createDeal
   );
 
   /* UPDATE a deal */
   app.put(
     '/deals/:id',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     dealController.updateDeal
   );
 
   /* Delete a deal */
   app.delete(
     '/deals/:id',
-    adminAuthService.isAuthenticated,
+    isAdminAuthenticated,
     dealController.deleteDeal
   );
 }

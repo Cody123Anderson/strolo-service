@@ -1,11 +1,11 @@
 const userController = require('../controllers/user-controller');
-const { isAuthenticated } = require('../middleware/user-auth');
+const { isUserAuthenticated } = require('../middleware/user-auth');
 
 module.exports = (app, passport) => {
   /* Gets the authenticated user */
   app.get(
     '/users/authenticated',
-    isAuthenticated,
+    isUserAuthenticated,
     userController.getUserFromToken
   );
 
@@ -18,10 +18,14 @@ module.exports = (app, passport) => {
   /* Adds/Removes a favorite idea from a  user */
   app.put(
     '/users/:userId/idea/:ideaId',
-    isAuthenticated,
+    isUserAuthenticated,
     userController.updateUserFavorites
   );
 
   /* Updates a user */
-  app.put('/users/:id', isAuthenticated, userController.updateUser);
+  app.put(
+    '/users/:id',
+    isUserAuthenticated,
+    userController.updateUser
+  );
 }

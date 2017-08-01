@@ -10,7 +10,7 @@ module.exports.getAllTags = (req, res) => {
     console.error('error in getAllTags controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve tags',
-      details: err
+      details: err.message
     });
   });
 };
@@ -24,7 +24,7 @@ module.exports.getTag = (req, res) => {
     console.error('Error in getTag controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve tag',
-      details: err
+      details: err.message
     });
   });
 };
@@ -47,7 +47,7 @@ module.exports.createTag = (req, res) => {
     console.error('error creating tag: ', err);
     return res.status(500).send({
       error: 'server error creating tag',
-      details: err
+      details: err.message
     });
   });
 };
@@ -61,7 +61,7 @@ module.exports.updateTag = (req, res) => {
     console.error('error updating tag: ', err);
     return res.status(500).send({
       error: 'server error updating tag',
-      details: err
+      details: err.message
     });
   });
 };

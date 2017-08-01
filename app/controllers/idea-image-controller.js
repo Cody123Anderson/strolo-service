@@ -31,13 +31,13 @@ exports.createImage = (req, res) => {
       console.error('error creating ideaImage: ', err);
       return res.status(500).send({
         error: 'server error creating ideaImage',
-        details: err
+        details: err.message
       });
     });
   }).catch(err => {
     return res.status(400).send({
       info: 'failed to upload image',
-      error: err
+      error: err.message
     });
   });
 };
@@ -79,20 +79,20 @@ exports.updateImage = (req, res) => {
       }).catch(err => {
         return res.status(500).send({
           error: 'server error updating ideaImage',
-          details: err
+          details: err.message
         });
       });
     }).catch(err => {
       console.error('error updating ideaImage: ', err);
       return res.status(500).send({
         error: 'server error updating ideaImage',
-        details: err
+        details: err.message
       });
     });
   }).catch(err => {
     return res.status(400).send({
       info: 'failed to upload image',
-      error: err
+      error: err.message
     });
   });
 };
@@ -114,7 +114,7 @@ exports.destroyImage = (req, res) => {
     }).catch(err => {
       return res.status(500).send({
         error: 'server error deleting ideaImage',
-        details: err
+        details: err.message
       });
     });
   }).catch(err => {

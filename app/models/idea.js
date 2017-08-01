@@ -19,21 +19,10 @@ const Idea = sequelize.define('Idea', {
     },
     allowNull: false
   },
-  createdAt: {
-    allowNull: false,
-    type: Sequelize.DATE
-  },
-  updatedAt: {
-    allowNull: false,
-    type: Sequelize.DATE
-  },
-  title: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  description: {
-    type: Sequelize.STRING
-  },
+  createdAt: { allowNull: false, type: Sequelize.DATE },
+  updatedAt: { allowNull: false, type: Sequelize.DATE },
+  title: { type: Sequelize.STRING, allowNull: false },
+  description: { type: Sequelize.STRING },
   status: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -49,9 +38,8 @@ const Idea = sequelize.define('Idea', {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
   },
-  endDate: {
-    type: Sequelize.DATE
-  }
+  endDate: { type: Sequelize.DATE },
+  eventDate: { type: Sequelize.DATE }
 });
 
 module.exports = Idea;

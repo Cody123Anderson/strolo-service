@@ -1,31 +1,32 @@
 const dealInstanceController = require('../controllers/deal-instance-controller');
-const adminAuthService = require('../services/admin-auth');
+const { isAdminAuthenticated } = require('../middleware/admin-auth');
+const { isUserAuthenticated } = require('../middleware/user-auth');
 
 module.exports = (app, passport) => {
   /* READ all dealInstances */
-  app.get('/dealInstances', dealInstanceController.getAllDealInstances);
+  app.get(
+    '/admin/dealInstances',
+    isAdminAuthenticated,
+    dealInstanceController.getAllDealInstances
+  );
 
   /* READ one dealInstance by id  */
-  app.get('/dealInstances/:id', dealInstanceController.getDealInstance);
+  app.get(
+    '/dealInstances/:id',
+    isUserAuthenticated,
+    dealInstanceController.getDealInstance
+  );
 
   /* CREATE a dealInstance */
   app.post(
     '/dealInstances',
-    adminAuthService.isAuthenticated,
+    isUserAuthenticated,
     dealInstanceController.createDealInstance
   );
 
-  /* UPDATE a dealInstance */
+  /* Update a dealInstance by changing status to redeemed */
   app.put(
-    '/dealInstances/:id',
-    adminAuthService.isAuthenticated,
-    dealInstanceController.updateDealInstance
-  );
-
-  /* Delete a dealInstance */
-  app.delete(
-    '/dealInstances/:id',
-    adminAuthService.isAuthenticated,
-    dealInstanceController.deleteDealInstance
+    '/dealInstances/:id/redeem',
+    dealInstanceController.redeemDealInstance
   );
 }

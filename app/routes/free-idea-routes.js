@@ -1,5 +1,5 @@
 const freeIdeaController = require('../controllers/free-idea-controller');
-const adminAuthService = require('../services/admin-auth');
+const { isAdminAuthenticated } = require('../middleware/admin-auth');
 
 module.exports = (app, passport) => {
   /* READ all freeideas */
@@ -15,11 +15,11 @@ module.exports = (app, passport) => {
   app.get('/freeideas/:id', freeIdeaController.getFreeIdea);
 
   /* CREATE a freeIdea */
-  app.post('/freeideas', adminAuthService.isAuthenticated, freeIdeaController.createFreeIdea);
+  app.post('/freeideas', isAdminAuthenticated, freeIdeaController.createFreeIdea);
 
   /* UPDATE a freeIdea */
-  app.put('/freeideas/:id', adminAuthService.isAuthenticated, freeIdeaController.updateFreeIdea);
+  app.put('/freeideas/:id', isAdminAuthenticated, freeIdeaController.updateFreeIdea);
 
   /* Delete a freeIdea */
-  app.delete('/freeideas/:id', adminAuthService.isAuthenticated, freeIdeaController.deleteFreeIdea);
+  app.delete('/freeideas/:id', isAdminAuthenticated, freeIdeaController.deleteFreeIdea);
 }

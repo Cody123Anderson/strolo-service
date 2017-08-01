@@ -1,7 +1,7 @@
 const { User, Idea } = require('../models');
 const { decodeToken } = require('../utils/jwt-token');
 
-exports.isAuthenticated = (req, res, next) => {
+exports.isUserAuthenticated = (req, res, next) => {
   const token = req.headers.authorization;
   const email = decodeToken(token).sub;
 

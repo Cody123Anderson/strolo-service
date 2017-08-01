@@ -1,5 +1,5 @@
 const ideaController = require('../controllers/idea-controller');
-const adminAuthService = require('../services/admin-auth');
+const { isAdminAuthenticated } = require('../middleware/admin-auth');
 
 module.exports = (app, passport) => {
   /* READ all ideas */
@@ -21,11 +21,11 @@ module.exports = (app, passport) => {
   app.get('/ideas/:id', ideaController.getIdea);
 
   /* CREATE an idea */
-  app.post('/ideas', adminAuthService.isAuthenticated, ideaController.createIdea);
+  app.post('/ideas', isAdminAuthenticated, ideaController.createIdea);
 
   /* UPDATE an idea */
-  app.put('/ideas/:id', adminAuthService.isAuthenticated, ideaController.updateIdea);
+  app.put('/ideas/:id', isAdminAuthenticated, ideaController.updateIdea);
 
   /* Delete an idea */
-  app.delete('/ideas/:id', adminAuthService.isAuthenticated, ideaController.deleteIdea);
+  app.delete('/ideas/:id', isAdminAuthenticated, ideaController.deleteIdea);
 }
