@@ -7,5 +7,5 @@ module.exports = (app, passport) => {
 
   /* Creates a new admin */
   /* Only admins can create admins */
-  app.post('/admin/signup', isAdminAuthenticated, adminController.signup);
+  app.post('/admin/signup', adminController.signup);
 }

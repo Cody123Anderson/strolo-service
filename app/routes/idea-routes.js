@@ -20,6 +20,9 @@ module.exports = (app, passport) => {
   /* READ one idea by id  */
   app.get('/ideas/:id', ideaController.getIdea);
 
+  /* READ one idea by id for a user  */
+  app.get('/ideas/:ideaId/user/:userId', ideaController.getIdeaForUser);
+
   /* CREATE an idea */
   app.post('/ideas', isAdminAuthenticated, ideaController.createIdea);
 

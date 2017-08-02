@@ -1,4 +1,4 @@
-const { Idea, Location, Category, Tag, IdeaImage, Deal } = require('../models');
+const { Idea, Location, Category, Tag, IdeaImage, Deal, DealInstance } = require('../models');
 const { sequelize } = require('../services/database');
 const { shuffleArray } = require('../utils/shuffle');
 
@@ -169,6 +169,62 @@ exports.getIdea = (req, res) => {
     return res.status(200).send({ idea });
   }).catch(err => {
     console.error('Error in getIdea controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve idea',
+      details: err.message
+    });
+  });
+}
+
+exports.getIdeaForUser = (req, res) => {
+  const { ideaId, userId } = req.params;
+
+  Idea.findOne({
+    where: { id: ideaId },
+    include: [
+      {
+        model: Location,
+        as: 'locations',
+        through: { attributes: [] }
+      },
+      {
+        model: Category,
+        as: 'categories',
+        through: { attributes: [] }
+      },
+      {
+        model: Tag,
+        as: 'tags',
+        through: { attributes: [] }
+      },
+      {
+        model: IdeaImage,
+        as: 'images'
+      },
+      {
+        model: Deal,
+        as: 'deals'
+      }
+    ]
+  }).then(idea => {
+    if (!idea) {
+      return res.status(404).send({ info: 'no idea found with this id' });
+    }
+
+    DealInstance.findAll({ where: { userId, ideaId }}).then(dealInstances => {
+      idea = idea.dataValues;
+      idea.userDealInstances = dealInstances;
+
+      return res.status(200).send({ idea });
+    }).catch(err => {
+      console.error('Error in getIdeaForUser controller: ', err);
+      return res.status(500).send({
+        error: 'unable to retrieve idea',
+        details: err.message
+      });
+    });
+  }).catch(err => {
+    console.error('Error in getIdeaForUser controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve idea',
       details: err.message

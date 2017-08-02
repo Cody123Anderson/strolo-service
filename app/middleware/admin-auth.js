@@ -4,10 +4,10 @@ const config = require('../config');
 
 exports.isAdminAuthenticated = (req, res, next) => {
   const token = req.headers.authorization;
-  const decoded = decodeToken(token);
+  const username = decodeToken(token).sub;
   const params = {
     TableName: config.TABLE_ADMIN,
-    Key: { 'username': decoded.sub }
+    Key: { 'username': username }
   };
 
   dynamo.get(params, function(err, data) {
