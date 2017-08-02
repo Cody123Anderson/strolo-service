@@ -1,7 +1,7 @@
 {
 	"variables": [],
 	"info": {
-		"name": "Serenade API",
+		"name": "Dealtrix API",
 		"_postman_id": "cc03030d-71ec-80c5-f602-4ca17c91a956",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
@@ -19,9 +19,9 @@
 			"response": []
 		},
 		{
-			"name": "/admin/authenticated",
+			"name": "/admin/dealInstances",
 			"request": {
-				"url": "{{url}}/admin/authenticated",
+				"url": "{{url}}/admin/dealInstances",
 				"method": "GET",
 				"header": [
 					{
@@ -122,7 +122,7 @@
 		{
 			"name": "/businesses/:id",
 			"request": {
-				"url": "{{url}}/businesses/bus-1494121432-LFp3I",
+				"url": "{{url}}/businesses/{{current-bus-id}}",
 				"method": "GET",
 				"header": [
 					{
@@ -144,7 +144,7 @@
 		{
 			"name": "/businesses/:id",
 			"request": {
-				"url": "{{url}}/businesses/bus-1494121432-LFp3I",
+				"url": "{{url}}/businesses/{{current-bus-id}}",
 				"method": "PUT",
 				"header": [
 					{
@@ -160,7 +160,32 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"billingAddress\": \"1476 Trinnaman Ln.\",\n  \"billingCity\": \"Lehi\",\n  \"billingState\": \"UT\",\n  \"billingZip\": \"84043\",\n  \"contactName\": \"Cody Anderson\",\n  \"contactEmail\": \"cody@testbusiness2.com\",\n  \"contactPhone\": \"6025417677\",\n  \"locations\": [\"loc-1\", \"loc-2\", \"loc-3\"],\n  \"name\": \"Alphabet\",\n  \"status\": \"active\"\n}"
+					"raw": "{\n  \"billingAddress\": \"3247 South Tytus Ln.\",\n  \"billingCity\": \"Saratoga Springs\",\n  \"billingZip\": \"84045\",\n  \"logoUrl\": \"https://res.cloudinary.com/serenade-dates/logos/dealtrix-logo-dark.png\",\n  \"website\": \"www.dealtrix.com\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businesses/:businessId/user/:userID",
+			"request": {
+				"url": "{{url}}/businesses/{{current-bus-id}}/user/{{current-user-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
 				},
 				"description": ""
 			},
@@ -168,6 +193,18 @@
 		},
 		{
 			"name": "/businesses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-bus-id\", jsonData.business.id);"
+						]
+					}
+				}
+			],
 			"request": {
 				"url": "{{url}}/businesses",
 				"method": "POST",
@@ -185,7 +222,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"billingAddress\": \"1476 Trinnaman Ln.\",\n  \"billingCity\": \"Lehi\",\n  \"billingState\": \"UT\",\n  \"billingZip\": \"84043\",\n  \"contactName\": \"Cody Anderson\",\n  \"contactEmail\": \"cody@testbusiness2.com\",\n  \"contactPhone\": \"6025417677\",\n  \"locations\": [\"loc-1\", \"loc-2\"],\n  \"name\": \"Alphabet\",\n  \"status\": \"active\"\n}"
+					"raw": "{\n  \"name\": \"Dealtrix\",\n  \"description\": \"Dealtrix offers the best deals on Earth!\",\n  \"websiteUrl\": \"www.dealtrixx.com\",\n  \"billingAddress\": \"1476 Trinnaman Ln.\",\n  \"billingCity\": \"Lehi\",\n  \"billingState\": \"UT\",\n  \"billingZip\": \"84043\",\n  \"stripeToken\": \"1ak13lkj5502kfslkdjf23klj\",\n  \"logoUrl\": \"broken\"\n}"
 				},
 				"description": ""
 			},
@@ -194,7 +231,7 @@
 		{
 			"name": "/businesses/:id",
 			"request": {
-				"url": "{{url}}/businesses/bus-1494121432-LFp3I",
+				"url": "{{url}}/businesses/{{current-bus-id}}",
 				"method": "DELETE",
 				"header": [
 					{
@@ -217,66 +254,10 @@
 			"response": []
 		},
 		{
-			"name": "/freeideas",
+			"name": "/businessContacts/:id",
 			"request": {
-				"url": "{{url}}/freeideas",
+				"url": "{{url}}/businessContacts/{{current-bus-contact-id}}",
 				"method": "GET",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/freeideas/status/:status",
-			"request": {
-				"url": "{{url}}/freeideas/status/active",
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/freeideas/zip/:zip/range/:range",
-			"request": {
-				"url": "{{url}}/freeideas/zip/{{zipcode}}/range/{range}}",
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/freeideas/:id",
-			"request": {
-				"url": "{{url}}/freeideas/{{freeIdeaID}}",
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/freeideas",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"freeIdeaID\", jsonData.id);"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": "{{url}}/freeideas",
-				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -289,18 +270,15 @@
 						"description": ""
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"businessName\": \"Test Business\",\n  \"categories\": [\"Romantic\", \"Spontaneous\"],\n  \"description\": \"This is a test date. This really is a test date.\",\n  \"images\": [{\n    \"id\": \"v1480801812\",\n    \"url\": \"https://res.cloudinary.com/serenade-dates/image/upload/v1480801812/emails/firstdate.jpg\"\n  }],\n  \"locations\": [{\n    \"address\": \"1489 Test Ln.\",\n    \"city\": \"Provo\",\n    \"state\": \"UT\",\n    \"zip\": \"84606\"\n  }],\n  \"name\": \"Test date\",\n  \"retailPrice\": 44.99,\n  \"status\": \"active\",\n  \"type\": \"activity\"\n}"
-				},
+				"body": {},
 				"description": ""
 			},
 			"response": []
 		},
 		{
-			"name": "/freeideas/:id",
+			"name": "/businessContacts/:id",
 			"request": {
-				"url": "{{url}}/freeideas/{{freeIdeaID}}",
+				"url": "{{url}}/businessContacts/{{current-bus-contact-id}}",
 				"method": "PUT",
 				"header": [
 					{
@@ -316,16 +294,574 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"businessName\": \"Trampoline Nation\",\n  \"name\": \"Become Ninja Warriors\",\n  \"retailPrice\": 54.99,\n  \"status\": \"inactive\",\n  \"type\": \"fun\"\n}"
+					"raw": "{\n  \"name\": \"Cody Henderson\",\n  \"position\": \"Co-Founder\",\n  \"email\": \"cody@blah.com\",\n  \"phone\": \"(602) 541-7677\"\n}"
 				},
 				"description": ""
 			},
 			"response": []
 		},
 		{
-			"name": "/freeideas/:id",
+			"name": "/businessContacts/:businessId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-bus-contact-id\", jsonData.businessContact.id);"
+						]
+					}
+				}
+			],
 			"request": {
-				"url": "{{url}}/freeideas/{{freeIdeaID}}",
+				"url": "{{url}}/businessContacts/{{current-bus-id}}",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Cody Anderson\",\n  \"position\": \"Co-Founder\",\n  \"email\": \"cody@dealtrix.com\",\n  \"phone\": \"(602) 541-7677\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/businessContacts/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"current-bus-contact-id\", null);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/businessContacts/{{current-bus-contact-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Cody Henderson\",\n  \"position\": \"Co-Founder\",\n  \"email\": \"cody@blah.com\",\n  \"phone\": \"(602) 541-7677\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories",
+			"request": {
+				"url": "{{url}}/categories",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/:id",
+			"request": {
+				"url": "{{url}}/categories/{{current-category-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/:id",
+			"request": {
+				"url": "{{url}}/categories/{{current-category-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"date_ideas\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-category-id\", jsonData.category.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/categories",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"date_idea\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"current-category-contact-id\", null);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/categories/{{current-category-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals/:id",
+			"request": {
+				"url": "{{url}}/deals/{{current-deal-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals/idea/:ideaId",
+			"request": {
+				"url": "{{url}}/deals/idea/{{current-idea-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals/:id",
+			"request": {
+				"url": "{{url}}/deals/{{current-deal-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Dinner for two\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-deal-id\", jsonData.deal.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/deals",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"ideaId\": \"{{current-idea-id}}\",\n    \"title\": \"Buy 1 Get 1 Free\",\n    \"details\": \"Admission tickets for two people.\",\n    \"retailPrice\": 10.00,\n    \"discountPrice\": 5.00,\n    \"maxRedemptions\": 1,\n    \"type\": \"single\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/deals/:id",
+			"request": {
+				"url": "{{url}}/deals/{{current-deal-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/dealInstances/:id",
+			"request": {
+				"url": "{{url}}/dealInstances/{{current-dealInstance-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{user-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/dealInstances/:id/redeem",
+			"request": {
+				"url": "{{url}}/dealInstances/{{current-dealInstance-id}}/redeem",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{user-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/dealInstances",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-dealInstance-id\", jsonData.dealInstance.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/dealInstances",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{user-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": \"{{current-user-id}}\",\n\t\"businessId\": \"{{current-bus-id}}\",\n\t\"ideaId\": \"{{current-idea-id}}\",\n\t\"dealId\": \"{{current-deal-id}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas",
+			"request": {
+				"url": "{{url}}/ideas",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/:id",
+			"request": {
+				"url": "{{url}}/ideas/{{current-idea-id}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/:ideaId/user/:userId",
+			"request": {
+				"url": "{{url}}/ideas/{{current-idea-id}}/user/{{current-user-id}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/status/:status",
+			"request": {
+				"url": "{{url}}/ideas/status/Active",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/business/:id",
+			"request": {
+				"url": "{{url}}/ideas/business/{{current-bus-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/:id",
+			"request": {
+				"url": "{{url}}/ideas/{{current-idea-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"status\": \"Active\",\n  \"locationIds\": [\"78e253d7-764e-4eb5-9529-8f53d23bcc91\", \"{{current-loc-id}}\"],\n  \"categoryIds\": [\"3c33a371-7326-4448-80f3-31245a6c082d\", \"{{current-category-id}}\"],\n  \"tagIds\": [\"8b141979-cf80-4d80-a3f7-edb0e11a84c5\", \"{{current-tag-id}}\"],\n  \"reservationRequired\": true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-idea-id\", jsonData.idea.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/ideas",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"businessId\": \"{{current-bus-id}}\",\n  \"title\": \"Test date\",\n  \"description\": \"This is a test date. This really is a test date.\",\n  \"locationIds\": [\"{{current-loc-id}}\"],\n  \"categoryIds\": [\"{{current-category-id}}\"],\n  \"tagIds\": [\"{{current-tag-id}}\"],\n  \"reservationRequired\": false\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideas/:id",
+			"request": {
+				"url": "{{url}}/ideas/{{current-idea-id}}",
 				"method": "DELETE",
 				"header": [
 					{
@@ -348,78 +884,21 @@
 			"response": []
 		},
 		{
-			"name": "/images",
-			"request": {
-				"url": "{{url}}/images",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					},
-					{
-						"key": "Authorization",
-						"value": "{{admin-token}}",
-						"description": ""
+			"name": "/ideaImages/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-cloudinary-id\", jsonData.ideaImage.cloudinaryId);"
+						]
 					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"dataURL\": \"\"\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/locations",
+				}
+			],
 			"request": {
-				"url": "{{url}}/locations",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					},
-					{
-						"key": "Authorization",
-						"value": "{{admin-token}}",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/locations/:id",
-			"request": {
-				"url": "{{url}}/locations/loc-1494749161-U5Elb",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					},
-					{
-						"key": "Authorization",
-						"value": "{{admin-token}}",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/locations/:id",
-			"request": {
-				"url": "{{url}}/locations/loc-1494749161-U5Elb",
+				"url": "{{url}}/ideaImages/{{current-ideaImage-id}}",
 				"method": "PUT",
 				"header": [
 					{
@@ -435,7 +914,139 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"address2\": \"#403\"\n}"
+					"raw": "{\n  \"oldCloudinaryId\": \"{{current-cloudinary-id}}\",\n  \"dataURL\": \"data:image/jpeg;base64,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\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideaImages",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-ideaImage-id\", jsonData.ideaImage.id);",
+							"postman.setEnvironmentVariable(\"current-cloudinary-id\", jsonData.ideaImage.cloudinaryId);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/ideaImages",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ideaId\": \"{{current-idea-id}}\",\n  \"dataURL\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAPFBMVEXw8PDYdqTXbZ/x9vTq1d7Yc6Ldlbbw8vHr2uHcj7LXcKHbia/cjbHdk7Xhp8Hq19/v6+zVZJrmwNDZfaiM2TIJAAAB0UlEQVR4nO3dSU4rURBEUXDZVOOOZv97RUgM0XcOIus/yecsIPSuGGJlvbwAAAAA/zKX7D0VtFTc3yvvCk4FTeuh4ONYeFZwKml6O70+digV5qaSFCrsmUpSqLBnKkmhwp6pJIUKe6aSFCrsmUpSqLBnKkmhwp6pJIUKe6aSFCrsmUpSqLBnKkmhwp6ppCcovG6nx2qFuamk+XZZHzsvhWcFp6LmqaL0quAUAAAAAAAAAPypduohaO/A0qmHoEGvRgQNejUiaNDfRClUqFChQoUKFSpUqFChQoUKFSpUqFChQoUKFSpUqFChwv9dWDoAsHvhkjtLsKxvBV/7Br6eKq+63iqJ83IoHOLY+S/4k1iwXaZa4e6vTzmtChWOTqHC8SlUOD6FCsenUOH4FCocn0KF41OocHwKFY5PocLxKVQ4PoW/hfePyo2D2j/yt52nzqXC92PBslbetX3ed5061j7zUTo0Uvw4zH3fqeQBlCf4ko5ChS1TSQoV9kwlKVTYM5WkUGHPVJJChT1TSQoV9kwlKVTYM5WkUGHPVJJChT1TSQoV9kwlKVTYM5U0XbfCBYBaYW4qab5d1sfOlV8OBKei5tJ9kNpPI3JTAAAA8LS+ATTNd+s7UW8SAAAAAElFTkSuQmCC\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/ideaImages/:id",
+			"request": {
+				"url": "{{url}}/ideaImages/{{current-ideaImage-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"cloudinaryId\": \"{{current-cloudinary-id}}\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/:id",
+			"request": {
+				"url": "{{url}}/locations/{{current-loc-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/business/:businessId",
+			"request": {
+				"url": "{{url}}/locations/business/{{current-bus-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/locations/:id",
+			"request": {
+				"url": "{{url}}/locations/{{current-loc-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"address\": \"3247 South Tytus Lane\",\n  \"address2\": \"\",\n  \"city\": \"Saratoga Springs\",\n  \"zip\": \"84045\",\n  \"phone\": \"(602) 555-3922\"\n}"
 				},
 				"description": ""
 			},
@@ -443,6 +1054,19 @@
 		},
 		{
 			"name": "/locations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-loc-id\", jsonData.location.id);",
+							""
+						]
+					}
+				}
+			],
 			"request": {
 				"url": "{{url}}/locations",
 				"method": "POST",
@@ -460,7 +1084,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"address\": \"1476 Trinnaman Ln.\",\n  \"address2\": \"#402\",\n  \"city\": \"Lehi\",\n  \"state\": \"UT\",\n  \"zip\": \"84043\",\n  \"businessId\": \"bus-1494121432-LFp3I\"\n}"
+					"raw": "{\n  \"address\": \"1476 Trinnaman Ln.\",\n  \"address2\": \"#402\",\n  \"city\": \"Lehi\",\n  \"state\": \"UT\",\n  \"zipcode\": \"84043\",\n  \"businessId\": \"{{current-bus-id}}\"\n}"
 				},
 				"description": ""
 			},
@@ -469,7 +1093,7 @@
 		{
 			"name": "/locations/:id",
 			"request": {
-				"url": "{{url}}/locations/loc-1494750795-07cNO",
+				"url": "{{url}}/locations/loc-1497911865-zr0oU",
 				"method": "DELETE",
 				"header": [
 					{
@@ -517,9 +1141,157 @@
 			"response": []
 		},
 		{
-			"name": "/user",
+			"name": "/tags",
 			"request": {
-				"url": "{{url}}/user",
+				"url": "{{url}}/tags",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Spontaneous\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags/:id",
+			"request": {
+				"url": "{{url}}/tags/{{current-tag-id}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Spontaneous\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags/:id",
+			"request": {
+				"url": "{{url}}/tags/{{current-tag-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Spontaneous\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"current-tag-id\", jsonData.tag.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/tags",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"spontaneous\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/tags/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"current-tag-contact-id\", null);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/tags/{{current-tag-id}}",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{admin-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/users/authenticated",
+			"request": {
+				"url": "{{url}}/users/authenticated",
 				"method": "GET",
 				"header": [
 					{
@@ -542,56 +1314,9 @@
 			"response": []
 		},
 		{
-			"name": "/user/authenticated",
+			"name": "/users/:id",
 			"request": {
-				"url": "{{url}}/user/authenticated",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					},
-					{
-						"key": "Authorization",
-						"value": "{{user-token}}",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/user/favorites",
-			"request": {
-				"url": "{{url}}/user/favorites",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					},
-					{
-						"key": "Authorization",
-						"value": "{{user-token}}",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"favorites\": [\"1235\"]\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "/user",
-			"request": {
-				"url": "{{url}}/user",
+				"url": "{{url}}/users/{{current-user-id}}",
 				"method": "PUT",
 				"header": [
 					{
@@ -607,7 +1332,32 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"favorites\": [\n    \"fi-1490115218-GRwwT\",\n    \"fi-149011512111-209Gs\",\n    \"fi-1490805646-X5syM\",\n    \"fi-1491930976-wsdXW\",\n    \"idea-1\",\n    \"idea-2\"\n  ]\n}"
+					"raw": "{\n  \"firstName\": \"Cody\",\n  \"lastName\": \"Anderson\",\n  \"phone\": \"(602) 541-7677\",\n  \"birthday\": 664934400,\n  \"plusOneName\": \"Claire Anderson\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/users/:userId/idea/:ideaId",
+			"request": {
+				"url": "{{url}}/users/{{current-user-id}}/idea/{{current-idea-id}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{user-token}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
 				},
 				"description": ""
 			},
@@ -622,13 +1372,14 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"user-token\", jsonData.token);"
+							"postman.setEnvironmentVariable(\"user-token\", jsonData.token);",
+							"postman.setEnvironmentVariable(\"current-user-id\", jsonData.id);"
 						]
 					}
 				}
 			],
 			"request": {
-				"url": "{{url}}/user/login",
+				"url": "{{url}}/users/login",
 				"method": "POST",
 				"header": [
 					{
@@ -654,13 +1405,14 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"user-token\", jsonData.token);"
+							"postman.setEnvironmentVariable(\"user-token\", jsonData.token);",
+							"postman.setEnvironmentVariable(\"current-user-id\", jsonData.user.id);"
 						]
 					}
 				}
 			],
 			"request": {
-				"url": "{{url}}/user/signup",
+				"url": "{{url}}/users/signup",
 				"method": "POST",
 				"header": [
 					{

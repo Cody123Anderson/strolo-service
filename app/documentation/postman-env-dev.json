@@ -1,29 +1,11 @@
 {
   "id": "6a58c0a1-b206-3fb1-77e2-6216b0facb63",
-  "name": "serenade-dev",
+  "name": "dealtrix-dev",
   "values": [
     {
       "enabled": true,
       "key": "url",
       "value": "http://localhost:3000",
-      "type": "text"
-    },
-    {
-      "enabled": true,
-      "key": "admin-password",
-      "value": "password",
-      "type": "text"
-    },
-    {
-      "enabled": true,
-      "key": "admin-username",
-      "value": "admin",
-      "type": "text"
-    },
-    {
-      "enabled": true,
-      "key": "admin-token",
-      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE0OTM5MTI2NjgsImV4cCI6MTQ5NDUxNzQ2OH0.VQPQ-auNDdp3P78a3B-gF24BOiq4n4hDUt_IkFfMPLQ",
       "type": "text"
     },
     {
@@ -41,18 +23,108 @@
     {
       "enabled": true,
       "key": "user-email",
-      "value": "cody@serenadedates.com",
+      "value": "",
       "type": "text"
     },
     {
       "enabled": true,
       "key": "user-password",
+      "value": "",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-loc-id",
+      "value": "0e8d5139-e0bf-497e-a671-85dd9a92a8b6",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-bus-id",
+      "value": "66e24bde-5194-41be-a102-06836f658f9f",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-bus-contact-id",
+      "value": "78add5a7-a008-4804-a87f-935d6906a17a",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-idea-id",
+      "value": "0aeec994-ac89-4e50-8bb0-cfab4720c688",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-category-id",
+      "value": "439ecea5-c0b5-4f6a-92d8-57c146d5f786",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-tag-id",
+      "value": "09075d95-4e0d-42bb-870e-c8bdffa151e5",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-ideaImage-id",
+      "value": "13b7efe0-ba6c-4087-8591-20091a682474",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-cloudinary-id",
+      "value": "erz9pnhjpgt72g5af5ot",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-deal-id",
+      "value": "30b4a9db-6d93-4b3e-bef9-03b59403604d",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-dealInstance-id",
+      "value": "75f8e284-3106-4467-94a1-de5f4620113e",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZWFsdHJpeC1hZG1pbiIsInVzZXJuYW1lIjoiZGVhbHRyaXgtYWRtaW4iLCJpYXQiOjE1MDE2ODUxMDYsImV4cCI6MTUwMjI4OTkwNn0.FXCEiSQGJ3oxBwk2IEiv_OSuf3G35DVCF9LwIB8XtLE",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb2R5MTIzYW5kZXJzb25AZ21haWwuY29tIiwiZW1haWwiOiJjb2R5MTIzYW5kZXJzb25AZ21haWwuY29tIiwiaWF0IjoxNTAxNjg1MjQ0LCJleHAiOjE1MDIyOTAwNDR9.1iRrTrGE6oT1yMEw6s4IEwAxrN12ioZFOfYtERuy8ek",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-user-id",
+      "value": "00b07a29-d377-4930-9c41-658aaa901750",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-username",
+      "value": "admin",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-password",
       "value": "password",
       "type": "text"
     }
   ],
-  "timestamp": 1494120892607,
+  "timestamp": 1501689397468,
   "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2017-05-07T03:18:51.112Z",
-  "_postman_exported_using": "Postman/4.10.5"
+  "_postman_exported_at": "2017-08-02T15:58:37.599Z",
+  "_postman_exported_using": "Postman/4.10.7"
 }
