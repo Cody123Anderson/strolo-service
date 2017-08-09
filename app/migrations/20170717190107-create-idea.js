@@ -31,13 +31,15 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
+      reservationDetails: { type: Sequelize.STRING },
       startDate: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
       },
       endDate: { type: Sequelize.DATE },
-      eventDate: { type: Sequelize.DATE }
+      eventStartDate: { type: Sequelize.DATE },
+      eventEndDate: { type: Sequelize.DATE }
     });
   },
   down: function(queryInterface, Sequelize) {

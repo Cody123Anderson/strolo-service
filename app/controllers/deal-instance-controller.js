@@ -95,7 +95,7 @@ module.exports.createDealInstance = (req, res) => {
       dealMaxRedemptions: deal.maxRedemptions || null,
       dealType: deal.type,
       status: status,
-      expirationDate: idea.eventDate || idea.endDate || defaultExpiration
+      expirationDate: idea.eventEndDate || idea.endDate || defaultExpiration
     };
 
     DealInstance.create(dealInstance).then(dealInstance => {
