@@ -22,7 +22,7 @@ const Idea = sequelize.define('Idea', {
   createdAt: { allowNull: false, type: Sequelize.DATE },
   updatedAt: { allowNull: false, type: Sequelize.DATE },
   title: { type: Sequelize.STRING, allowNull: false },
-  description: { type: Sequelize.STRING },
+  description: { type: Sequelize.TEXT },
   status: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -33,7 +33,7 @@ const Idea = sequelize.define('Idea', {
     allowNull: false,
     defaultValue: false
   },
-  reservationDetails: { type: Sequelize.STRING },
+  reservationDetails: { type: Sequelize.TEXT },
   startDate: {
     allowNull: false,
     type: Sequelize.DATE,

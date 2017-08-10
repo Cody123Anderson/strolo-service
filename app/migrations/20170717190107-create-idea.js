@@ -20,7 +20,7 @@ module.exports = {
       createdAt: { allowNull: false, type: Sequelize.DATE },
       updatedAt: { allowNull: false, type: Sequelize.DATE },
       title: { type: Sequelize.STRING, allowNull: false },
-      description: { type: Sequelize.STRING },
+      description: { type: Sequelize.TEXT },
       status: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -31,7 +31,7 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
-      reservationDetails: { type: Sequelize.STRING },
+      reservationDetails: { type: Sequelize.TEXT },
       startDate: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -22,7 +22,7 @@ const Business = sequelize.define('Business', {
     allowNull: false
   },
   description: {
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   },
   status: {
     type: Sequelize.STRING,

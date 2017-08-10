@@ -33,7 +33,7 @@ const Deal = sequelize.define('Deal', {
   },
   details: {
     allowNull: false,
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   },
   retailPrice: {
     allowNull: false,
