@@ -59,7 +59,8 @@ Location.belongsToMany(Idea, {
 **/
 Idea.belongsTo(Business, {
   foreignKey: 'businessId',
-  onDelete: 'CASCADE',
+  as: 'business',
+  onDelete: 'CASCADE'
 });
 
 Idea.belongsToMany(Location, {

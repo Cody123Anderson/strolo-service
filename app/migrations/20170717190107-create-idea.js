@@ -24,7 +24,7 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'Under Construction' // 'Active', 'Under Construction', 'Deactivated'
+        defaultValue: 'under construction' // 'active', 'under construction', 'deactivated'
       },
       reservationRequired: {
         type: Sequelize.BOOLEAN,

@@ -27,7 +27,7 @@ const Business = sequelize.define('Business', {
   status: {
     type: Sequelize.STRING,
     allowNull: false,
-    defaultValue: 'Active'
+    defaultValue: 'active'
   },
   websiteUrl: {
     type: Sequelize.STRING,

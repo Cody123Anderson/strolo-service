@@ -25,7 +25,7 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: 'Active'
+        defaultValue: 'active'
       },
       websiteUrl: {
         type: Sequelize.STRING,

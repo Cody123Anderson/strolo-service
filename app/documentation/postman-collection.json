@@ -766,7 +766,7 @@
 		{
 			"name": "/ideas/status/:status",
 			"request": {
-				"url": "{{url}}/ideas/status/Active",
+				"url": "{{url}}/ideas/status/active",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -815,7 +815,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"status\": \"Active\",\n  \"locationIds\": [\"78e253d7-764e-4eb5-9529-8f53d23bcc91\", \"{{current-loc-id}}\"],\n  \"categoryIds\": [\"3c33a371-7326-4448-80f3-31245a6c082d\", \"{{current-category-id}}\"],\n  \"tagIds\": [\"8b141979-cf80-4d80-a3f7-edb0e11a84c5\", \"{{current-tag-id}}\"],\n  \"reservationRequired\": true\n}"
+					"raw": "{\n  \"status\": \"active\",\n  \"locationIds\": [\"78e253d7-764e-4eb5-9529-8f53d23bcc91\", \"{{current-loc-id}}\"],\n  \"categoryIds\": [\"3c33a371-7326-4448-80f3-31245a6c082d\", \"{{current-category-id}}\"],\n  \"tagIds\": [\"8b141979-cf80-4d80-a3f7-edb0e11a84c5\", \"{{current-tag-id}}\"],\n  \"reservationRequired\": true\n}"
 				},
 				"description": ""
 			},

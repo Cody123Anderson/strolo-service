@@ -1,10 +1,20 @@
-const { Idea, Location, Category, Tag, IdeaImage, Deal, DealInstance } = require('../models');
 const { sequelize } = require('../services/database');
 const { shuffleArray } = require('../utils/shuffle');
+const {
+  Idea,
+  Business,
+  Location,
+  Category,
+  Tag,
+  IdeaImage,
+  Deal,
+  DealInstance
+} = require('../models');
 
 exports.getAllIdeas = (req, res) => {
   Idea.findAll({
     include: [
+      { model: Business, as: 'business' },
       {
         model: Location,
         as: 'locations',
@@ -47,6 +57,7 @@ exports.getIdeasForStatus = (req, res) => {
   Idea.findAll({
     where: { status },
     include: [
+      { model: Business, as: 'business' },
       {
         model: Location,
         as: 'locations',
@@ -91,6 +102,7 @@ exports.getIdeasForBusiness = (req, res) => {
   Idea.findAll({
     where: { businessId },
     include: [
+      { model: Business, as: 'business' },
       {
         model: Location,
         as: 'locations',
@@ -141,6 +153,7 @@ exports.getIdea = (req, res) => {
   Idea.findOne({
     where: { id },
     include: [
+      { model: Business, as: 'business' },
       {
         model: Location,
         as: 'locations',
@@ -182,6 +195,7 @@ exports.getIdeaForUser = (req, res) => {
   Idea.findOne({
     where: { id: ideaId },
     include: [
+      { model: Business, as: 'business' },
       {
         model: Location,
         as: 'locations',
