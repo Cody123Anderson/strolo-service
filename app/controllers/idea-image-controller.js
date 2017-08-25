@@ -2,6 +2,20 @@ const { IdeaImage } = require('../models');
 const { sequelize } = require('../services/database');
 const { uploadImage, deleteImage } = require('../utils/image-uploads');
 
+module.exports.getImagesForIdea = (req, res) => {
+  const { ideaId } = req.params;
+
+  IdeaImage.findAll({ where: { ideaId } }).then(ideaImages => {
+    return res.status(200).send({ ideaImages });
+  }).catch(err => {
+    console.error('error in getImagesForIdea controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve ideaImages',
+      details: err.message
+    });
+  });
+};
+
 /* Uploads image to Cloudinary, then persists the url and id to db */
 exports.createImage = (req, res) => {
   const { dataURL, ideaId } = req.body;
