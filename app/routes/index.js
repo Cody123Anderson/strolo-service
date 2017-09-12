@@ -1,6 +1,7 @@
 const adminRoutes = require('./admin-routes');
 const businessRoutes = require('./business-routes');
 const businessContactRoutes = require('./business-contact-routes');
+const businessLogoRoutes = require('./business-logo-routes');
 const categoryRoutes = require('./category-routes');
 const dealRoutes = require('./deal-routes');
 const dealInstanceRoutes = require('./deal-instance-routes');
@@ -16,6 +17,7 @@ module.exports = (app) => {
   adminRoutes(app);
   businessRoutes(app);
   businessContactRoutes(app);
+  businessLogoRoutes(app);
   categoryRoutes(app);
   dealRoutes(app);
   dealInstanceRoutes(app);

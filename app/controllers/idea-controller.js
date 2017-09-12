@@ -46,7 +46,7 @@ exports.getAllIdeas = (req, res) => {
     console.error('error in getAllIdeas controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve ideas',
-      details: err.message
+      details: err
     });
   });
 };
@@ -91,7 +91,7 @@ exports.getIdeasForStatus = (req, res) => {
     console.error('error in getIdeasForStatus controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve ideas',
-      details: err.message
+      details: err
     });
   });
 }
@@ -134,7 +134,7 @@ exports.getIdeasForBusiness = (req, res) => {
     console.error('error in getIdeasForBusiness controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve ideas',
-      details: err.message
+      details: err
     });
   });
 }
@@ -184,7 +184,7 @@ exports.getIdea = (req, res) => {
     console.error('Error in getIdea controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve idea',
-      details: err.message
+      details: err
     });
   });
 }
@@ -234,14 +234,14 @@ exports.getIdeaForUser = (req, res) => {
       console.error('Error in getIdeaForUser controller: ', err);
       return res.status(500).send({
         error: 'unable to retrieve idea',
-        details: err.message
+        details: err
       });
     });
   }).catch(err => {
     console.error('Error in getIdeaForUser controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve idea',
-      details: err.message
+      details: err
     });
   });
 }
@@ -333,14 +333,14 @@ exports.createIdea = (req, res) => {
       console.error('error creating idea: ', err);
       return res.status(500).send({
         error: 'server error creating idea',
-        details: err.message
+        details: err
       });
     });
   }).catch(err => {
     console.error('error creating idea: ', err);
     return res.status(500).send({
       error: 'server error creating idea',
-      details: err.message
+      details: err
     });
   });
 }
@@ -421,21 +421,21 @@ exports.updateIdea = (req, res) => {
         console.error('error creating idea: ', err);
         return res.status(500).send({
           error: 'server error creating idea',
-          details: err.message
+          details: err
         });
       });
     }).catch(err => {
       console.error('error updating idea: ', err);
       return res.status(500).send({
         error: 'server error updating idea',
-        details: err.message
+        details: err
       });
     });
   }).catch(err => {
     console.error('error updating idea: ', err);
     return res.status(500).send({
       error: 'server error updating idea',
-      details: err.message
+      details: err
     });
   });
 }
@@ -452,7 +452,7 @@ exports.deleteIdea = (req, res) => {
     console.error('error deleting idea: ', err);
     return res.status(500).send({
       error: 'server error deleting idea',
-      details: err.message
+      details: err
     });
   });
 }

@@ -10,7 +10,7 @@ module.exports.getDeal = (req, res) => {
     console.error('Error in getDeal controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve deal',
-      details: err.message
+      details: err
     });
   });
 };
@@ -27,7 +27,7 @@ module.exports.getDealsForIdea = (req, res) => {
     console.error('error in getDealsForIdea controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve deals',
-      details: err.message
+      details: err
     });
   });
 };
@@ -73,7 +73,7 @@ module.exports.createDeal = (req, res) => {
     console.error('error creating deal: ', err);
     return res.status(500).send({
       error: 'server error creating deal',
-      details: err.message
+      details: err
     });
   });
 };
@@ -100,14 +100,14 @@ module.exports.updateDeal = (req, res) => {
       console.error('error updating deal: ', err);
       return res.status(500).send({
         error: 'server error updating deal',
-        details: err.message
+        details: err
       });
     });
   }).catch(err => {
     console.error('Error in updateDeal controller: ', err);
     return res.status(500).send({
       error: 'unable to update deal',
-      details: err.message
+      details: err
     });
   });
 };

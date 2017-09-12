@@ -8,6 +8,7 @@ const IdeaImage = require('./idea-image');
 const Deal = require('./deal');
 const { User } = require('./user');
 const DealInstance = require('./deal-instance');
+const BusinessLogo = require('./business-logo');
 
 /**
   * Business Model Associations
@@ -155,9 +156,18 @@ DealInstance.belongsTo(User, {
   onDelete: 'CASCADE',
 });
 
+/**
+  * BusinessLogo Model Associations
+**/
+BusinessLogo.belongsTo(Business, {
+  foreignKey: 'businessId',
+  onDelete: 'CASCADE',
+});
+
 module.exports = {
   Business,
   BusinessContact,
+  BusinessLogo,
   Location,
   Idea,
   Category,

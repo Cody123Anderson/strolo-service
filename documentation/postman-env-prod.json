@@ -1,0 +1,118 @@
+{
+  "id": "3e237d89-95e2-21ac-f2c8-74aa96cb0275",
+  "name": "serenade-prod",
+  "values": [
+    {
+      "enabled": true,
+      "key": "url",
+      "value": "https://api.serenadedates.com",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "zipcode",
+      "value": "84043",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "range",
+      "value": "50",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-email",
+      "value": "",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-password",
+      "value": "",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "user-token",
+      "value": "",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-business-id",
+      "value": "",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-business-contact-id",
+      "value": "",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-category-id",
+      "value": "374b0142-e2ee-48b6-b2ba-a678b1c4a4c0",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-tag-id",
+      "value": "7bf3947b-f36e-4022-9520-319dc716de73",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-username",
+      "value": "test",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "admin-password",
+      "value": "Dealtrix2017.",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-bus-id",
+      "value": "953e198b-d082-4a69-85af-b4b5c2f66d2a",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-loc-id",
+      "value": "90b6267d-3e1f-43d8-b891-8b968b7d89ba",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-idea-id",
+      "value": "c21e419c-2a23-4796-a7f9-b15bf56a5b0f",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-deal-id",
+      "value": "ffd7c6af-2ae5-4d41-992a-6cda31ee882c",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-ideaImage-id",
+      "value": "828a8902-93e2-47b4-bb75-169ec3452b7d",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "current-cloudinary-id",
+      "value": "clnjiptdcunsc6l6h0px",
+      "type": "text"
+    }
+  ],
+  "timestamp": 1505242355015,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2017-09-12T18:52:36.773Z",
+  "_postman_exported_using": "Postman/4.10.7"
+}

@@ -13,7 +13,7 @@ module.exports.getLocation = (req, res) => {
     console.error('Error in getLocation controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve location',
-      details: err.message
+      details: err
     });
   });
 }
@@ -29,7 +29,7 @@ module.exports.getLocationsForBusiness = (req, res) => {
     console.error('Error in getLocationsForBusiness controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve locations',
-      details: err.message
+      details: err
     });
   });
 }
@@ -40,7 +40,7 @@ module.exports.createLocation = (req, res) => {
       console.error('error creating location: ', err);
       return res.status(500).send({
         error: 'error creating location',
-        details: err.message
+        details: err
       });
     }
 
@@ -59,7 +59,7 @@ module.exports.createLocation = (req, res) => {
       console.error('error creating location: ', err);
       return res.status(500).send({
         error: 'server error creating location',
-        details: err.message
+        details: err
       });
     });
   });
@@ -76,7 +76,7 @@ module.exports.updateLocation = (req, res) => {
         console.error('error updating location: ', err);
         res.status(500).send({
           error: 'unable to update location',
-          details: err.message
+          details: err
         });
       }
 
@@ -93,7 +93,7 @@ module.exports.updateLocation = (req, res) => {
     console.error('Error in updateLocation controller: ', err);
     return res.status(500).send({
       error: 'unable to update location',
-      details: err.message
+      details: err
     });
   });
 }
@@ -107,7 +107,7 @@ module.exports.deleteLocation = (req, res) => {
     console.error('error deleting location: ', err);
     return res.status(500).send({
       error: 'server error deleting location',
-      details: err.message
+      details: err
     });
   });
 }

@@ -38,7 +38,7 @@ const sequelize = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.info('Postgres connection has been established successfully.');
   })
   .catch(err => {
     console.error('Unable to connect to the database:', err);

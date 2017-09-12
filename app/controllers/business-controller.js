@@ -32,7 +32,7 @@ module.exports.getAllBusinesses = (req, res) => {
     console.error('error in getAllBusinesses controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve businesses',
-      details: err.message
+      details: err
     });
   });
 };
@@ -62,7 +62,7 @@ module.exports.getBusiness = (req, res) => {
     console.error('Error in getBusiness controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve business',
-      details: err.message
+      details: err
     });
   });
 };
@@ -85,7 +85,7 @@ module.exports.createBusiness = (req, res) => {
     console.error('error creating business: ', err);
     return res.status(500).send({
       error: 'server error creating business',
-      details: err.message
+      details: err
     });
   });
 };
@@ -124,7 +124,7 @@ module.exports.updateBusinessUsers = (req, res) => {
         console.error('error updating business users: ', err);
         return res.status(500).send({
           error: 'server error updating business users',
-          details: err.message
+          details: err
         });
       });
     } else {
@@ -136,7 +136,7 @@ module.exports.updateBusinessUsers = (req, res) => {
         console.error('error updating business users: ', err);
         return res.status(500).send({
           error: 'server error updating business users',
-          details: err.message
+          details: err
         });
       });
     }
@@ -144,7 +144,7 @@ module.exports.updateBusinessUsers = (req, res) => {
     console.error('error updating business users: ', err);
     return res.status(500).send({
       error: 'server error updating business users',
-      details: err.message
+      details: err
     });
   });
 };
@@ -158,7 +158,7 @@ module.exports.updateBusiness = (req, res) => {
     console.error('error updating business: ', err);
     return res.status(500).send({
       error: 'server error updating business',
-      details: err.message
+      details: err
     });
   });
 };
@@ -175,7 +175,7 @@ module.exports.deleteBusiness = (req, res) => {
     console.error('error deleting business: ', err);
     return res.status(500).send({
       error: 'server error deleting business',
-      details: err.message
+      details: err
     });
   });
 };

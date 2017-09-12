@@ -15,7 +15,7 @@ module.exports.getAllDealInstances = (req, res) => {
     console.error('error in getAllDealInstances controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve dealInstances',
-      details: err.message
+      details: err
     });
   });
 }
@@ -36,7 +36,7 @@ module.exports.getDealInstance = (req, res) => {
     console.error('error in getDealInstance controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve dealInstance',
-      details: err.message
+      details: err
     });
   });
 }
@@ -104,14 +104,14 @@ module.exports.createDealInstance = (req, res) => {
       console.error('error in createDealInstance controller: ', err);
       return res.status(500).send({
         error: 'unable to create dealInstance',
-        details: err.message
+        details: err
       });
     });
   }).catch(err => {
     console.error('error in createDealInstance controller: ', err);
     return res.status(500).send({
       error: 'unable to create dealInstance',
-      details: err.message
+      details: err
     });
   })
 }
@@ -130,14 +130,14 @@ module.exports.redeemDealInstance = (req, res) => {
       console.error('error in redeemDealInstance controller: ', err);
       return res.status(500).send({
         error: 'unable to redeem dealInstance',
-        details: err.message
+        details: err
       });
     });
   }).catch(err => {
     console.error('error in redeemDealInstance controller: ', err);
     return res.status(500).send({
       error: 'unable to redeem dealInstance',
-      details: err.message
+      details: err
     });
   });
 };

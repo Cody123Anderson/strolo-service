@@ -1,79 +1,84 @@
-const { IdeaImage } = require('../models');
+const { BusinessLogo } = require('../models');
 const { sequelize } = require('../services/database');
 const { uploadImage, deleteImage } = require('../utils/image-uploads');
 
-module.exports.getImagesForIdea = (req, res) => {
-  const { ideaId } = req.params;
+module.exports.getLogosForBusiness = (req, res) => {
+  const { businessId } = req.params;
 
-  IdeaImage.findAll({ where: { ideaId } }).then(ideaImages => {
-    return res.status(200).send({ ideaImages });
+  BusinessLogo.findAll({ where: { businessId } }).then(businessLogos => {
+    return res.status(200).send({ businessLogos });
   }).catch(err => {
-    console.error('error in getImagesForIdea controller: ', err);
+    console.error('error in getLogosForBusiness controller: ', err);
     return res.status(500).send({
-      error: 'unable to retrieve ideaImages',
+      error: 'unable to retrieve businessLogos',
       details: err
     });
   });
 };
 
 /* Uploads image to Cloudinary, then persists the url and id to db */
-exports.createImage = (req, res) => {
-  const { dataURL, ideaId } = req.body;
+exports.createLogo = (req, res) => {
+  const { dataURL, businessId } = req.body;
 
   if (!dataURL) {
     return res.status(422).send({
       info: 'failed to upload image',
       error: 'missing required prop - dataURL'
     });
+  } else if (!businessId) {
+    return res.status(422).send({
+      info: 'failed to upload image',
+      error: 'missing required prop - businessId'
+    });
   }
 
   uploadImage(dataURL).then(image => {
     const newImage = {
-      ideaId: ideaId,
+      businessId: businessId,
       cloudinaryId: image.public_id,
       url: image.secure_url,
       width: image.width,
       height: image.height
     };
 
-    IdeaImage.create(newImage).then(ideaImage => {
+    BusinessLogo.create(newImage).then(businessLogo => {
       return res.status(200).send({
-        info: 'new ideaImage created!',
-        ideaImage: ideaImage
+        info: 'new businessLogo created!',
+        businessLogo: businessLogo
       });
     }).catch(err => {
-      console.error('error creating ideaImage: ', err);
+      console.error('error creating businessLogo: ', err);
       return res.status(500).send({
-        error: 'server error creating ideaImage',
+        error: 'server error creating businessLogo',
         details: err
       });
     });
   }).catch(err => {
     return res.status(400).send({
-      info: 'failed to upload image',
+      info: 'failed to upload logo',
       error: err
     });
   });
 };
 
 /* Uploads image to Cloudinary, then persists the url and id to db */
-exports.updateImage = (req, res) => {
+exports.updateLogo = (req, res) => {
   const { id } = req.params;
   const { dataURL, oldCloudinaryId } = req.body;
 
   if (!dataURL) {
     return res.status(422).send({
-      info: 'failed to update image',
+      info: 'failed to update logo',
       error: 'missing required prop - dataURL'
     });
   } else if (!oldCloudinaryId) {
     return res.status(422).send({
-      info: 'failed to update image',
+      info: 'failed to update logo',
       error: 'missing required prop - oldCloudinaryId'
     });
   }
 
-  // Upload new image to Cloudinary
+  // Upload new logo to Cloudinary
   uploadImage(dataURL).then(image => {
     const updatedImage = {
       cloudinaryId: image.public_id,
@@ -82,37 +87,38 @@ exports.updateImage = (req, res) => {
       height: image.height
     };
 
-    // Update the image item in the database
-    IdeaImage.update(updatedImage, { where: { id } }).then(() => {
-      // Delete the old image from Cloudinary
+    // Update the logo item in the database
+    BusinessLogo.update(updatedImage, { where: { id } }).then(() => {
+      // Delete the old logo from Cloudinary
       deleteImage(oldCloudinaryId).then(() => {
         return res.status(200).send({
-          info: 'ideaImage updated successfully!',
-          ideaImage: updatedImage
+          info: 'businessLogo updated successfully!',
+          businessLogo: updatedImage
         });
       }).catch(err => {
+        console.error('error updating businessLogo: ', err);
         return res.status(500).send({
-          error: 'server error updating ideaImage',
+          error: 'server error updating businessLogo',
           details: err
         });
       });
     }).catch(err => {
-      console.error('error updating ideaImage: ', err);
+      console.error('error updating businessLogo: ', err);
       return res.status(500).send({
-        error: 'server error updating ideaImage',
+        error: 'server error updating businessLogo',
         details: err
       });
     });
   }).catch(err => {
     return res.status(400).send({
-      info: 'failed to upload image',
+      info: 'failed to upload logo',
       error: err
     });
   });
 };
 
 /* Deletes the image from cloudinary and then from the db */
-exports.destroyImage = (req, res) => {
+exports.destroyLogo = (req, res) => {
   const { id } = req.params;
   const { cloudinaryId } = req.body;
 
@@ -122,17 +128,17 @@ exports.destroyImage = (req, res) => {
     });
   }
 
-  IdeaImage.destroy({ where: { id } }).then(() => {
+  BusinessLogo.destroy({ where: { id } }).then(() => {
     deleteImage(cloudinaryId).then(() => {
-      return res.status(200).send({ info: 'ideaImage was deleted!' });
+      return res.status(200).send({ info: 'businessLogo was deleted!' });
     }).catch(err => {
       return res.status(500).send({
-        error: 'server error deleting ideaImage',
+        error: 'server error deleting businessLogo',
         details: err
       });
     });
   }).catch(err => {
-    console.error('error deleting ideaImage: ', err);
-    return res.status(500).send({ error: 'server error deleting ideaImage' });
+    console.error('error deleting businessLogo: ', err);
+    return res.status(500).send({ error: 'server error deleting businessLogo' });
   });
 };
