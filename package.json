@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dockerlogin": "$(aws ecr get-login --no-include-email --region us-west-1)",
+    "dockerbuild": "docker build -t serenade-api .",
+    "dockertag": "docker tag serenade-api:latest 011323353560.dkr.ecr.us-west-1.amazonaws.com/serenade-api:latest",
+    "dockerrun": "docker run -d -p 3000:3000 --name serenade-api serenade-api",
+    "dockerpush": "docker push 011323353560.dkr.ecr.us-west-1.amazonaws.com/serenade-api:latest",
     "dev": "NODE_ENV=development PORT=3000 nodemon app.js",
     "start": "NODE_ENV=production PORT=3000 node app.js",
     "test": "mocha --compilers js:babel-core/register --require ignore-styles --recursive ./test"

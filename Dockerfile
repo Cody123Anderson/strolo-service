@@ -1,9 +1,10 @@
-FROM node:6
+FROM node:8.4.0
 MAINTAINER Cody Anderson <cody@serenadedates.com>
 
-RUN mkdir -p /usr/serenade-api
-COPY . /usr/serenade-api
-WORKDIR /usr/serenade-api
+RUN mkdir -p /usr/src/serenade-api
+COPY . /usr/src/serenade-api
+WORKDIR /usr/src/serenade-api
+
 RUN npm install --production
 
 ENV PORT 3000
