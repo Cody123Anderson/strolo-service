@@ -62,7 +62,7 @@ module.exports.createDeal = (req, res) => {
   }
 
   // Set discountPercent for deal
-  deal.discountPercent = deal.discountPrice / deal.retailPrice * 100;
+  deal.discountPercent = 100 - (deal.discountPrice / deal.retailPrice * 100);
 
   Deal.create(deal).then(deal => {
     return res.status(200).send({
@@ -92,7 +92,7 @@ module.exports.updateDeal = (req, res) => {
     // Find the new discountPercent
     newDeal.retailPrice = newDeal.retailPrice || deal.retailPrice;
     newDeal.discountPrice = newDeal.discountPrice || deal.discountPrice;
-    newDeal.discountPercent = deal.discountPrice / deal.retailPrice * 100;
+    newDeal.discountPercent = 100 - (newDeal.discountPrice / newDeal.retailPrice * 100);
 
     Deal.update(newDeal, { where: { id } }).then(() => {
       return res.status(200).send({ info: 'deal updated successfully!' });
