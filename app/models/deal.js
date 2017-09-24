@@ -53,6 +53,10 @@ const Deal = sequelize.define('Deal', {
   type: {
     allowNull: false,
     type: Sequelize.STRING
+  },
+  cleverPhrase: {
+    allowNull: false,
+    type: Sequelize.STRING
   }
 });
 

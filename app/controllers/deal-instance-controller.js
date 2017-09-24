@@ -4,7 +4,8 @@ const {
   DealInstance,
   Business,
   Idea,
-  Deal
+  Deal,
+  User
 } = require('../models');
 const { sequelize } = require('../services/database');
 
@@ -49,6 +50,13 @@ module.exports.createDealInstance = (req, res) => {
     return res.status(422).send({ info: 'missing required parameters' });
   }
 
+  const getUser = new Promise((resolve, reject) => {
+    User.findOne({ where: { id: userId }}).then(user => {
+      if (!user) reject(new Error('no user found with this id'));
+      resolve(user);
+    }).catch(err => { reject(err); });
+  });
+
   const getBusiness = new Promise((resolve, reject) => {
     Business.findOne({ where: { id: businessId }}).then(business => {
       if (!business) reject(new Error('no business found with this id'));
@@ -70,16 +78,19 @@ module.exports.createDealInstance = (req, res) => {
     }).catch(err => { reject(err); });
   });
 
-  Promise.all([getBusiness, getIdea, getDeal]).then(values => {
-    const business = values[0];
-    const idea = values[1];
-    const deal = values[2];
+  Promise.all([getUser, getBusiness, getIdea, getDeal]).then(values => {
+    const user = values[0];
+    const business = values[1];
+    const idea = values[2];
+    const deal = values[3];
     const defaultExpiration = moment().add(30, 'd').format();
     const dealInstance = {
       userId: userId,
       businessId: businessId,
       ideaId: ideaId,
       dealId: dealId,
+      userFirstName: user.firstName,
+      plusOneFirstName: user.plusOneFirstName,
       businessName: business.name,
       businessDescription: business.description,
       businessWebsiteUrl: business.websiteUrl,

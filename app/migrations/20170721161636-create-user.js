@@ -42,10 +42,7 @@ module.exports = {
       birthday: {
         type: Sequelize.DATE
       },
-      imageUrl: {
-        type: Sequelize.STRING
-      },
-      plusOneName: {
+      plusOneFirstName: {
         type: Sequelize.STRING
       }
     });

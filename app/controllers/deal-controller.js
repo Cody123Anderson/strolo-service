@@ -55,6 +55,10 @@ module.exports.createDeal = (req, res) => {
     return res.status(422).send({
       error: 'You must provide a deal type'
     });
+  } else if (!deal.cleverPhrase) {
+    return res.status(422).send({
+      error: 'You must provide a cleverPhrase to be used on date cards'
+    });
   } else if (deal.type && (deal.type !== 'single' && deal.type !== 'pair')) {
     return res.status(422).send({
       error: `deal type must be either 'single' or 'pair'`

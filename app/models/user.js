@@ -46,10 +46,7 @@ const User = sequelize.define('User', {
   birthday: {
     type: Sequelize.DATE
   },
-  imageUrl: {
-    type: Sequelize.STRING
-  },
-  plusOneName: {
+  plusOneFirstName: {
     type: Sequelize.STRING
   }
 });
@@ -67,8 +64,7 @@ function formatUser(user) {
           password: hashedPassword,
           phone: user.phone,
           birthday: user.birthday,
-          imageUrl: user.imageUrl,
-          plusOneName: user.plusOneName
+          plusOneFirstName: user.plusOneFirstName
         };
 
         // Remove null or undefined attributes
@@ -83,8 +79,7 @@ function formatUser(user) {
         email: user.email,
         phone: user.phone,
         birthday: user.birthday,
-        imageUrl: user.imageUrl,
-        plusOneName: user.plusOneName
+        plusOneFirstName: user.plusOneFirstName
       };
 
       // Remove null or undefined attributes
