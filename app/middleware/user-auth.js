@@ -22,3 +22,15 @@ exports.isUserAuthenticated = (req, res, next) => {
     return res.status(500).send({ status: 500, error: err });
   });
 };
+
+exports.isMatchingUser = (req, res, next) => {
+  const authenticatedUserId = req.user.id;
+  const suppliedUserId = req.params.userId;
+
+  if (authenticatedUserId === suppliedUserId) {
+    next();
+  } else {
+    console.error(`authenticatedUserId ${authenticatedUserId} does not match the suppliedUserId ${suppliedUserId}`);
+    return res.status(403).send('unauthorized');
+  }
+};

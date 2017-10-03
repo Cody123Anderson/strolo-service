@@ -34,6 +34,11 @@ Business.belongsToMany(User, {
   foreignKey: 'businessId'
 });
 
+Business.hasMany(BusinessLogo, {
+  foreignKey: 'businessId',
+  as: 'logos'
+});
+
 /**
   * BusinessContact Model Associations
 **/

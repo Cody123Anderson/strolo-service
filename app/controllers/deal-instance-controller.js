@@ -3,6 +3,7 @@ const moment = require('moment');
 const {
   DealInstance,
   Business,
+  BusinessLogo,
   Idea,
   Deal,
   User
@@ -14,6 +15,20 @@ module.exports.getAllDealInstances = (req, res) => {
     return res.status(200).send({ dealInstances });
   }).catch(err => {
     console.error('error in getAllDealInstances controller: ', err);
+    return res.status(500).send({
+      error: 'unable to retrieve dealInstances',
+      details: err
+    });
+  });
+}
+
+module.exports.getDealInstancesForUser = (req, res) => {
+  const { userId } = req.params;
+
+  DealInstance.findAll({ where: { userId }}).then(dealInstances => {
+    return res.status(200).send({ dealInstances });
+  }).catch(err => {
+    console.error('error in getDealInstancesForUser controller: ', err);
     return res.status(500).send({
       error: 'unable to retrieve dealInstances',
       details: err
@@ -58,7 +73,10 @@ module.exports.createDealInstance = (req, res) => {
   });
 
   const getBusiness = new Promise((resolve, reject) => {
-    Business.findOne({ where: { id: businessId }}).then(business => {
+    Business.findOne({
+      where: { id: businessId },
+      include: [{ model: BusinessLogo, as: 'logos' }]
+    }).then(business => {
       if (!business) reject(new Error('no business found with this id'));
       resolve(business);
     }).catch(err => { reject(err); });
@@ -87,9 +105,15 @@ module.exports.createDealInstance = (req, res) => {
 
     // Make sure there's both names supplied
     if (!user.firstName && !firstName) {
-      return res.status(422).send({ info: 'missing using firstName parameter' });
+      return res.status(422).send({ info: 'missing user firstName parameter' });
     } else if (!user.plusOneFirstName && !plusOneFirstName) {
-      return res.status(422).send({ info: 'missing using plusOneFirstName parameter' });
+      return res.status(422).send({ info: 'missing user plusOneFirstName parameter' });
+    }
+
+    let businessLogoUrl = null;
+
+    if (business.logos[0]) {
+      businessLogoUrl = business.logos[0].url;
     }
 
     const dealInstance = {
@@ -102,7 +126,7 @@ module.exports.createDealInstance = (req, res) => {
       businessName: business.name,
       businessDescription: business.description,
       businessWebsiteUrl: business.websiteUrl,
-      businessLogoUrl: business.logoUrl,
+      businessLogoUrl: businessLogoUrl,
       ideaTitle: idea.title,
       ideaDescription: idea.description,
       ideaReservationRequired: idea.reservationRequired,
