@@ -43,7 +43,7 @@ module.exports.getDealInstance = (req, res) => {
 }
 
 module.exports.createDealInstance = (req, res) => {
-  const { userId, businessId, ideaId, dealId } = req.body;
+  const { userId, businessId, ideaId, dealId, firstName, plusOneFirstName } = req.body;
   const status = 'active';
 
   if (!userId || !businessId || !ideaId || !dealId) {
@@ -84,13 +84,21 @@ module.exports.createDealInstance = (req, res) => {
     const idea = values[2];
     const deal = values[3];
     const defaultExpiration = moment().add(30, 'd').format();
+
+    // Make sure there's both names supplied
+    if (!user.firstName && !firstName) {
+      return res.status(422).send({ info: 'missing using firstName parameter' });
+    } else if (!user.plusOneFirstName && !plusOneFirstName) {
+      return res.status(422).send({ info: 'missing using plusOneFirstName parameter' });
+    }
+
     const dealInstance = {
       userId: userId,
       businessId: businessId,
       ideaId: ideaId,
       dealId: dealId,
-      userFirstName: user.firstName,
-      plusOneFirstName: user.plusOneFirstName,
+      userFirstName: firstName || user.firstName,
+      plusOneFirstName: plusOneFirstName || user.plusOneFirstName,
       businessName: business.name,
       businessDescription: business.description,
       businessWebsiteUrl: business.websiteUrl,
