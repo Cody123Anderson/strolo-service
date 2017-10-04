@@ -45,10 +45,6 @@ module.exports = {
       },
       stripeToken: {
         type: Sequelize.STRING
-      },
-      logoUrl: {
-        type: Sequelize.STRING,
-        isUrl: true
       }
     });
   },

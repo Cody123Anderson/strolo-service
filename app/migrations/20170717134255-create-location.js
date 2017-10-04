@@ -60,6 +60,9 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING
+      },
+      email: {
+        type: Sequelize.STRING
       }
     });
   },

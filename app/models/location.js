@@ -64,6 +64,9 @@ const Location = sequelize.define('Location', {
   },
   phone: {
     type: Sequelize.STRING
+  },
+  email: {
+    type: Sequelize.STRING
   }
 });
 

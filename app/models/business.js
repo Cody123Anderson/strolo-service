@@ -47,10 +47,6 @@ const Business = sequelize.define('Business', {
   },
   stripeToken: {
     type: Sequelize.STRING
-  },
-  logoUrl: {
-    type: Sequelize.STRING,
-    isUrl: true
   }
 });
 

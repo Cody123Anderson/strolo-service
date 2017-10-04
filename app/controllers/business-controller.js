@@ -3,6 +3,7 @@ const _ = require('lodash');
 const {
   Business,
   BusinessContact,
+  BusinessLogo,
   Location,
   Idea,
   User
@@ -14,6 +15,7 @@ module.exports.getAllBusinesses = (req, res) => {
     order: sequelize.col('name'),
     include: [
       { model: BusinessContact, as: 'businessContacts'},
+      { model: BusinessLogo, as: 'logos' },
       { model: Location, as: 'locations'},
       { model: Idea, as: 'ideas'},
       {
@@ -44,6 +46,7 @@ module.exports.getBusiness = (req, res) => {
     where: { id },
     include: [
       { model: BusinessContact, as: 'businessContacts'},
+      { model: BusinessLogo, as: 'logos' },
       { model: Location, as: 'locations'},
       { model: Idea, as: 'ideas'},
       {
