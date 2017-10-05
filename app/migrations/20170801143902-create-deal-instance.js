@@ -44,6 +44,7 @@ module.exports = {
       dealDiscountPercent: { allowNull: false, type: Sequelize.INTEGER },
       dealMaxRedemptions: { type: Sequelize.INTEGER },
       dealType: { allowNull: false, type: Sequelize.STRING },
+      dealCleverPhrase: { allowNull: false, type: Sequelize.STRING },
       status: { allowNull: false, type: Sequelize.STRING },
       expirationDate: { allowNull: false, type: Sequelize.DATE },
       userFirstName: { allowNull: false, type: Sequelize.STRING },

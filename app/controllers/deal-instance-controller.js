@@ -137,6 +137,7 @@ module.exports.createDealInstance = (req, res) => {
       dealDiscountPercent: deal.discountPercent,
       dealMaxRedemptions: deal.maxRedemptions || null,
       dealType: deal.type,
+      dealCleverPhrase: deal.cleverPhrase,
       status: status,
       expirationDate: idea.eventEndDate || idea.endDate || defaultExpiration
     };
