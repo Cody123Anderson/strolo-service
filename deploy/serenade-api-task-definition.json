@@ -1,0 +1,45 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "nginx",
+      "image": "011323353560.dkr.ecr.us-west-1.amazonaws.com/serenade-api/nginx:latest",
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ],
+      "links": ["serenade-api:serenade-api"],
+      "volumesFrom": [
+        {
+          "sourceContainer": "serenade-api"
+        }
+      ],
+      "cpu": 256,
+      "memory": 100
+    },
+    {
+      "name": "serenade-api",
+      "image": "011323353560.dkr.ecr.us-west-1.amazonaws.com/serenade-api/serenade-api:latest",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000
+        }
+      ],
+      "cpu": 768,
+      "memory": 800,
+      "environment": [
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "PORT",
+          "value": "3000"
+        }
+      ]
+    }
+  ],
+  "family": "serenade-api-task-definition"
+}
