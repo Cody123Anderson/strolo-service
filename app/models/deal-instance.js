@@ -47,6 +47,7 @@ const DealInstance = sequelize.define('DealInstance', {
   dealMaxRedemptions: { type: Sequelize.INTEGER },
   dealType: { allowNull: false, type: Sequelize.STRING },
   dealCleverPhrase: { allowNull: false, type: Sequelize.STRING },
+  customCleverPhrase: { allowNull: true, type: Sequelize.TEXT },
   status: { allowNull: false, type: Sequelize.STRING },
   expirationDate: { allowNull: false, type: Sequelize.DATE },
   userFirstName: { allowNull: false, type: Sequelize.STRING },

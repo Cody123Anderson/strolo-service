@@ -58,7 +58,7 @@ module.exports.getDealInstance = (req, res) => {
 }
 
 module.exports.createDealInstance = (req, res) => {
-  const { userId, businessId, ideaId, dealId, firstName, plusOneFirstName } = req.body;
+  const { userId, businessId, ideaId, dealId, firstName, plusOneFirstName, customCleverPhrase } = req.body;
   const status = 'active';
 
   if (!userId || !businessId || !ideaId || !dealId) {
@@ -102,6 +102,7 @@ module.exports.createDealInstance = (req, res) => {
     const idea = values[2];
     const deal = values[3];
     const defaultExpiration = moment().add(30, 'd').format();
+    let businessLogoUrl = null;
 
     // Make sure there's both names supplied
     if (!user.firstName && !firstName) {
@@ -109,8 +110,6 @@ module.exports.createDealInstance = (req, res) => {
     } else if (!user.plusOneFirstName && !plusOneFirstName) {
       return res.status(422).send({ info: 'missing user plusOneFirstName parameter' });
     }
-
-    let businessLogoUrl = null;
 
     if (business.logos[0]) {
       businessLogoUrl = business.logos[0].url;
@@ -138,6 +137,7 @@ module.exports.createDealInstance = (req, res) => {
       dealMaxRedemptions: deal.maxRedemptions || null,
       dealType: deal.type,
       dealCleverPhrase: deal.cleverPhrase,
+      customCleverPhrase: customCleverPhrase,
       status: status,
       expirationDate: idea.eventEndDate || idea.endDate || defaultExpiration
     };
