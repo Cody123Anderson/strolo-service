@@ -43,5 +43,9 @@
     "sequelize": "^4.3.0",
     "uuid": "^3.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "ignore-styles": "^5.0.1",
+    "mocha": "^4.0.1"
+  }
 }
