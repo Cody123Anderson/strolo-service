@@ -1,0 +1,51 @@
+{
+  "name": "serenade-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "./deploy/deploy.sh -d",
+    "dockerlogin": "$(aws ecr get-login --no-include-email --region us-west-1)",
+    "dockerbuild": "docker build -t serenade-api/serenade-api:latest -t 011323353560.dkr.ecr.us-west-1.amazonaws.com/serenade-api/serenade-api:latest -t 011323353560.dkr.ecr.us-west-1.amazonaws.com/serenade-api/serenade-api:1.0.0 .",
+    "dockerrun": "docker run -d -p 3000:3000 --name serenade-api serenade-api/serenade-api:latest",
+    "dev": "NODE_ENV=development PORT=3000 nodemon app.js",
+    "start": "NODE_ENV=production PORT=3000 node app.js",
+    "test": "mocha --compilers js:babel-core/register --require ignore-styles --recursive ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cody123Anderson/serenade-api.git"
+  },
+  "author": "Cody Anderson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cody123Anderson/serenade-api/issues"
+  },
+  "homepage": "https://github.com/Cody123Anderson/serenade-api#readme",
+  "dependencies": {
+    "aws-sdk": "^2.26.0",
+    "axios": "^0.15.3",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.2",
+    "cloudinary": "^1.8.0",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "jwt-simple": "^0.5.1",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "morgan": "^1.7.0",
+    "node-geocoder": "^3.18.0",
+    "nodemon": "^1.11.0",
+    "pg": "^6.4.0",
+    "pg-hstore": "^2.3.2",
+    "sendgrid": "^4.7.1",
+    "sendgrid-rest": "^2.3.0",
+    "sequelize": "^4.3.0",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "ignore-styles": "^5.0.1",
+    "mocha": "^4.0.1"
+  }
+}

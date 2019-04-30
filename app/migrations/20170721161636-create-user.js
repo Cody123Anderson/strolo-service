@@ -1,7 +1,7 @@
 module.exports = {
-  up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Users', {
-      id: {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable('users', {
+      userId: {
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
@@ -9,6 +9,10 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
+        type: Sequelize.DATE
+      },
+      deletedAt: {
+        allowNull: true,
         type: Sequelize.DATE
       },
       updatedAt: {
@@ -26,6 +30,11 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      emailVerified: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       password: {
         type: Sequelize.STRING,
         allowNull: false
@@ -33,7 +42,7 @@ module.exports = {
       passwordResetToken: {
         type: Sequelize.STRING
       },
-      passwordResetTokenExpiration: {
+      passwordResetExpiration: {
         type: Sequelize.DATE
       },
       phone: {
@@ -42,12 +51,15 @@ module.exports = {
       birthday: {
         type: Sequelize.DATE
       },
+      status: {
+        type: Sequelize.STRING
+      },
       plusOneFirstName: {
         type: Sequelize.STRING
       }
     });
   },
-  down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Users');
+  down: (queryInterface) => {
+    return queryInterface.dropTable('users');
   }
 };

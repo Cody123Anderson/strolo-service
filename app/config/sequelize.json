@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "cody",
+    "password": "cody123",
+    "database": "serenadedevdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "cody",
+    "password": "cody123",
+    "database": "serenadedb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "cody",
+    "password": "cody123",
+    "database": "serenadeproddb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

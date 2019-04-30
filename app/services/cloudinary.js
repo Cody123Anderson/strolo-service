@@ -1,6 +1,6 @@
 const cloudinary = require('cloudinary');
 
-const config = require('../config')
+const config = require('../config');
 
 //Cloudinary Image Config
 cloudinary.config({

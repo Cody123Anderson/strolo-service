@@ -1,93 +1,60 @@
-const Sequelize = require('sequelize');
+import { DataTypes } from 'sequelize';
 
-const { encryptPassword } = require('../utils/password');
-const { cleanObj } = require('../utils/format-data');
-const { sequelize } = require('../services/database');
+import { sequelize } from '../services/sequelize';
 
-const User = sequelize.define('User', {
-  id: {
+const User = sequelize.define('user', {
+  userId: {
     allowNull: false,
-    defaultValue: Sequelize.UUIDV4,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
-    type: Sequelize.UUID
+    type: DataTypes.UUID
   },
-  createdAt: {
-    allowNull: false,
-    type: Sequelize.DATE
-  },
-  updatedAt: {
-    allowNull: false,
-    type: Sequelize.DATE
+  deletedAt: {
+    allowNull: true,
+    type: DataTypes.DATE
   },
   firstName: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING
   },
   lastName: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING
   },
   email: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
+  emailVerified: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
   password: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false
   },
   passwordResetToken: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING
   },
-  passwordResetTokenExpiration: {
-    type: Sequelize.DATE
+  passwordResetExpiration: {
+    type: DataTypes.DATE
   },
   phone: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING
   },
   birthday: {
-    type: Sequelize.DATE
+    type: DataTypes.DATE
+  },
+  status: {
+    type: DataTypes.STRING
   },
   plusOneFirstName: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING
   }
-});
+}, {});
 
-function formatUser(user) {
-  return new Promise((resolve, reject) => {
-    if (user.password) {
-      encryptPassword(user.password, (err, hashedPassword) => {
-        if (err) cb(err, null);
+// User.associate = function(models) {
+//   // associations can be defined here
+// };
 
-        const formattedUser = {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          password: hashedPassword,
-          phone: user.phone,
-          birthday: user.birthday,
-          plusOneFirstName: user.plusOneFirstName
-        };
-
-        // Remove null or undefined attributes
-        cleanObj(formattedUser);
-
-        resolve(formattedUser);
-      });
-    } else {
-      const formattedUser = {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-        birthday: user.birthday,
-        plusOneFirstName: user.plusOneFirstName
-      };
-
-      // Remove null or undefined attributes
-      cleanObj(formattedUser);
-
-      resolve(formattedUser);
-    }
-  });
-}
-
-module.exports = { User, formatUser };
+module.exports = User;

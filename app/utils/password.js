@@ -1,16 +1,9 @@
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcryptjs');
 
 // Encrypts password when signing up
-exports.encryptPassword = (password, cb) => {
-  const salt = 8;
-  bcrypt.genSalt(salt, (err, salt) => {
-    if (err) { cb(err, null); }
-
-    bcrypt.hash(password, salt, null, (err, hashedPassword) => {
-      cb(err, hashedPassword);
-    });
-  });
-}
+exports.hashPassword = (password) => {
+  return bcrypt.hashSync(password, 11);
+};
 
 // Checks for password match when logging in
 exports.comparePasswords = (candidatePassword, hashedPassword, cb) => {

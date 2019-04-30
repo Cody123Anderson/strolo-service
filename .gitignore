@@ -1,3 +1,7 @@
 node_modules
-*.DS_Store
-app/config/
+.serverless
+.env
+.webpack
+.idea
+.DS_Store
+serverless.env.yml

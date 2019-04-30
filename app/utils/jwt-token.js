@@ -1,6 +1,6 @@
 const jwt = require('jwt-simple');
 
-const config = require('../config');
+const constants = require('../constants');
 const { getTimestamp } = require('./timestamp');
 
 exports.encodeAdminToken = (user) => {
@@ -12,8 +12,8 @@ exports.encodeAdminToken = (user) => {
     username: user.username,
     iat: issuedAt,
     exp: expiration
-  }, config.JWT_SECRET);
-}
+  }, constants.JWT_SECRET);
+};
 
 exports.encodeUserToken = (user) => {
   const issuedAt = getTimestamp();
@@ -24,9 +24,9 @@ exports.encodeUserToken = (user) => {
     email: user.email,
     iat: issuedAt,
     exp: expiration
-  }, config.JWT_SECRET);
-}
+  }, constants.JWT_SECRET);
+};
 
 exports.decodeToken = (token) => {
-  return jwt.decode(token, config.JWT_SECRET);
-}
+  return jwt.decode(token, constants.JWT_SECRET);
+};

@@ -1,27 +1,41 @@
-const _ = require('lodash');
+import AWS from './aws';
 
-exports.getUpdateExpression = (obj) => {
-  let expressionString = 'set';
-  let attributeNames = {};
-  let attributeValues = {};
-  let count = 0;
+export function call(action, params) {
+  const dynamo = new AWS.DynamoDB.DocumentClient();
 
-  _.forOwn(obj, (value, key) => {
-    if (count > 0) {
-      expressionString += ',';
-    }
-
-    expressionString += ` #${key}=:${key}`;
-    attributeNames[`#${key}`] = key;
-    attributeValues[`:${key}`] = value;
-    count += 1;
-  });
-
-  return { expressionString, attributeNames, attributeValues };
+  return dynamo[action](params).promise();
 }
 
-exports.batchKeysFormat = (values, key) => {
-  return values.map((val) => {
-    return { [key]: val };
+export function getUpdateExpression(data) {
+  let updateExpression = 'SET';
+
+  Object.entries(data).forEach(([key], index) => {
+    if (index > 0) {
+      updateExpression = `${updateExpression},`;
+    }
+
+    updateExpression = `${updateExpression} #${key} = :${key}`;
   });
+
+  return updateExpression;
+}
+
+export function getExpressionAttributeNames(data) {
+  let expressionValues = {};
+
+  Object.entries(data).forEach(([key]) => {
+    expressionValues[`#${key}`] = key;
+  });
+
+  return expressionValues;
+}
+
+export function getExpressionAttributeValues(data) {
+  let expressionValues = {};
+
+  Object.entries(data).forEach(([key, value]) => {
+    expressionValues[`:${key}`] = value;
+  });
+
+  return expressionValues;
 }

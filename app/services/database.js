@@ -9,7 +9,7 @@ const {
   DB_USERNAME,
   DB_PASSWORD,
   DB_HOST
-} = require('../config')
+} = require('../config');
 
 /**
   * Set up DynamoDB
