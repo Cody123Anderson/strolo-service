@@ -32,18 +32,30 @@ provider:
   profile: ${file(./serverless.env.yml):${self:provider.stage}.SERVERLESS_ADMIN}
   timeout: 30
   environment:
-    REGION: ${self:provider.region}
-    SENDGRID_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SENDGRID_API_KEY}
-    STAGE: ${self:provider.stage}
+    API_URL: ${file(./serverless.env.yml):${self:provider.stage}.API_URL}
     DASHBOARD_URL: ${file(./serverless.env.yml):${self:provider.stage}.DASHBOARD_URL}
+    JWT_SECRET: ${file(./serverless.env.yml):${self:provider.stage}.JWT_SECRET}
     POSTGRES_DB_HOST: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_HOST}
     POSTGRES_DB_NAME: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_NAME}
-    POSTGRES_DB_USERNAME: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_USERNAME}
     POSTGRES_DB_PASSWORD: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_PASSWORD}
+    POSTGRES_DB_USERNAME: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_USERNAME}
+    REGION: ${self:provider.region}
+    SENDGRID_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SENDGRID_API_KEY}
     SERENADE_SERVICE_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SERENADE_SERVICE_API_KEY}
-    JWT_SECRET: ${file(./serverless.env.yml):${self:provider.stage}.JWT_SECRET}
-    API_URL: ${file(./serverless.env.yml):${self:provider.stage}.API_URL}
+    SERENADE_SHOPIFY_INSTALL_TOPIC_ARN: ${file(./serverless.env.yml):${self:provider.stage}.SERENADE_SHOPIFY_INSTALL_TOPIC_ARN}
+    SHOP_URL: ${file(./serverless.env.yml):${self:provider.stage}.SHOP_URL}
+    SHOPIFY_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SHOPIFY_API_KEY}
+    SHOPIFY_API_SECRET: ${file(./serverless.env.yml):${self:provider.stage}.SHOPIFY_API_SECRET}
+    STAGE: ${self:provider.stage}
   iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
     - Effect: Allow
       Action:
         - lambda:InvokeFunction
@@ -54,60 +66,94 @@ provider:
           - Ref: AWS::Region
           - Ref: AWS::AccountId
           - function:${self:service}-${self:provider.stage}-*
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource: "arn:aws:sns:${self:provider.region}:*:*-${self:provider.stage}"
 
 functions:
-  createUser:
-    handler: app/functions/users/createUser.main
+  addWebhooksToStore:
+    handler: app/functions/shopify/addWebhooksToStore.main
     events:
-      - http:
-          path: /users
-          method: post
-          cors: true
+      - sns: serenadeShopifyAppInstall-${self:provider.stage}
+    warmup: false
+    timeout: 300
 
-  deleteUser:
-    handler: app/functions/users/deleteUser.main
+  installApp:
+    handler: app/functions/shopify/installApp.main
     events:
       - http:
-          path: /users/{userId}
-          method: delete
-          cors: true
-
-  forgotUserPassword:
-    handler: app/functions/users/forgotUserPassword.main
-    events:
-      - http:
-          path: /users/password/forgot
-          method: post
-          cors: true
-
-  getUser:
-    handler: app/functions/users/getUser.main
-    events:
-      - http:
-          path: /users/user
+          path: /shopify/install
           method: get
           cors: true
 
-  loginUser:
-    handler: app/functions/users/loginUser.main
+  installCallback:
+    handler: app/functions/shopify/installCallback.main
     events:
       - http:
-          path: /users/login
+          path: /shopify/install-callback
+          method: get
+          cors: true
+
+  ordersWebhook:
+    handler: app/functions/shopify/ordersWebhook.main
+    events:
+      - http:
+          path: /shopify/orders
           method: post
           cors: true
+  # createUser:
+  #   handler: app/functions/users/createUser.main
+  #   events:
+  #     - http:
+  #         path: /users
+  #         method: post
+  #         cors: true
 
-  resetUserPassword:
-    handler: app/functions/users/resetUserPassword.main
-    events:
-      - http:
-          path: /users/password/reset
-          method: put
-          cors: true
+  # deleteUser:
+  #   handler: app/functions/users/deleteUser.main
+  #   events:
+  #     - http:
+  #         path: /users/{userId}
+  #         method: delete
+  #         cors: true
 
-  updateUser:
-    handler: app/functions/users/updateUser.main
-    events:
-      - http:
-          path: /users/{userId}
-          method: put
-          cors: true
+  # forgotUserPassword:
+  #   handler: app/functions/users/forgotUserPassword.main
+  #   events:
+  #     - http:
+  #         path: /users/password/forgot
+  #         method: post
+  #         cors: true
+
+  # getUser:
+  #   handler: app/functions/users/getUser.main
+  #   events:
+  #     - http:
+  #         path: /users/user
+  #         method: get
+  #         cors: true
+
+  # loginUser:
+  #   handler: app/functions/users/loginUser.main
+  #   events:
+  #     - http:
+  #         path: /users/login
+  #         method: post
+  #         cors: true
+
+  # resetUserPassword:
+  #   handler: app/functions/users/resetUserPassword.main
+  #   events:
+  #     - http:
+  #         path: /users/password/reset
+  #         method: put
+  #         cors: true
+
+  # updateUser:
+  #   handler: app/functions/users/updateUser.main
+  #   events:
+  #     - http:
+  #         path: /users/{userId}
+  #         method: put
+  #         cors: true
