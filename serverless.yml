@@ -34,6 +34,7 @@ provider:
   environment:
     API_URL: ${file(./serverless.env.yml):${self:provider.stage}.API_URL}
     DASHBOARD_URL: ${file(./serverless.env.yml):${self:provider.stage}.DASHBOARD_URL}
+    DYNAMO_TEMP_DATECARD_TABLE: ${file(./serverless.env.yml):${self:provider.stage}.DYNAMO_TEMP_DATECARD_TABLE}
     JWT_SECRET: ${file(./serverless.env.yml):${self:provider.stage}.JWT_SECRET}
     POSTGRES_DB_HOST: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_HOST}
     POSTGRES_DB_NAME: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_NAME}
@@ -72,29 +73,6 @@ provider:
       Resource: "arn:aws:sns:${self:provider.region}:*:*-${self:provider.stage}"
 
 functions:
-  addWebhooksToStore:
-    handler: app/functions/shopify/addWebhooksToStore.main
-    events:
-      - sns: serenadeShopifyAppInstall-${self:provider.stage}
-    warmup: false
-    timeout: 300
-
-  installApp:
-    handler: app/functions/shopify/installApp.main
-    events:
-      - http:
-          path: /shopify/install
-          method: get
-          cors: true
-
-  installCallback:
-    handler: app/functions/shopify/installCallback.main
-    events:
-      - http:
-          path: /shopify/install-callback
-          method: get
-          cors: true
-
   ordersWebhook:
     handler: app/functions/shopify/ordersWebhook.main
     events:
@@ -102,6 +80,31 @@ functions:
           path: /shopify/orders
           method: post
           cors: true
+    
+  createTempDatecard:
+    handler: app/functions/tempDatecards/createTempDatecard.main
+    events:
+      - http:
+          path: /temp-datecards
+          method: post
+          cors: true
+
+  getTempDatecard:
+    handler: app/functions/tempDatecards/getTempDatecard.main
+    events:
+      - http:
+          path: /temp-datecards
+          method: get
+          cors: true
+
+  updateTempDatecard:
+    handler: app/functions/tempDatecards/updateTempDatecard.main
+    events:
+      - http:
+          path: /temp-datecards
+          method: put
+          cors: true
+        
   # createUser:
   #   handler: app/functions/users/createUser.main
   #   events:

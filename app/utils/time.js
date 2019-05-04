@@ -4,6 +4,10 @@ export function getCurrentTimestamp() {
   return Math.floor(Date.now() / 1000);
 }
 
+export function convertStringToUnix(datetimeString) {
+  return (new Date(datetimeString).valueOf() / 1000);
+}
+
 export function getTimestampForXDaysInFuture(numDays) {
   const currentTimestamp = Math.floor(Date.now() / 1000);
   const dateOffset = numDays * 24 * 60 * 60;

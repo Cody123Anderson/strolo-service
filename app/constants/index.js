@@ -1,6 +1,7 @@
 module.exports = {
   API_URL: process.env.API_URL,
   AWS: {
+    DYNAMO_TEMP_DATECARD_TABLE: process.env.DYNAMO_TEMP_DATECARD_TABLE,
     REGION: process.env.REGION || 'us-east-1'
   },
   DASHBOARD_URL: process.env.DASHBOARD_URL,
@@ -19,7 +20,8 @@ module.exports = {
     API_KEY: process.env.SENDGRID_API_KEY,
     API_URL: 'https://api.sendgrid.com/v3',
     RESET_USER_PASSWORD_TEMPLATE_ID: '',
-    NEW_MEMBER_TEMPLATE_ID: 'd-f2afba36310b4fa4964bfed43796bf13'
+    NEW_MEMBER_TEMPLATE_ID: 'd-f2afba36310b4fa4964bfed43796bf13',
+    NEW_TEMP_DATECARD_TEMPLATE_ID: 'd-0acf011102124643b3580ed82b30b08a'
   },
   SERENADE_SERVICE_API_KEY: process.env.SERENADE_SERVICE_API_KEY,
   SHOP_URL: process.env.SHOP_URL,
@@ -27,10 +29,6 @@ module.exports = {
   SHOPIFY_API_SECRET: process.env.SHOPIFY_API_SECRET,
   SNS_TOPIC_ARNS: {
     SERENADE_SHOPIFY_INSTALL: process.env.SERENADE_SHOPIFY_INSTALL_TOPIC_ARN
-  },
-  USER_STATUS: {
-    ACTIVE: 'Active',
-    DELETED: 'Deleted'
   },
   USER_TYPES: {
     ADMIN: 'Admin',
