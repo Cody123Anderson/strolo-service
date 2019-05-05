@@ -98,7 +98,7 @@ export async function main(event) {
         },
         templateId: constants.SENDGRID.NEW_TEMP_DATECARD_TEMPLATE_ID,
         dynamic_template_data: {
-          datecardUrl: `${constants.DASHBOARD_URL}/temp-datecards/${tempDatecard.tempDatecardId}/order/${tempDatecard.shopifyOrderId}`,
+          datecardUrl: `${constants.DASHBOARD_URL}/datecards/${tempDatecard.tempDatecardId}/order/${tempDatecard.shopifyOrderId}`,
           userFirstName: tempDatecard.userFirstName,
           firstDealItemTitle: tempDatecard.dealItems[0].title,
           additionalItemsBool: tempDatecard.dealItems.length - 1 > 0,
