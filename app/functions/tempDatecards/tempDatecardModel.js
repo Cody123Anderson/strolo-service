@@ -6,10 +6,10 @@ const tempDatecard = {
   shopifyOrderNumber: '',
   createdAt: '',
   updatedAt: '',
-  redeemedAt: '',
   cancelledAt: '',
   deletedAt: '',
   dealItems: [{
+    redeemedAt: '',
     imageUrl: '',
     shopifyLineItemId: '',
     shopifyProductId: '',
