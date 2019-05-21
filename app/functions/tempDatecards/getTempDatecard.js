@@ -35,11 +35,11 @@ export async function main(event) {
         if (!tempDatecard) {
           return resolve(success({
             status: 'No tempDatecard found',
-            tempDatecard: {}
+            data: {}
           }));
         }
 
-        return resolve(success({ tempDatecard: result.Item }));
+        return resolve(success({ data: result.Item }));
       } catch (err) {
         console.error('server error getting the tempDatecard: ', err);
         return reject(serverFailure('Server error getting the tempDatecard', err));
@@ -64,11 +64,11 @@ export async function main(event) {
       if (!tempDatecard) {
         return resolve(success({
           status: 'No tempDatecard found',
-          tempDatecard: {}
+          data: {}
         }));
       }
 
-      return resolve(success({ tempDatecard }));
+      return resolve(success({ data: tempDatecard }));
     } catch (err) {
       console.error('server error getting the tempDatecard: ', err);
       return reject(serverFailure('Server error getting the tempDatecard', err));
