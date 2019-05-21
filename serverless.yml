@@ -101,7 +101,7 @@ functions:
     handler: app/functions/tempDatecards/updateTempDatecard.main
     events:
       - http:
-          path: /temp-datecards
+          path: /temp-datecards/{tempDatecardId}
           method: put
           cors: true
         

@@ -4,7 +4,6 @@ import { success, serverFailure } from '../../utils/response';
 import { getCurrentTimestamp } from '../../utils/time';
 import { getTempDatecard } from './tempDatecardModel';
 import { isLambdaWarmer } from '../../utils/warmer';
-import { requireAuth } from '../../utils/auth';
 
 export async function main(event) {
   return new Promise(async (resolve, reject) => {
@@ -12,7 +11,7 @@ export async function main(event) {
 
     event.body = JSON.parse(event.body);
 
-    await requireAuth(event, reject);
+    console.info('event.body: ', event.body);
 
     const datetime = getCurrentTimestamp();
     const tempDatecard = {
@@ -20,8 +19,8 @@ export async function main(event) {
       updatedAt: datetime
     };
     const params = {
-      TableName: constants.AWS.DYNAMO_USERS_TABLE,
-      Key: { shopifyOrderId: event.pathParameters.shopifyOrderId },
+      TableName: constants.AWS.DYNAMO_TEMP_DATECARD_TABLE,
+      Key: { tempDatecardId: event.pathParameters.tempDatecardId },
       UpdateExpression: dynamoDbUtils.getUpdateExpression(tempDatecard),
       ExpressionAttributeNames: dynamoDbUtils.getExpressionAttributeNames(tempDatecard),
       ExpressionAttributeValues: dynamoDbUtils.getExpressionAttributeValues(tempDatecard),
