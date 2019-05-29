@@ -48,6 +48,7 @@ provider:
     SHOPIFY_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SHOPIFY_API_KEY}
     SHOPIFY_API_SECRET: ${file(./serverless.env.yml):${self:provider.stage}.SHOPIFY_API_SECRET}
     STAGE: ${self:provider.stage}
+    STRIPE_SECRET_KEY: ${file(./serverless.env.yml):${self:provider.stage}.STRIPE_SECRET_KEY}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -78,6 +79,14 @@ functions:
     events:
       - http:
           path: /shopify/orders
+          method: post
+          cors: true
+
+  createStripeConnectAccount:
+    handler: app/functions/stripe/createStripeConnectAccount.main
+    events:
+      - http:
+          path: /stripe/connect
           method: post
           cors: true
     

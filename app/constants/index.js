@@ -30,6 +30,7 @@ module.exports = {
   SNS_TOPIC_ARNS: {
     SERENADE_SHOPIFY_INSTALL: process.env.SERENADE_SHOPIFY_INSTALL_TOPIC_ARN
   },
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   USER_TYPES: {
     ADMIN: 'Admin',
     USER: 'User'
