@@ -2,8 +2,8 @@ import { DataTypes } from 'sequelize';
 
 import { sequelize } from '../services/sequelize';
 
-const User = sequelize.define('user', {
-  userId: {
+const Athlete = sequelize.define('athlete', {
+  athleteId: {
     allowNull: false,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
@@ -47,14 +47,11 @@ const User = sequelize.define('user', {
   },
   status: {
     type: DataTypes.STRING
-  },
-  plusOneFirstName: {
-    type: DataTypes.STRING
   }
 }, {});
 
-// User.associate = function(models) {
+// Athlete.associate = function(models) {
 //   // associations can be defined here
 // };
 
-module.exports = User;
+module.exports = Athlete;

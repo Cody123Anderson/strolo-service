@@ -2,21 +2,21 @@
   "development": {
     "username": "cody",
     "password": "cody123",
-    "database": "serenadedevdb",
+    "database": "strolodevdb",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
     "username": "cody",
     "password": "cody123",
-    "database": "serenadedb",
+    "database": "strolotestdb",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
     "username": "cody",
     "password": "cody123",
-    "database": "serenadeproddb",
+    "database": "stroloproddb",
     "host": "127.0.0.1",
     "dialect": "postgres"
   }

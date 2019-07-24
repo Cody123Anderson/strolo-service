@@ -1,7 +1,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users', {
-      userId: {
+    return queryInterface.createTable('athletes', {
+      athleteId: {
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
@@ -53,13 +53,10 @@ module.exports = {
       },
       status: {
         type: Sequelize.STRING
-      },
-      plusOneFirstName: {
-        type: Sequelize.STRING
       }
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('athletes');
   }
 };

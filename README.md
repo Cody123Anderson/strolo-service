@@ -1,5 +1,5 @@
-# serenade-service
-Serverless Application to host all Serenade Dates APIs
+# strolo-service
+Serverless Application to host all Strolo REST APIs
 
 ### Running Locally
 - Install Postgres locally using homebrew
@@ -9,7 +9,7 @@ Serverless Application to host all Serenade Dates APIs
     - `alias pgstart="launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist"`
     - `alias pgstop="launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist"`
   - `pgstart`
-  - `createdb serenadetestdb`
+  - `createdb strolotestdb`
   - `createuser <username>`
   - Connect to your postgres with the command: `psql`
   - `alter user <username> with encrypted password '<password>';`

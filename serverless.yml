@@ -1,4 +1,4 @@
-service: serenade-service
+service: strolo-service
 
 frameworkVersion: ">=1.1.0 <2.0.0"
 
@@ -34,7 +34,6 @@ provider:
   environment:
     API_URL: ${file(./serverless.env.yml):${self:provider.stage}.API_URL}
     DASHBOARD_URL: ${file(./serverless.env.yml):${self:provider.stage}.DASHBOARD_URL}
-    DYNAMO_TEMP_DATECARD_TABLE: ${file(./serverless.env.yml):${self:provider.stage}.DYNAMO_TEMP_DATECARD_TABLE}
     JWT_SECRET: ${file(./serverless.env.yml):${self:provider.stage}.JWT_SECRET}
     POSTGRES_DB_HOST: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_HOST}
     POSTGRES_DB_NAME: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_NAME}
@@ -42,22 +41,10 @@ provider:
     POSTGRES_DB_USERNAME: ${file(./serverless.env.yml):${self:provider.stage}.POSTGRES_DB_USERNAME}
     REGION: ${self:provider.region}
     SENDGRID_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SENDGRID_API_KEY}
-    SERENADE_SERVICE_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SERENADE_SERVICE_API_KEY}
-    SERENADE_SHOPIFY_INSTALL_TOPIC_ARN: ${file(./serverless.env.yml):${self:provider.stage}.SERENADE_SHOPIFY_INSTALL_TOPIC_ARN}
-    SHOP_URL: ${file(./serverless.env.yml):${self:provider.stage}.SHOP_URL}
-    SHOPIFY_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SHOPIFY_API_KEY}
-    SHOPIFY_API_SECRET: ${file(./serverless.env.yml):${self:provider.stage}.SHOPIFY_API_SECRET}
+    STROLO_SERVICE_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.STROLO_SERVICE_API_KEY}
     STAGE: ${self:provider.stage}
     STRIPE_SECRET_KEY: ${file(./serverless.env.yml):${self:provider.stage}.STRIPE_SECRET_KEY}
   iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
     - Effect: Allow
       Action:
         - lambda:InvokeFunction
@@ -74,53 +61,13 @@ provider:
       Resource: "arn:aws:sns:${self:provider.region}:*:*-${self:provider.stage}"
 
 functions:
-  ordersWebhook:
-    handler: app/functions/shopify/ordersWebhook.main
+  createAthlete:
+    handler: app/functions/athletes/createAthlete.main
     events:
       - http:
-          path: /shopify/orders
+          path: /athletes
           method: post
           cors: true
-
-  createStripeConnectAccount:
-    handler: app/functions/stripe/createStripeConnectAccount.main
-    events:
-      - http:
-          path: /stripe/connect
-          method: post
-          cors: true
-    
-  createTempDatecard:
-    handler: app/functions/tempDatecards/createTempDatecard.main
-    events:
-      - http:
-          path: /temp-datecards
-          method: post
-          cors: true
-
-  getTempDatecard:
-    handler: app/functions/tempDatecards/getTempDatecard.main
-    events:
-      - http:
-          path: /temp-datecards
-          method: get
-          cors: true
-
-  updateTempDatecard:
-    handler: app/functions/tempDatecards/updateTempDatecard.main
-    events:
-      - http:
-          path: /temp-datecards/{tempDatecardId}
-          method: put
-          cors: true
-        
-  # createUser:
-  #   handler: app/functions/users/createUser.main
-  #   events:
-  #     - http:
-  #         path: /users
-  #         method: post
-  #         cors: true
 
   # deleteUser:
   #   handler: app/functions/users/deleteUser.main
@@ -168,4 +115,12 @@ functions:
   #     - http:
   #         path: /users/{userId}
   #         method: put
+  #         cors: true
+
+  # createStripeConnectAccount:
+  #   handler: app/functions/stripe/createStripeConnectAccount.main
+  #   events:
+  #     - http:
+  #         path: /stripe/connect
+  #         method: post
   #         cors: true

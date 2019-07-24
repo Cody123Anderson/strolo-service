@@ -1,10 +1,10 @@
-const aws = require('aws-sdk');
+// const aws = require('aws-sdk');
 const Sequelize = require('sequelize');
 
 const {
-  AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY,
-  AWS_REGION,
+  // AWS_ACCESS_KEY_ID,
+  // AWS_SECRET_ACCESS_KEY,
+  // AWS_REGION,
   DB_NAME,
   DB_USERNAME,
   DB_PASSWORD,
@@ -16,14 +16,14 @@ const {
 **/
 
 // Configure AWS
-aws.config.update({
-  accessKeyId: AWS_ACCESS_KEY_ID,
-  secretAccessKey: AWS_SECRET_ACCESS_KEY
-});
-aws.config.update({ region: AWS_REGION });
+// aws.config.update({
+//   accessKeyId: AWS_ACCESS_KEY_ID,
+//   secretAccessKey: AWS_SECRET_ACCESS_KEY
+// });
+// aws.config.update({ region: AWS_REGION });
 
 // Get instance of the database
-const dynamo = new aws.DynamoDB.DocumentClient();
+// const dynamo = new aws.DynamoDB.DocumentClient();
 
 /**
   * Set up Postgres with Sequelize
@@ -44,4 +44,5 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-module.exports = { dynamo, sequelize };
+// module.exports = { dynamo, sequelize };
+module.exports = { sequelize };
