@@ -9,7 +9,7 @@ export function convertStringToUnix(datetimeString) {
 }
 
 export function getTimestampForXDaysInFuture(numDays) {
-  const currentTimestamp = Math.floor(Date.now() / 1000);
+  const currentTimestamp = getCurrentTimestamp();
   const dateOffset = numDays * 24 * 60 * 60;
 
   return currentTimestamp + dateOffset;

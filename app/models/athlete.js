@@ -9,9 +9,6 @@ const Athlete = sequelize.define('athlete', {
     primaryKey: true,
     type: DataTypes.UUID
   },
-  deletedAt: {
-    type: DataTypes.DATE
-  },
   firstName: {
     type: DataTypes.STRING
   },
@@ -56,8 +53,21 @@ const Athlete = sequelize.define('athlete', {
   },
   status: {
     type: DataTypes.STRING
+  },
+  createdAt: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  updatedAt: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  deletedAt: {
+    type: DataTypes.STRING
   }
-}, {});
+}, {
+  timestamps: false
+});
 
 // Athlete.associate = function(models) {
 //   // associations can be defined here

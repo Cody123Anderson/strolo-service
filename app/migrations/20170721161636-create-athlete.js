@@ -7,9 +7,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
-      deletedAt: {
-        type: Sequelize.DATE
-      },
       firstName: {
         type: Sequelize.STRING
       },
@@ -54,7 +51,20 @@ module.exports = {
       },
       status: {
         type: Sequelize.STRING
+      },
+      createdAt: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      updatedAt: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      deletedAt: {
+        type: Sequelize.STRING
       }
+    }, {
+      timestamps: false
     });
   },
   down: (queryInterface) => {

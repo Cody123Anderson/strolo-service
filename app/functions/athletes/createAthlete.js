@@ -6,8 +6,8 @@ const Athlete = require('../../models/athlete');
 import { formatAthlete } from '../../utils/athlete';
 import { getAthleteJWT } from '../../utils/jwt';
 import { hashPassword } from '../../utils/password';
-
 import * as constants from '../../constants';
+import { getCurrentTimestamp } from '../../utils/time';
 import { failure, serverFailure, success } from '../../utils/response';
 import { isLambdaWarmer } from '../../utils/warmer';
 
@@ -18,6 +18,7 @@ export async function main(event) {
     if (isLambdaWarmer(event)) return resolve(success());
 
     const data = JSON.parse(event.body);
+    const timestamp = getCurrentTimestamp();
     let athlete;
     let hashedPassword;
 
@@ -54,6 +55,8 @@ export async function main(event) {
 
     const formattedAthlete = formatAthlete({
       athleteId: uuid.v4(),
+      createdAt: timestamp,
+      updatedAt: timestamp,
       email,
       password: hashedPassword,
       status: constants.ATHLETE_STATUS.ACTIVE
@@ -61,13 +64,13 @@ export async function main(event) {
 
     console.info('formattedAthlete: ', formattedAthlete);
 
-    Athlete.create(formattedAthlete).then(newAthlete => {
-      console.info('newAthlete in create: ', newAthlete);
-      athlete = newAthlete.dataValues;
-    }).catch(err => {
+    try {
+      athlete = await Athlete.create(formattedAthlete);
+      athlete = athlete.dataValues;
+    } catch (err) {
       console.error('server error creating athlete: ', err);
       return reject(serverFailure('server error creating athlete', err.response));
-    });
+    }
 
     // Send an email to the athlete to confirm their email address
     // try {
