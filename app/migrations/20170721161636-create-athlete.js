@@ -7,22 +7,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
       deletedAt: {
-        allowNull: true,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       firstName: {
         type: Sequelize.STRING
       },
       lastName: {
+        type: Sequelize.STRING
+      },
+      profileImageUrl: {
         type: Sequelize.STRING
       },
       email: {
@@ -35,6 +29,10 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
+      username: {
+        type: Sequelize.STRING,
+        unique: true
+      },
       password: {
         type: Sequelize.STRING,
         allowNull: false
@@ -45,7 +43,10 @@ module.exports = {
       passwordResetExpiration: {
         type: Sequelize.DATE
       },
-      phone: {
+      gender: {
+        type: Sequelize.STRING
+      },
+      measurementUnits: {
         type: Sequelize.STRING
       },
       birthday: {

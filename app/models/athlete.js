@@ -10,13 +10,15 @@ const Athlete = sequelize.define('athlete', {
     type: DataTypes.UUID
   },
   deletedAt: {
-    allowNull: true,
     type: DataTypes.DATE
   },
   firstName: {
     type: DataTypes.STRING
   },
   lastName: {
+    type: DataTypes.STRING
+  },
+  profileImageUrl: {
     type: DataTypes.STRING
   },
   email: {
@@ -29,6 +31,10 @@ const Athlete = sequelize.define('athlete', {
     allowNull: false,
     defaultValue: false
   },
+  username: {
+    type: DataTypes.STRING,
+    unique: true
+  },
   password: {
     type: DataTypes.STRING,
     allowNull: false
@@ -39,7 +45,10 @@ const Athlete = sequelize.define('athlete', {
   passwordResetExpiration: {
     type: DataTypes.DATE
   },
-  phone: {
+  gender: {
+    type: DataTypes.STRING
+  },
+  measurementUnits: {
     type: DataTypes.STRING
   },
   birthday: {
