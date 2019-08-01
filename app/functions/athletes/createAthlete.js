@@ -2,7 +2,7 @@ import _ from 'lodash';
 import uuid from 'uuid';
 import sgMail from '@sendgrid/mail';
 
-const Athlete = require('../../models/athlete');
+import Athlete from '../../models/athlete';
 import { formatAthlete } from '../../utils/athlete';
 import { getAthleteJWT } from '../../utils/jwt';
 import { hashPassword } from '../../utils/password';

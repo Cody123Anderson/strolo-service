@@ -68,6 +68,13 @@ functions:
           path: /athletes
           method: post
           cors: true
+  updateAthlete:
+    handler: app/functions/athletes/updateAthlete.main
+    events:
+      - http:
+          path: /athletes/{athleteId}
+          method: put
+          cors: true
 
   # deleteUser:
   #   handler: app/functions/users/deleteUser.main
@@ -106,14 +113,6 @@ functions:
   #   events:
   #     - http:
   #         path: /users/password/reset
-  #         method: put
-  #         cors: true
-
-  # updateUser:
-  #   handler: app/functions/users/updateUser.main
-  #   events:
-  #     - http:
-  #         path: /users/{userId}
   #         method: put
   #         cors: true
 
