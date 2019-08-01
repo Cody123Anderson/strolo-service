@@ -22,7 +22,7 @@ export async function main(event) {
     let athlete;
     let hashedPassword;
 
-    // // lowercase the email
+    // Lowercase the email
     data.email = _.toLower(data.email);
 
     const { email, password } = data;
@@ -45,7 +45,7 @@ export async function main(event) {
       return reject(failure(422, 'Invalid Request: an athlete with this email already exists'));
     }
 
-    // // Hash the password
+    // Hash the password
     try {
       hashedPassword = hashPassword(password);
     } catch (err) {
