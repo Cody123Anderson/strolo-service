@@ -68,6 +68,15 @@ functions:
           path: /athletes
           method: post
           cors: true
+  
+  getAthlete:
+    handler: app/functions/athletes/getAthlete.main
+    events:
+      - http:
+          path: /athletes/athlete
+          method: get
+          cors: true
+
   updateAthlete:
     handler: app/functions/athletes/updateAthlete.main
     events:
@@ -90,14 +99,6 @@ functions:
   #     - http:
   #         path: /users/password/forgot
   #         method: post
-  #         cors: true
-
-  # getUser:
-  #   handler: app/functions/users/getUser.main
-  #   events:
-  #     - http:
-  #         path: /users/user
-  #         method: get
   #         cors: true
 
   # loginUser:
