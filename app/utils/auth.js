@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import axios from 'axios';
 
-import { XP_SERVICE_API_KEY, JWT, API_URL } from '../constants';
+import { STROLO_SERVICE_API_KEY, JWT, API_URL } from '../constants';
 import { failure } from './response';
 import { decode } from './jwt';
 import { getInternalRequestOptions } from './request';
@@ -35,7 +35,7 @@ function hasValidRole(acceptedRoles, role) {
 /*
   * event: object - lambda event
   * reject: func - reject function from lambda to responsd to request if it fails
-  * type: string - type off of the JWT (required if JWT auth is allowed)
+  * type: string - type of the JWT (required if JWT auth is allowed)
   * acceptedRoles: array - accepted user roles to be authenticated (required if JWT auth is allowed)
 */
 export async function requireAuth(event, parentReject, type = 'Invalid', acceptedRoles = []) {
@@ -44,18 +44,18 @@ export async function requireAuth(event, parentReject, type = 'Invalid', accepte
     console.info('type: ', type);
     console.info('acceptedRoles: ', acceptedRoles);
 
-    const xpServiceApiKey = _.get(event, 'headers[\'XP-Service-API-Key\']');
+    const stroloServiceAPIKey = _.get(event, 'headers[\'Strolo-Service-API-Key\']');
     const token = _.get(event, 'headers.Authorization');
 
-    if (xpServiceApiKey) {
-      // XP-Service-API-Key check
-      if (xpServiceApiKey === XP_SERVICE_API_KEY) {
-        console.info('Is a valid XP service API key!');
+    if (stroloServiceAPIKey) {
+      // Strolo-Service-API-Key check
+      if (stroloServiceAPIKey === STROLO_SERVICE_API_KEY) {
+        console.info('Is a valid Strolo Service API key!');
         return resolve();
       }
 
-      // Invalid XP Service API Key
-      deny(401, 'Invalid XP service API key', parentReject);
+      // Invalid Strolo Service API Key
+      deny(401, 'Invalid Strolo Service API key', parentReject);
     } else if (token) {
       // JWT Check
       try {
@@ -75,42 +75,42 @@ export async function requireAuth(event, parentReject, type = 'Invalid', accepte
           }
 
           // Check if user has necessary permissions
-          if (decodedToken.type === JWT.TYPES.ADMIN) {
-            console.info('Is a valid XP Admin!');
+          if (decodedToken.type === JWT.TYPES.STROLO_ADMIN) {
+            console.info('Is a valid Strolo Admin!');
             return resolve();
-          } else if (decodedToken.type === type && type === JWT.TYPES.COLLABORATOR) {
-            const requestCollaboratorId = _.get(event, 'pathParameters.collaboratorId') || _.get(event, 'queryStringParameters.collaboratorId') || _.get(event, 'body.collaboratorId');
-            let requestMerchantId = _.get(event, 'pathParameters.merchantId') || _.get(event, 'queryStringParameters.merchantId') || _.get(event, 'body.merchantId');
+          } else if (decodedToken.type === type && type === JWT.TYPES.SPONSOR_ADMIN) {
+            const requestSponsorAdminId = _.get(event, 'pathParameters.sponsorAdminId') || _.get(event, 'queryStringParameters.sponsorAdminId') || _.get(event, 'body.sponsorAdminId');
+            let requestSponsorId = _.get(event, 'pathParameters.sponsorId') || _.get(event, 'queryStringParameters.sponsorId') || _.get(event, 'body.sponsorId');
 
-            if (requestCollaboratorId && requestCollaboratorId === decodedToken.sub) {
-              // Collaborator making request is accessing/altering their own data
+            if (requestSponsorAdminId && requestSponsorAdminId === decodedToken.sub) {
+              // SponsorAdmin making request is accessing/altering their own data
               return resolve();
-            } else if (requestMerchantId && requestMerchantId === decodedToken.merchantId) {
-              // Collaborator making request is trying to access/alter data on collaborator within their merchant account
+            } else if (requestSponsorId && requestSponsorId === decodedToken.sponsorId) {
+              // SponsorAdmin making request is trying to access/alter data on sponsorAdmin within their sponsor account
               if (hasValidRole(acceptedRoles, decodedToken.role)) {
-                // Collaborator's role is sufficient enough to make this request
+                // SponsorAdmin's role is sufficient enough to make this request
                 return resolve();
               }
 
               deny(403, 'Insufficient role to carry out this operation', parentReject);
-            } else if (requestCollaboratorId && !requestMerchantId) {
+            } else if (requestSponsorAdminId && !requestSponsorId) {
               try {
                 const options = getInternalRequestOptions();
-                const requestUrl = `${API_URL}/collaborators/collaborator?collaboratorId=${requestCollaboratorId}`;
+                const requestUrl = `${API_URL}/sponsorAdmins/sponsorAdmin?sponsorAdminId=${requestSponsorAdminId}`;
                 const { data } = await axios.get(requestUrl, options);
 
                 console.info('data: ', data);
 
-                requestMerchantId = _.get(data, 'collaborator.merchantId', 'notfound');
+                requestSponsorId = _.get(data, 'sponsorAdmin.sponsorId', 'notfound');
               } catch (e) {
-                console.error('server error getting collaborator: ', e);
-                return deny(500, 'server error getting collaborator', parentReject);
+                console.error('server error getting sponsorAdmin: ', e);
+                return deny(500, 'server error getting sponsorAdmin', parentReject);
               }
 
-              if (decodedToken.merchantId === requestMerchantId) {
-                // Collaborator making request is trying to access/alter data on collaborator within their merchant account
+              if (decodedToken.sponsorId === requestSponsorId) {
+                // SponsorAdmin making request is trying to access/alter data on sponsorAdmin within their sponsor account
                 if (hasValidRole(acceptedRoles, decodedToken.role)) {
-                  // Collaborator's role is sufficient enough to make this request
+                  // SponsorAdmin's role is sufficient enough to make this request
                   return resolve();
                 }
 
@@ -121,20 +121,23 @@ export async function requireAuth(event, parentReject, type = 'Invalid', accepte
             } else {
               deny(403, 'Insufficient permissions to access accounts other than your own', parentReject);
             }
-          } else if (decodedToken.type === type && type === JWT.TYPES.USER) {
-            const requestUserId = decodeURIComponent(_.get(event, 'pathParameters.userId') || _.get(event, 'queryStringParameters.userId') || _.get(event, 'body.userId'));
+          } else if (decodedToken.type === type && type === JWT.TYPES.ATHLETE) {
+            const requestAthleteId = decodeURIComponent(_.get(event, 'pathParameters.athleteId') || _.get(event, 'queryStringParameters.athleteId') || _.get(event, 'body.athleteId'));
             const requestEmail = decodeURIComponent(_.get(event, 'pathParameters.email') || _.get(event, 'queryStringParameters.email') || _.get(event, 'body.email'));
 
-            if (requestUserId && requestUserId === decodedToken.sub) {
-              // User making request is accessing/altering their own data
+            if (requestAthleteId && requestAthleteId === decodedToken.sub) {
+              // Athlete making request is accessing/altering their own data
               return resolve();
             } else if (requestEmail && requestEmail === decodedToken.email) {
-              // User making request is accessing/altering their own data
+              // Athlete making request is accessing/altering their own data
               return resolve();
             }
 
             deny(403, 'Insufficient permissions to access accounts other than your own', parentReject);
           } else {
+            console.log('decodedToken.type: ', decodedToken.type);
+            console.log('type: ', type);
+            console.log('JWT.TYPES.ATHLETE: ', JWT.TYPES.ATHLETE);
             deny(403, 'Unknown JWT type', parentReject);
           }
         } else {

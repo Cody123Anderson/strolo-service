@@ -7,9 +7,9 @@ module.exports = {
   JWT: {
     SECRET: process.env.JWT_SECRET,
     TYPES: {
-      COMPANY_ADMIN: 'Company Admin',
+      SPONSOR_ADMIN: 'Sponsor Admin',
       STROLO_ADMIN: 'Admin',
-      ATHLETE: 'ATHLETE'
+      ATHLETE: 'Athlete'
     }
   },
   POSTGRES_DB_HOST: process.env.POSTGRES_DB_HOST,
@@ -25,7 +25,7 @@ module.exports = {
   SNS_TOPIC_ARNS: {},
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   USER_TYPES: {
-    COMPANY_ADMIN: 'Company Admin',
+    COMPANY_ADMIN: 'Sponsor Admin',
     STROLO_ADMIN: 'Admin',
     ATHLETE: 'Athlete'
   },

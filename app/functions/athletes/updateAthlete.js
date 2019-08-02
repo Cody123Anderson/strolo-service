@@ -3,6 +3,7 @@ import { getCurrentTimestamp } from '../../utils/time';
 import { formatAthlete } from '../../utils/athlete';
 import { isLambdaWarmer } from '../../utils/warmer';
 import { requireAuth } from '../../utils/auth';
+import * as constants from '../../constants';
 import Athlete from '../../models/athlete';
 
 export async function main(event) {
@@ -14,12 +15,12 @@ export async function main(event) {
 
     event.body = JSON.parse(event.body);
 
-    // await requireAuth(event, reject, constants.JWT.TYPES.ATHLETE);
+    await requireAuth(event, reject, constants.JWT.TYPES.ATHLETE);
 
     const datetime = getCurrentTimestamp();
     const newAttributes = {
       ...formatAthlete(event.body),
-      updatedAt: datetime
+      updatedAt: `${datetime}`
     };
 
     // don't let the athlete update their password using this endpoint
