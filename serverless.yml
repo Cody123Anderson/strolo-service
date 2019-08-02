@@ -77,6 +77,14 @@ functions:
           method: get
           cors: true
 
+  loginAthlete:
+    handler: app/functions/athletes/loginAthlete.main
+    events:
+      - http:
+          path: /athletes/login
+          method: post
+          cors: true
+
   updateAthlete:
     handler: app/functions/athletes/updateAthlete.main
     events:
@@ -98,14 +106,6 @@ functions:
   #   events:
   #     - http:
   #         path: /users/password/forgot
-  #         method: post
-  #         cors: true
-
-  # loginUser:
-  #   handler: app/functions/users/loginUser.main
-  #   events:
-  #     - http:
-  #         path: /users/login
   #         method: post
   #         cors: true
 
