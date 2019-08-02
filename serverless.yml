@@ -85,6 +85,14 @@ functions:
           method: post
           cors: true
 
+  resetAthletePassword:
+    handler: app/functions/athletes/resetAthletePassword.main
+    events:
+      - http:
+          path: /athletes/password/reset
+          method: put
+          cors: true
+
   updateAthlete:
     handler: app/functions/athletes/updateAthlete.main
     events:
@@ -107,14 +115,6 @@ functions:
   #     - http:
   #         path: /users/password/forgot
   #         method: post
-  #         cors: true
-
-  # resetUserPassword:
-  #   handler: app/functions/users/resetUserPassword.main
-  #   events:
-  #     - http:
-  #         path: /users/password/reset
-  #         method: put
   #         cors: true
 
   # createStripeConnectAccount:

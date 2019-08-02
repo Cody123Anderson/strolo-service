@@ -49,7 +49,7 @@ export async function main(event) {
       return resolve(failure(404, 'No athlete found'));
     }
 
-    delete athlete.password;
+    delete athlete.dataValues.password;
 
     return resolve(success({ athlete }));
   });

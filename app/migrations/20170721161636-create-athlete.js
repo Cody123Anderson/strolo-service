@@ -38,7 +38,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       passwordResetExpiration: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       gender: {
         type: Sequelize.STRING

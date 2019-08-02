@@ -40,7 +40,7 @@ const Athlete = sequelize.define('athlete', {
     type: DataTypes.STRING
   },
   passwordResetExpiration: {
-    type: DataTypes.DATE
+    type: DataTypes.STRING
   },
   gender: {
     type: DataTypes.STRING
