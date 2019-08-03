@@ -23,8 +23,10 @@ export async function main(event) {
       updatedAt: `${datetime}`
     };
 
-    // don't let the athlete update their password using this endpoint
+    // don't let the athlete update their password or email using this endpoint
     delete newAttributes.password;
+    delete newAttributes.email;
+    delete newAttributes.emailVerified;
 
     console.info('athleteId: ', athleteId);
     console.info('newAttributes: ', newAttributes);

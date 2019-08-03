@@ -79,16 +79,19 @@ export async function requireAuth(event, parentReject, type = 'Invalid', accepte
             console.info('Is a valid Strolo Admin!');
             return resolve();
           } else if (decodedToken.type === type && type === JWT.TYPES.SPONSOR_ADMIN) {
+            console.info('Is a Sponsor Admin!');
             const requestSponsorAdminId = _.get(event, 'pathParameters.sponsorAdminId') || _.get(event, 'queryStringParameters.sponsorAdminId') || _.get(event, 'body.sponsorAdminId');
             let requestSponsorId = _.get(event, 'pathParameters.sponsorId') || _.get(event, 'queryStringParameters.sponsorId') || _.get(event, 'body.sponsorId');
 
             if (requestSponsorAdminId && requestSponsorAdminId === decodedToken.sub) {
               // SponsorAdmin making request is accessing/altering their own data
+              console.info('Is a valid Sponsor Admin!');
               return resolve();
             } else if (requestSponsorId && requestSponsorId === decodedToken.sponsorId) {
               // SponsorAdmin making request is trying to access/alter data on sponsorAdmin within their sponsor account
               if (hasValidRole(acceptedRoles, decodedToken.role)) {
                 // SponsorAdmin's role is sufficient enough to make this request
+                console.info('Is a valid Sponsor Admin - Completed Role Check!');
                 return resolve();
               }
 
@@ -122,22 +125,22 @@ export async function requireAuth(event, parentReject, type = 'Invalid', accepte
               deny(403, 'Insufficient permissions to access accounts other than your own', parentReject);
             }
           } else if (decodedToken.type === type && type === JWT.TYPES.ATHLETE) {
+            console.info('Is an Athlete!');
             const requestAthleteId = decodeURIComponent(_.get(event, 'pathParameters.athleteId') || _.get(event, 'queryStringParameters.athleteId') || _.get(event, 'body.athleteId'));
             const requestEmail = decodeURIComponent(_.get(event, 'pathParameters.email') || _.get(event, 'queryStringParameters.email') || _.get(event, 'body.email'));
 
             if (requestAthleteId && requestAthleteId === decodedToken.sub) {
               // Athlete making request is accessing/altering their own data
+              console.info('Is a valid Athlete - athleteId check!');
               return resolve();
             } else if (requestEmail && requestEmail === decodedToken.email) {
               // Athlete making request is accessing/altering their own data
+              console.info('Is a valid Athlete - email check!');
               return resolve();
             }
 
             deny(403, 'Insufficient permissions to access accounts other than your own', parentReject);
           } else {
-            console.log('decodedToken.type: ', decodedToken.type);
-            console.log('type: ', type);
-            console.log('JWT.TYPES.ATHLETE: ', JWT.TYPES.ATHLETE);
             deny(403, 'Unknown JWT type', parentReject);
           }
         } else {
