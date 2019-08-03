@@ -11,17 +11,22 @@ import {
   * Set up Postgres with Sequelize
 **/
 
-const sequelize = new Sequelize(POSTGRES_DB_NAME, POSTGRES_DB_USERNAME, POSTGRES_DB_PASSWORD, {
-  host: POSTGRES_DB_HOST,
-  port: 5432,
-  dialect: 'postgres',
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
+const sequelize = new Sequelize(
+  POSTGRES_DB_NAME,
+  POSTGRES_DB_USERNAME,
+  POSTGRES_DB_PASSWORD,
+  {
+    host: POSTGRES_DB_HOST,
+    port: 5432,
+    dialect: 'postgres',
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
   }
-});
+);
 
 sequelize
   .authenticate()

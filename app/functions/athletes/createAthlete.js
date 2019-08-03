@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import uuid from 'uuid';
-import sgMail from '@sendgrid/mail';
+// import sgMail from '@sendgrid/mail';
 
-import Athlete from '../../models/athlete';
-import { formatAthlete } from '../../utils/athlete';
+import { Athlete, formatAthlete } from '../../models/athlete';
 import { getAthleteJWT } from '../../utils/jwt';
 import { hashPassword } from '../../utils/password';
 import * as constants from '../../constants';
@@ -11,7 +10,7 @@ import { getCurrentTimestamp } from '../../utils/time';
 import { failure, serverFailure, success } from '../../utils/response';
 import { isLambdaWarmer } from '../../utils/warmer';
 
-sgMail.setApiKey(constants.SENDGRID.API_KEY);
+// sgMail.setApiKey(constants.SENDGRID.API_KEY);
 
 export async function main(event) {
   return new Promise(async (resolve, reject) => {

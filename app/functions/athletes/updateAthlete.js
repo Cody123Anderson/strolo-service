@@ -1,10 +1,9 @@
 import { success, serverFailure, failure } from '../../utils/response';
 import { getCurrentTimestamp } from '../../utils/time';
-import { formatAthlete } from '../../utils/athlete';
 import { isLambdaWarmer } from '../../utils/warmer';
 import { requireAuth } from '../../utils/auth';
 import * as constants from '../../constants';
-import Athlete from '../../models/athlete';
+import { Athlete, formatAthlete } from '../../models/athlete';
 
 export async function main(event) {
   return new Promise(async (resolve, reject) => {

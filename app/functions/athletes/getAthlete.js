@@ -4,7 +4,7 @@ import * as constants from '../../constants';
 import { success, serverFailure, failure } from '../../utils/response';
 import { isLambdaWarmer } from '../../utils/warmer';
 import { requireAuth } from '../../utils/auth';
-import Athlete from '../../models/athlete';
+import { Athlete } from '../../models/athlete';
 
 export async function main(event) {
   return new Promise(async (resolve, reject) => {

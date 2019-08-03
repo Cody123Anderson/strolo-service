@@ -1,10 +1,9 @@
 import moment from 'moment';
 import bcrypt from 'bcryptjs';
 
-import Athlete from '../../models/athlete';
+import { Athlete, formatAthlete } from '../../models/athlete';
 import { failure, serverFailure, success } from '../../utils/response';
 import { getCurrentTimestamp } from '../../utils/time';
-import { formatAthlete } from '../../utils/athlete';
 import { isLambdaWarmer } from '../../utils/warmer';
 
 export async function main(event) {

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 
-import Athlete from '../../models/athlete';
+import { Athlete } from '../../models/athlete';
 import * as constants from '../../constants';
 import { failure, serverFailure, success } from '../../utils/response';
 import { getAthleteJWT } from '../../utils/jwt';

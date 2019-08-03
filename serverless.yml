@@ -8,10 +8,13 @@ plugins:
   - serverless-plugin-warmup
   - serverless-offline
 
-custom:
+custom:    
   webpack:
     webpackConfig: 'webpack.config.js'
-    includeModules: true
+    includeModules:
+      forceInclude:
+        - pg
+        - pg-hstore
     packager: 'npm'
 
   customDomain:
