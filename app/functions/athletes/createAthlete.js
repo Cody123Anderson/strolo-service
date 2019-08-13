@@ -2,7 +2,7 @@ import _ from 'lodash';
 import uuid from 'uuid';
 // import sgMail from '@sendgrid/mail';
 
-import { Athlete, formatAthlete } from '../../models/athlete';
+import { Athlete, formatAthlete } from '../../models';
 import { getAthleteJWT } from '../../utils/jwt';
 import { hashPassword } from '../../utils/password';
 import * as constants from '../../constants';
@@ -53,10 +53,11 @@ export async function main(event) {
     }
 
     const formattedAthlete = formatAthlete({
+      measurementUnits: constants.MEASUREMENT_UNITS.IMPERIAL,
+      ...data,
       athleteId: uuid.v4(),
       createdAt: timestamp,
       updatedAt: timestamp,
-      email,
       password: hashedPassword,
       status: constants.ATHLETE_STATUS.ACTIVE
     });

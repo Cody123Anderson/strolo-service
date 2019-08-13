@@ -104,6 +104,22 @@ functions:
           method: put
           cors: true
 
+  createSponsor:
+    handler: app/functions/sponsors/createSponsor.main
+    events:
+      - http:
+          path: /sponsors
+          method: post
+          cors: true
+
+  createSponsorship:
+    handler: app/functions/sponsorships/createSponsorship.main
+    events:
+      - http:
+          path: /sponsorships
+          method: post
+          cors: true
+
   # deleteUser:
   #   handler: app/functions/users/deleteUser.main
   #   events:

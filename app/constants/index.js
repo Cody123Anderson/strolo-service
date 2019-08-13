@@ -12,6 +12,10 @@ module.exports = {
       ATHLETE: 'Athlete'
     }
   },
+  MEASUREMENT_UNITS: {
+    IMPERIAL: 'Imperial',
+    METRIC: 'Metric'
+  },
   POSTGRES_DB_HOST: process.env.POSTGRES_DB_HOST,
   POSTGRES_DB_NAME: process.env.POSTGRES_DB_NAME,
   POSTGRES_DB_USERNAME: process.env.POSTGRES_DB_USERNAME,
@@ -23,6 +27,20 @@ module.exports = {
   },
   STROLO_SERVICE_API_KEY: process.env.STROLO_SERVICE_API_KEY,
   SNS_TOPIC_ARNS: {},
+  SPONSOR_STATUS: {
+    ACTIVE: 'Active',
+    DELETED: 'Deleted',
+    PENDING_CONFIG: 'Pending Configuration'
+  },
+  SPONSOR_TYPES: {
+    CORPORATE: 'Corporate',
+    PERSONAL: 'Personal'
+  },
+  SPONSORSHIP_STATUS: {
+    ACTIVE: 'Active',
+    CANCELLED: 'Cancelled',
+    PENDING_APPROVAL: 'Pending Approval'
+  },
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   USER_TYPES: {
     COMPANY_ADMIN: 'Sponsor Admin',

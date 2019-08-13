@@ -1,7 +1,7 @@
 import moment from 'moment';
 import bcrypt from 'bcryptjs';
 
-import { Athlete, formatAthlete } from '../../models/athlete';
+import { Athlete, formatAthlete } from '../../models';
 import { failure, serverFailure, success } from '../../utils/response';
 import { getCurrentTimestamp } from '../../utils/time';
 import { isLambdaWarmer } from '../../utils/warmer';

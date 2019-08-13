@@ -46,6 +46,13 @@ export async function requireAuth(event, parentReject, type = 'Invalid', accepte
 
     const stroloServiceAPIKey = _.get(event, 'headers[\'Strolo-Service-API-Key\']');
     const token = _.get(event, 'headers.Authorization');
+    let body = {};
+
+    if (typeof event.body === 'string') {
+      body = { ...JSON.parse(event.body) };
+    } else {
+      body = { ...event.body };
+    }
 
     if (stroloServiceAPIKey) {
       // Strolo-Service-API-Key check
@@ -126,8 +133,9 @@ export async function requireAuth(event, parentReject, type = 'Invalid', accepte
             }
           } else if (decodedToken.type === type && type === JWT.TYPES.ATHLETE) {
             console.info('Is an Athlete!');
-            const requestAthleteId = decodeURIComponent(_.get(event, 'pathParameters.athleteId') || _.get(event, 'queryStringParameters.athleteId') || _.get(event, 'body.athleteId'));
-            const requestEmail = decodeURIComponent(_.get(event, 'pathParameters.email') || _.get(event, 'queryStringParameters.email') || _.get(event, 'body.email'));
+
+            const requestAthleteId = decodeURIComponent(_.get(event, 'pathParameters.athleteId') || _.get(event, 'queryStringParameters.athleteId') || _.get(body, 'athleteId'));
+            const requestEmail = decodeURIComponent(_.get(event, 'pathParameters.email') || _.get(event, 'queryStringParameters.email') || _.get(body, 'email'));
 
             if (requestAthleteId && requestAthleteId === decodedToken.sub) {
               // Athlete making request is accessing/altering their own data

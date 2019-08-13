@@ -6,9 +6,8 @@ import { cleanObj } from '../utils/format-data';
 const Athlete = sequelize.define('athlete', {
   athleteId: {
     allowNull: false,
-    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
-    type: DataTypes.UUID
+    type: DataTypes.STRING
   },
   firstName: {
     type: DataTypes.STRING
@@ -50,7 +49,7 @@ const Athlete = sequelize.define('athlete', {
     type: DataTypes.STRING
   },
   birthday: {
-    type: DataTypes.DATE
+    type: DataTypes.STRING
   },
   status: {
     type: DataTypes.STRING
@@ -69,10 +68,6 @@ const Athlete = sequelize.define('athlete', {
 }, {
   timestamps: false
 });
-
-// Athlete.associate = function(models) {
-//   // associations can be defined here
-// };
 
 function formatAthlete(athlete) {
   const formattedAthlete = {

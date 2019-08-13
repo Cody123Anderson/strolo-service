@@ -7,6 +7,7 @@
   "scripts": {
     "deploy-dev": "serverless --stage dev deploy",
     "deploy-prod": "serverless --stage prod deploy",
+    "createMigration": "sequelize migration:generate --name changeMe",
     "migratetest": "npx sequelize db:migrate --env test",
     "migratedev": "npx sequelize db:migrate --env development",
     "migrateprod": "npx sequelize db:migrate --env production",

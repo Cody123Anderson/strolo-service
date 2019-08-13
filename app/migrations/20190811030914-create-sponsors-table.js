@@ -1,53 +1,48 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('athletes', {
-      athleteId: {
+    return queryInterface.createTable('sponsors', {
+      sponsorId: {
         allowNull: false,
-        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.UUID
-      },
-      firstName: {
         type: Sequelize.STRING
       },
-      lastName: {
-        type: Sequelize.STRING
-      },
-      profileImageUrl: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING,
+      createdByAthleteId: {
         allowNull: false,
-        unique: true
+        type: Sequelize.STRING
       },
-      emailVerified: {
-        type: Sequelize.BOOLEAN,
+      code: {
         allowNull: false,
-        defaultValue: false
+        type: Sequelize.STRING
       },
-      username: {
-        type: Sequelize.STRING,
-        unique: true
-      },
-      password: {
+      type: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      passwordResetToken: {
-        type: Sequelize.STRING
-      },
-      passwordResetExpiration: {
-        type: Sequelize.STRING
-      },
-      gender: {
-        type: Sequelize.STRING
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
       measurementUnits: {
         type: Sequelize.STRING
       },
-      birthday: {
-        type: Sequelize.DATE
+      logoUrl: {
+        type: Sequelize.STRING
+      },
+      maxDailyContribution: {
+        type: Sequelize.DECIMAL(2)
+      },
+      maxMonthlyContribution: {
+        type: Sequelize.DECIMAL(2)
+      },
+      maxYearlyContribution: {
+        type: Sequelize.DECIMAL(2)
+      },
+      dayStreak100Bonus: {
+        type: Sequelize.DECIMAL(2)
+      },
+      dayStreak365Bonus: {
+        type: Sequelize.DECIMAL(2)
       },
       status: {
         type: Sequelize.STRING
@@ -68,6 +63,6 @@ module.exports = {
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('athletes');
+    return queryInterface.dropTable('sponsors');
   }
 };

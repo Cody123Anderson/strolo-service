@@ -3,7 +3,7 @@ import { getCurrentTimestamp } from '../../utils/time';
 import { isLambdaWarmer } from '../../utils/warmer';
 import { requireAuth } from '../../utils/auth';
 import * as constants from '../../constants';
-import { Athlete, formatAthlete } from '../../models/athlete';
+import { Athlete, formatAthlete } from '../../models';
 
 export async function main(event) {
   return new Promise(async (resolve, reject) => {

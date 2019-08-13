@@ -4,7 +4,7 @@ import * as constants from '../../constants';
 import { success, serverFailure, failure } from '../../utils/response';
 import { isLambdaWarmer } from '../../utils/warmer';
 import { requireAuth } from '../../utils/auth';
-import { Athlete } from '../../models/athlete';
+import { Athlete, Sponsor } from '../../models';
 
 export async function main(event) {
   return new Promise(async (resolve, reject) => {
@@ -24,21 +24,39 @@ export async function main(event) {
 
     if (athleteId) {
       try {
-        athlete = await Athlete.findOne({ where: { athleteId } });
+        athlete = await Athlete.findOne({
+          where: { athleteId },
+          include: [{
+            model: Sponsor,
+            as: 'sponsorships'
+          }]
+        });
       } catch (e) {
         console.error('server error finding the athlete by athleteId: ', e);
         reject(serverFailure('Server error finding the athlete by athleteId', e));
       }
     } else if (username) {
       try {
-        athlete = await Athlete.findOne({ where: { username } });
+        athlete = await Athlete.findOne({
+          where: { username },
+          include: [{
+            model: Sponsor,
+            as: 'sponsorships'
+          }]
+        });
       } catch (e) {
         console.error('server error finding the athlete by username: ', e);
         reject(serverFailure('Server error finding the athlete by username', e));
       }
     } else if (email) {
       try {
-        athlete = await Athlete.findOne({ where: { email } });
+        athlete = await Athlete.findOne({
+          where: { email },
+          include: [{
+            model: Sponsor,
+            as: 'sponsorships'
+          }]
+        });
       } catch (e) {
         console.error('server error finding the athlete by email: ', e);
         reject(serverFailure('Server error finding the athlete by email', e));
