@@ -1,6 +1,4 @@
-import _ from 'lodash';
-
-import { success, serverFailure, failure } from '../../utils/response';
+import { success, serverFailure } from '../../utils/response';
 import { isLambdaWarmer } from '../../utils/warmer';
 import { ActivityType } from '../../models';
 
