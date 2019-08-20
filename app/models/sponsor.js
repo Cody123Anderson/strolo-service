@@ -33,19 +33,19 @@ const Sponsor = sequelize.define('sponsor', {
     type: DataTypes.STRING
   },
   maxDailyContribution: {
-    type: DataTypes.DECIMAL(2)
+    type: DataTypes.DECIMAL
   },
   maxMonthlyContribution: {
-    type: DataTypes.DECIMAL(2)
+    type: DataTypes.DECIMAL
   },
   maxYearlyContribution: {
-    type: DataTypes.DECIMAL(2)
+    type: DataTypes.DECIMAL
   },
   dayStreak100Bonus: {
-    type: DataTypes.DECIMAL(2)
+    type: DataTypes.DECIMAL
   },
   dayStreak365Bonus: {
-    type: DataTypes.DECIMAL(2)
+    type: DataTypes.DECIMAL
   },
   status: {
     type: DataTypes.STRING

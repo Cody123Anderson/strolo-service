@@ -1,50 +1,54 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('sponsors', {
-      sponsorId: {
-        allowNull: false,
+    return queryInterface.createTable('activities', {
+      activityId: {
         primaryKey: true,
         type: Sequelize.STRING
       },
-      createdByAthleteId: {
+      activityTypeId: {
+        foreignKey: true,
+        type: Sequelize.STRING
+      },
+      athleteId: {
+        foreignKey: true,
+        type: Sequelize.STRING
+      },
+      status: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      code: {
+      name: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      type: {
+      source: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      name: {
+      inputMethod: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
+      },
+      sourceActivityId: {
+        type: Sequelize.STRING
+      },
+      startTime: {
+        type: Sequelize.STRING
+      },
+      endTime: {
+        type: Sequelize.STRING
+      },
+      durationSeconds: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
+      distance: {
+        type: Sequelize.DECIMAL
       },
       measurementUnits: {
         type: Sequelize.STRING
       },
-      logoUrl: {
-        type: Sequelize.STRING
-      },
-      maxDailyContribution: {
-        type: Sequelize.DECIMAL
-      },
-      maxMonthlyContribution: {
-        type: Sequelize.DECIMAL
-      },
-      maxYearlyContribution: {
-        type: Sequelize.DECIMAL
-      },
-      dayStreak100Bonus: {
-        type: Sequelize.DECIMAL
-      },
-      dayStreak365Bonus: {
-        type: Sequelize.DECIMAL
-      },
-      status: {
+      elevationGained: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -63,6 +67,6 @@ module.exports = {
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('sponsors');
+    return queryInterface.dropTable('activities');
   }
 };

@@ -5,3 +5,11 @@ module.exports.cleanObj = function(obj) {
     }
   }
 };
+
+module.exports.parseBody = function(body) {
+  if (typeof body === 'string') {
+    return { ...JSON.parse(body) };
+  }
+
+  return { ...body };
+};

@@ -5,6 +5,7 @@ import { STROLO_SERVICE_API_KEY, JWT, API_URL } from '../constants';
 import { failure } from './response';
 import { decode } from './jwt';
 import { getInternalRequestOptions } from './request';
+import { parseBody } from './format-data';
 
 function finishProcesses() {
   return new Promise((resolve) => {
@@ -46,13 +47,9 @@ export async function requireAuth(event, parentReject, type = 'Invalid', accepte
 
     const stroloServiceAPIKey = _.get(event, 'headers[\'Strolo-Service-API-Key\']');
     const token = _.get(event, 'headers.Authorization');
-    let body = {};
+    const body = parseBody(event.body || {});
 
-    if (typeof event.body === 'string') {
-      body = { ...JSON.parse(event.body) };
-    } else {
-      body = { ...event.body };
-    }
+    console.log('body: ', body);
 
     if (stroloServiceAPIKey) {
       // Strolo-Service-API-Key check

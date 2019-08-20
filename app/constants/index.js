@@ -1,4 +1,12 @@
 module.exports = {
+  ACTIVITY_STATUS: {
+    APPROVED: 'Approved',
+    DELETED: 'Deleted'
+  },
+  ACTIVITY_TYPE_STATUS: {
+    ACTIVE: 'Active',
+    DELETED: 'Deleted'
+  },
   API_URL: process.env.API_URL,
   AWS: {
     REGION: process.env.REGION || 'us-east-1'

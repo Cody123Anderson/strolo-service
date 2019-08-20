@@ -64,6 +64,38 @@ provider:
       Resource: "arn:aws:sns:${self:provider.region}:*:*-${self:provider.stage}"
 
 functions:
+  createActivity:
+    handler: app/functions/activities/createActivity.main
+    events:
+      - http:
+          path: /activities
+          method: post
+          cors: true
+
+  getAthleteActivities:
+    handler: app/functions/activities/getAthleteActivities.main
+    events:
+      - http:
+          path: /activities/athlete/{athleteId}
+          method: get
+          cors: true
+
+  createActivityType:
+    handler: app/functions/activityTypes/createActivityType.main
+    events:
+      - http:
+          path: /activity-types
+          method: post
+          cors: true
+
+  getActivityTypes:
+    handler: app/functions/activityTypes/getActivityTypes.main
+    events:
+      - http:
+          path: /activity-types
+          method: get
+          cors: true
+
   createAthlete:
     handler: app/functions/athletes/createAthlete.main
     events:
