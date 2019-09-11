@@ -64,6 +64,7 @@ provider:
       Resource: "arn:aws:sns:${self:provider.region}:*:*-${self:provider.stage}"
 
 functions:
+  # activities
   createActivity:
     handler: app/functions/activities/createActivity.main
     events:
@@ -80,6 +81,7 @@ functions:
           method: get
           cors: true
 
+  # activityTypes
   createActivityType:
     handler: app/functions/activityTypes/createActivityType.main
     events:
@@ -96,6 +98,7 @@ functions:
           method: get
           cors: true
 
+  # athletes
   createAthlete:
     handler: app/functions/athletes/createAthlete.main
     events:
@@ -136,6 +139,7 @@ functions:
           method: put
           cors: true
 
+  # sponsors
   createSponsor:
     handler: app/functions/sponsors/createSponsor.main
     events:
@@ -144,12 +148,30 @@ functions:
           method: post
           cors: true
 
+  # sponsorships
   createSponsorship:
     handler: app/functions/sponsorships/createSponsorship.main
     events:
       - http:
           path: /sponsorships
           method: post
+          cors: true
+
+  # stroloClasses
+  createStroloClass:
+    handler: app/functions/stroloClasses/createStroloClass.main
+    events:
+      - http:
+          path: /strolo-classes
+          method: post
+          cors: true
+
+  getStroloClassesByActivityType:
+    handler: app/functions/stroloClasses/getStroloClassesByActivityType.main
+    events:
+      - http:
+          path: /strolo-classes/activity-type/{activityTypeId}
+          method: get
           cors: true
 
   # deleteUser:

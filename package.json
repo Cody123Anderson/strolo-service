@@ -5,13 +5,14 @@
   "author": "Strolo Engineering",
   "license": "MIT",
   "scripts": {
-    "deploy-dev": "serverless --stage dev deploy",
-    "deploy-prod": "serverless --stage prod deploy",
+    "deployDev": "serverless --stage dev deploy",
+    "deployProd": "serverless --stage prod deploy",
     "createMigration": "sequelize migration:generate --name changeMe",
-    "migratetest": "npx sequelize db:migrate --env test",
-    "migratedev": "npx sequelize db:migrate --env development",
-    "migrateprod": "npx sequelize db:migrate --env production",
-    "undomigrationstest": "npx sequelize db:migrate:undo:all --env test",
+    "migrateTest": "npx sequelize db:migrate --env test",
+    "migrateDev": "npx sequelize db:migrate --env development",
+    "migrateProd": "npx sequelize db:migrate --env production",
+    "undoMigrationDev": "npx sequelize-cli db:migrate:undo --env development",
+    "undoMigrationsDev": "npx sequelize db:migrate:undo:all --env development",
     "start": "serverless --stage test offline start"
   },
   "dependencies": {
