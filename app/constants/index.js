@@ -34,7 +34,9 @@ module.exports = {
     WELCOME_ATHLETE_TEMPLATE_ID: ''
   },
   STROLO_SERVICE_API_KEY: process.env.STROLO_SERVICE_API_KEY,
-  SNS_TOPIC_ARNS: {},
+  SNS_TOPIC_ARNS: {
+    NEW_ACTIVITY: ''
+  },
   SPONSOR_STATUS: {
     ACTIVE: 'Active',
     DELETED: 'Deleted',

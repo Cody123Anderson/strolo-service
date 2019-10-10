@@ -1,0 +1,14 @@
+{
+  "Records": [
+    {
+      "Sns": {
+        "Message": "{\"activity\":{\"activityId\":\"f3dc7acc-b431-476c-b19e-1ebb7c986b2a\",\"activityTypeId\":\"2e8dcec3-29c8-4228-99c4-cfbc83c10ee0\",\"athleteId\":\"c0406843-51d7-4aa7-ab09-7951f411ce33\",\"status\":\"Approved\",\"name\":\"Fun Run\",\"source\":\"Strolo\",\"inputMethod\":\"Manual\",\"durationSeconds\":3600,\"distance\":\"7.1\",\"measurementUnits\":\"miles\",\"createdAt\":\"1570572516\",\"updatedAt\":\"1570572516\",\"sourceActivityId\":null,\"startTime\":null,\"endTime\":null,\"elevationGained\":null,\"deletedAt\":null}}"
+      }
+    },
+    {
+      "Sns": {
+        "Message": "{\"activity\":{\"activityId\":\"5079ccb3-e0e4-4705-a964-9a46fcf27979\",\"activityTypeId\":\"ac94715b-3093-4fc8-b440-70080ef08c7e\",\"athleteId\":\"c0406843-51d7-4aa7-ab09-7951f411ce33\",\"status\":\"Approved\",\"name\":\"Push Calisthenics\",\"source\":\"Strolo\",\"inputMethod\":\"Manual\",\"durationSeconds\":3600,\"createdAt\":\"1570572653\",\"updatedAt\":\"1570572653\",\"sourceActivityId\":null,\"startTime\":null,\"endTime\":null,\"distance\":null,\"measurementUnits\":null,\"elevationGained\":null,\"deletedAt\":null}}"
+      }
+    }
+  ]
+}

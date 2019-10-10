@@ -148,6 +148,14 @@ functions:
           method: post
           cors: true
 
+  # sponsorActivities
+  createSponsorActivity:
+    handler: app/functions/sponsorActivities/createSponsorActivity.main
+    events:
+      - sns: newActivity-${self:provider.stage}
+    warmup: false
+    timeout: 300
+
   # sponsorships
   createSponsorship:
     handler: app/functions/sponsorships/createSponsorship.main
@@ -173,27 +181,3 @@ functions:
           path: /strolo-classes/activity-type/{activityTypeId}
           method: get
           cors: true
-
-  # deleteUser:
-  #   handler: app/functions/users/deleteUser.main
-  #   events:
-  #     - http:
-  #         path: /users/{userId}
-  #         method: delete
-  #         cors: true
-
-  # forgotUserPassword:
-  #   handler: app/functions/users/forgotUserPassword.main
-  #   events:
-  #     - http:
-  #         path: /users/password/forgot
-  #         method: post
-  #         cors: true
-
-  # createStripeConnectAccount:
-  #   handler: app/functions/stripe/createStripeConnectAccount.main
-  #   events:
-  #     - http:
-  #         path: /stripe/connect
-  #         method: post
-  #         cors: true

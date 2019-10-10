@@ -7,6 +7,8 @@ import { failure, serverFailure, success } from '../../utils/response';
 import { isLambdaWarmer } from '../../utils/warmer';
 import { requireAuth } from '../../utils/auth';
 import { parseBody } from '../../utils/format-data';
+import { SNS_TOPIC_ARNS } from '../../constants';
+import { SNS } from '../../utils/sns';
 
 export async function main(event) {
   return new Promise(async (resolve, reject) => {
@@ -69,6 +71,23 @@ export async function main(event) {
       console.error('server error creating activity: ', err);
       return reject(serverFailure('server error creating activity', err.response));
     }
+
+    // Publish the SNS event to run background processes
+    const snsData = { activity };
+    const snsParams = {
+      Message: JSON.stringify(snsData),
+      TopicArn: SNS_TOPIC_ARNS.NEW_ACTIVITY
+    };
+
+    console.info('snsParams: ', snsParams);
+
+    await SNS.publish(snsParams).promise().then(data => {
+      console.info(`message sent to the topic ${snsParams.TopicArn}`);
+      console.info(`MessageID is ${data.MessageId}`);
+    }).catch(e => {
+      console.error('Error creating the SNS event: ', e, e.stack);
+      return reject(failure(400, 'Error creating the SNS event: ', e));
+    });
 
     return resolve(success({ activity }));
   });

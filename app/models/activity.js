@@ -43,7 +43,7 @@ const Activity = sequelize.define('activity', {
   },
   durationSeconds: {
     type: DataTypes.INTEGER,
-    allowNull: true
+    allowNull: false
   },
   distance: {
     type: DataTypes.DECIMAL

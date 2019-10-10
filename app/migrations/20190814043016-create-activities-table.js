@@ -40,7 +40,7 @@ module.exports = {
       },
       durationSeconds: {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: false
       },
       distance: {
         type: Sequelize.DECIMAL

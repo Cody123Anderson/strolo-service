@@ -13,7 +13,8 @@
     "migrateProd": "npx sequelize db:migrate --env production",
     "undoMigrationDev": "npx sequelize-cli db:migrate:undo --env development",
     "undoMigrationsDev": "npx sequelize db:migrate:undo:all --env development",
-    "start": "serverless --stage test offline start"
+    "start": "serverless --stage test offline start",
+    "createSponsorActivity": "AWS_PROFILE=strolo-serverless-admin-dev serverless invoke local --function createSponsorActivity --path app/functions/sponsorActivities/createSponsorActivity.mock.json"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
