@@ -64,120 +64,128 @@ provider:
       Resource: "arn:aws:sns:${self:provider.region}:*:*-${self:provider.stage}"
 
 functions:
-  # activities
-  createActivity:
-    handler: app/functions/activities/createActivity.main
+  # emails
+  sendEmail:
+    handler: functions/emails/sendEmail.main
     events:
-      - http:
-          path: /activities
-          method: post
-          cors: true
-
-  getAthleteActivities:
-    handler: app/functions/activities/getAthleteActivities.main
-    events:
-      - http:
-          path: /activities/athlete/{athleteId}
-          method: get
-          cors: true
-
-  # activityTypes
-  createActivityType:
-    handler: app/functions/activityTypes/createActivityType.main
-    events:
-      - http:
-          path: /activity-types
-          method: post
-          cors: true
-
-  getActivityTypes:
-    handler: app/functions/activityTypes/getActivityTypes.main
-    events:
-      - http:
-          path: /activity-types
-          method: get
-          cors: true
-
-  # athletes
-  createAthlete:
-    handler: app/functions/athletes/createAthlete.main
-    events:
-      - http:
-          path: /athletes
-          method: post
-          cors: true
-  
-  getAthlete:
-    handler: app/functions/athletes/getAthlete.main
-    events:
-      - http:
-          path: /athletes/athlete
-          method: get
-          cors: true
-
-  loginAthlete:
-    handler: app/functions/athletes/loginAthlete.main
-    events:
-      - http:
-          path: /athletes/login
-          method: post
-          cors: true
-
-  resetAthletePassword:
-    handler: app/functions/athletes/resetAthletePassword.main
-    events:
-      - http:
-          path: /athletes/password/reset
-          method: put
-          cors: true
-
-  updateAthlete:
-    handler: app/functions/athletes/updateAthlete.main
-    events:
-      - http:
-          path: /athletes/{athleteId}
-          method: put
-          cors: true
-
-  # sponsors
-  createSponsor:
-    handler: app/functions/sponsors/createSponsor.main
-    events:
-      - http:
-          path: /sponsors
-          method: post
-          cors: true
-
-  # sponsorActivities
-  createSponsorActivity:
-    handler: app/functions/sponsorActivities/createSponsorActivity.main
-    events:
-      - sns: newActivity-${self:provider.stage}
+      - sns: send-email-${self:provider.stage}
     warmup: false
     timeout: 300
 
-  # sponsorships
-  createSponsorship:
-    handler: app/functions/sponsorships/createSponsorship.main
-    events:
-      - http:
-          path: /sponsorships
-          method: post
-          cors: true
+  # # activities
+  # createActivity:
+  #   handler: app/functions/activities/createActivity.main
+  #   events:
+  #     - http:
+  #         path: /activities
+  #         method: post
+  #         cors: true
 
-  # stroloClasses
-  createStroloClass:
-    handler: app/functions/stroloClasses/createStroloClass.main
-    events:
-      - http:
-          path: /strolo-classes
-          method: post
-          cors: true
+  # getAthleteActivities:
+  #   handler: app/functions/activities/getAthleteActivities.main
+  #   events:
+  #     - http:
+  #         path: /activities/athlete/{athleteId}
+  #         method: get
+  #         cors: true
 
-  getStroloClassesByActivityType:
-    handler: app/functions/stroloClasses/getStroloClassesByActivityType.main
-    events:
-      - http:
-          path: /strolo-classes/activity-type/{activityTypeId}
-          method: get
-          cors: true
+  # # activityTypes
+  # createActivityType:
+  #   handler: app/functions/activityTypes/createActivityType.main
+  #   events:
+  #     - http:
+  #         path: /activity-types
+  #         method: post
+  #         cors: true
+
+  # getActivityTypes:
+  #   handler: app/functions/activityTypes/getActivityTypes.main
+  #   events:
+  #     - http:
+  #         path: /activity-types
+  #         method: get
+  #         cors: true
+
+  # # athletes
+  # createAthlete:
+  #   handler: app/functions/athletes/createAthlete.main
+  #   events:
+  #     - http:
+  #         path: /athletes
+  #         method: post
+  #         cors: true
+  
+  # getAthlete:
+  #   handler: app/functions/athletes/getAthlete.main
+  #   events:
+  #     - http:
+  #         path: /athletes/athlete
+  #         method: get
+  #         cors: true
+
+  # loginAthlete:
+  #   handler: app/functions/athletes/loginAthlete.main
+  #   events:
+  #     - http:
+  #         path: /athletes/login
+  #         method: post
+  #         cors: true
+
+  # resetAthletePassword:
+  #   handler: app/functions/athletes/resetAthletePassword.main
+  #   events:
+  #     - http:
+  #         path: /athletes/password/reset
+  #         method: put
+  #         cors: true
+
+  # updateAthlete:
+  #   handler: app/functions/athletes/updateAthlete.main
+  #   events:
+  #     - http:
+  #         path: /athletes/{athleteId}
+  #         method: put
+  #         cors: true
+
+  # # sponsors
+  # createSponsor:
+  #   handler: app/functions/sponsors/createSponsor.main
+  #   events:
+  #     - http:
+  #         path: /sponsors
+  #         method: post
+  #         cors: true
+
+  # # sponsorActivities
+  # createSponsorActivity:
+  #   handler: app/functions/sponsorActivities/createSponsorActivity.main
+  #   events:
+  #     - sns: newActivity-${self:provider.stage}
+  #   warmup: false
+  #   timeout: 300
+
+  # # sponsorships
+  # createSponsorship:
+  #   handler: app/functions/sponsorships/createSponsorship.main
+  #   events:
+  #     - http:
+  #         path: /sponsorships
+  #         method: post
+  #         cors: true
+
+  # # stroloClasses
+  # createStroloClass:
+  #   handler: app/functions/stroloClasses/createStroloClass.main
+  #   events:
+  #     - http:
+  #         path: /strolo-classes
+  #         method: post
+  #         cors: true
+
+  # getStroloClassesByActivityType:
+  #   handler: app/functions/stroloClasses/getStroloClassesByActivityType.main
+  #   events:
+  #     - http:
+  #         path: /strolo-classes/activity-type/{activityTypeId}
+  #         method: get
+  #         cors: true

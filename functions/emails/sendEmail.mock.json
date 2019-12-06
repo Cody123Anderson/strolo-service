@@ -1,0 +1,9 @@
+{
+  "Records": [
+    {
+      "Sns": {
+        "Message": "{\"to\":\"cody@strolo.io\",\"from\":\"test@strolo.io\",\"templateId\":\"d-ab988250959c4965a5c02ee89db01862\",\"dynamicTemplateData\":{\"foo\":\"bar\"}}"
+      }
+    }
+  ]
+}
