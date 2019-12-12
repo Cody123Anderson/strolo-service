@@ -72,6 +72,16 @@ functions:
     warmup: false
     timeout: 300
 
+  sendHTTPEmail:
+    handler: functions/emails/sendHTTPEmail.main
+    events:
+      - http:
+          path: /emails
+          method: post
+          cors: true
+    warmup: false
+    timeout: 300
+
   # # activities
   # createActivity:
   #   handler: app/functions/activities/createActivity.main

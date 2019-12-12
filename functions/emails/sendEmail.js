@@ -12,18 +12,16 @@ export async function main(event) {
 
       console.info('data: ', data);
 
-      if (!data.to || !data.from || !data.templateId) {
+      if (!data.to || !data.from || !data.sendgridTemplateId) {
         return resolve(failure(400, 'missing required params'));
       }
-
-      console.log('to equals !isUndefined: ', data.to === identity);
 
       const email = pickBy(
         {
           to: data.to,
           from: data.from,
-          templateId: data.templateId,
-          dynamic_template_data: data.dynamicTemplateData
+          templateId: data.sendgridTemplateId,
+          dynamic_template_data: data.templateData
         },
         identity
       );
